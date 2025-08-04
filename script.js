@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uKickBlock
 // @namespace    https://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Lightning-fast content filtering for Kick.
 // @author       berkaygediz
 // @match        https://kick.com/*
@@ -243,6 +243,174 @@
       });
   }
 
+  async function observeBlockedChatMessages() {
+    let blockedUsers = await getBlockedChannels();
+
+    function normalize(name) {
+      return name.trim().toLowerCase();
+    }
+
+    const waitForChatContainer = () =>
+      new Promise((resolve) => {
+        const check = () => {
+          const container = document.querySelector("#chatroom-messages");
+          if (container) return resolve(container);
+          requestAnimationFrame(check);
+        };
+        check();
+      });
+
+    // remove message
+    /*
+  function hideChatMessage(node, username) {
+    node.style.display = 'none';
+    console.log(username);
+  }
+  */
+
+    function hideChatMessage(node, username) {
+      const content = node.querySelector('div[class*="betterhover"]');
+      if (content) {
+        content.innerHTML = `<span style="color: gray; font-style: italic;">[${username} is blocked]</span>`;
+        content.style.opacity = "0.3";
+      }
+    }
+
+    function processChatNode(node) {
+      const userButton = node.querySelector("button[title]");
+      if (!userButton) return;
+
+      const usernameDisplayed = userButton.getAttribute("title");
+      const normalizedName = normalize(usernameDisplayed);
+
+      const isBlocked = blockedUsers.some(
+        (blockedName) => normalize(blockedName) === normalizedName
+      );
+
+      if (isBlocked) {
+        hideChatMessage(node, usernameDisplayed);
+      }
+    }
+
+    const chatContainer = await waitForChatContainer();
+
+    function debounce(fn, delay) {
+      let timeout;
+      return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fn(...args), delay);
+      };
+    }
+
+    const processAddedNodes = debounce((mutationsList) => {
+      for (const mutation of mutationsList) {
+        for (const addedNode of mutation.addedNodes) {
+          if (!(addedNode instanceof HTMLElement)) continue;
+          if (addedNode.hasAttribute("data-index")) {
+            processChatNode(addedNode);
+          } else {
+            addedNode.querySelectorAll("[data-index]").forEach(processChatNode);
+          }
+        }
+      }
+    }, 0);
+
+    const chatObserver = new MutationObserver(processAddedNodes);
+
+    chatObserver.observe(chatContainer, {
+      childList: true,
+      subtree: true,
+    });
+
+    setTimeout(() => {
+      chatContainer.querySelectorAll("[data-index]").forEach(processChatNode);
+    }, 1000);
+
+    async function refreshBlockedUsers() {
+      blockedUsers = await getBlockedChannels();
+      chatContainer.querySelectorAll("[data-index]").forEach(processChatNode);
+    }
+    window.refreshBlockedUsers = refreshBlockedUsers;
+  }
+
+  async function observeChatUsernames() {
+    const chatContainer = document.getElementById("chatroom-messages");
+    if (!chatContainer) return;
+
+    function debounce(fn, delay) {
+      let timeout;
+      return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fn(...args), delay);
+      };
+    }
+
+    async function addBlockButtonsToNodes(nodes) {
+      nodes.forEach((msg) => {
+        if (msg.querySelector(".username-block-btn")) return;
+
+        const userButton = msg.querySelector("button[title]");
+        if (!userButton) return;
+
+        const btn = document.createElement("button");
+        btn.textContent = "X";
+        btn.title = "Bu kullanıcıyı engelle";
+        btn.className = "username-block-btn";
+        Object.assign(btn.style, {
+          marginLeft: "6px",
+          backgroundColor: "red",
+          color: "white",
+          border: "none",
+          borderRadius: "3px",
+          cursor: "pointer",
+          fontSize: "10px",
+          padding: "0 4px",
+          userSelect: "none",
+          verticalAlign: "middle",
+        });
+
+        btn.addEventListener("click", async (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+
+          const username = userButton.getAttribute("title").trim();
+          await blockChannel(username);
+          await removeBlockedCards();
+          if (window.refreshBlockedUsers) {
+            await window.refreshBlockedUsers();
+          }
+          console.log(`${username} blocked!`);
+        });
+
+        userButton.parentElement.appendChild(btn);
+      });
+    }
+
+    await addBlockButtonsToNodes(
+      Array.from(chatContainer.querySelectorAll("[data-index]"))
+    );
+
+    const observer = new MutationObserver(
+      debounce((mutationsList) => {
+        let addedNodes = [];
+        for (const mutation of mutationsList) {
+          mutation.addedNodes.forEach((node) => {
+            if (node instanceof HTMLElement) {
+              if (node.hasAttribute("data-index")) {
+                addedNodes.push(node);
+              } else {
+                addedNodes.push(...node.querySelectorAll("[data-index]"));
+              }
+            }
+          });
+        }
+        if (addedNodes.length) addBlockButtonsToNodes(addedNodes);
+      }, 100)
+    );
+
+    observer.observe(chatContainer, { childList: true, subtree: true });
+  }
+
   function createBlockButton(username) {
     const btn = document.createElement("button");
     btn.textContent = "X";
@@ -272,7 +440,7 @@
   }
 
   // Menu
-  function createToggleButtonAndPanel() {
+  async function createToggleButtonAndPanel() {
     const toggleBtn = document.createElement("div");
     toggleBtn.id = "kickToggleBtn";
     toggleBtn.textContent = "K";
@@ -531,17 +699,21 @@
       await removeBlockedCards();
       await removeSidebarBlockedChannels();
       await addBlockButtonOnChannelPage();
-    }, 0)
+      await observeBlockedChatMessages();
+      await observeChatUsernames();
+    }, 50)
   );
 
   observer.observe(document.body, { childList: true, subtree: true });
 
   (async () => {
+    await createToggleButtonAndPanel();
     await processCards();
     await processSidebarChannels();
     await removeBlockedCards();
     await removeSidebarBlockedChannels();
     await addBlockButtonOnChannelPage();
-    createToggleButtonAndPanel();
+    await observeBlockedChatMessages();
+    await observeChatUsernames();
   })();
 })();
