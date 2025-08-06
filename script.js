@@ -18,6 +18,50 @@
     return name.trim().toLowerCase();
   }
 
+  // chromium extension (storage)
+  /*
+  async function getBlockedChannels() {
+    return new Promise((resolve) => {
+      chrome.storage.local.get("blockedChannels", (result) => {
+        try {
+          const list = JSON.parse(result.blockedChannels || "[]");
+          resolve(list.map((x) => x.trim().toLowerCase()));
+        } catch {
+          resolve([]);
+        }
+      });
+    });
+  }
+
+  async function saveBlockedChannels(list) {
+    return new Promise((resolve) => {
+      chrome.storage.local.set(
+        { blockedChannels: JSON.stringify(list) },
+        resolve
+      );
+    });
+  }
+  */
+
+  // firefox extension (storage)
+  /*
+  async function getBlockedChannels() {
+    try {
+      const result = await browser.storage.local.get("blockedChannels");
+      const list = JSON.parse(result.blockedChannels || "[]");
+      return list.map((x) => x.trim().toLowerCase());
+    } catch {
+      return [];
+    }
+  }
+  
+  async function saveBlockedChannels(list) {
+    await browser.storage.local.set({
+      blockedChannels: JSON.stringify(list),
+    });
+  }
+  */
+  
   async function getBlockedChannels() {
     const data = await GM_getValue(STORAGE_KEY, "[]");
     try {
