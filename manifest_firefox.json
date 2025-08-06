@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "uKickBlock",
+  "version": "1.0",
+  "description": "Lightning-fast content filtering for Kick.",
+  "author": "Berkay Gediz",
+  "homepage_url": "https://berkaygediz.net",
+  "permissions": ["storage"],
+  "host_permissions": ["https://kick.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://kick.com/*"],
+      "js": ["script.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_title": "uKickBlock",
+    "default_icon": {
+      "16": "icon.png",
+      "32": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    }
+  },
+  "icons": {
+    "16": "icon.png",
+    "32": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "help@berkaygediz.net",
+      "strict_min_version": "109.0"
+    }
+  }
+}
