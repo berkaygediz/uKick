@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>uKickBlock</title>
+    <style>
+      body {
+        background: #1e1e1e;
+        color: white;
+        font-family: sans-serif;
+        padding: 20px;
+        margin: 0;
+      }
+
+      h1 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        color: #00b660;
+        font-size: 28px;
+        margin-bottom: 20px;
+        user-select: none;
+      }
+
+      h1 img {
+        -webkit-user-drag: none;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        max-width: 500px;
+        margin: 0 auto;
+      }
+
+      .section {
+        background: #222;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-sizing: border-box;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      h2 {
+        margin-top: 0;
+        color: #b2ff59;
+        font-size: 20px;
+      }
+
+      .btn-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+
+      button {
+        background: #00b660;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        padding: 8px 12px;
+        font-size: 14px;
+        transition: background 0.3s ease;
+        flex: 1 1 auto;
+        min-width: 100px;
+      }
+
+      button:hover {
+        background: #009e4c;
+      }
+
+      .delete-btn {
+        flex: 0 0 auto;
+        width: 26px;
+        height: 26px;
+        padding: 0;
+        font-size: 18px;
+        line-height: 26px;
+        text-align: center;
+        border-radius: 4px;
+        background-color: #d9534f;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        padding: 8px;
+        margin-top: 10px;
+        border-radius: 4px;
+        border: none;
+        font-size: 14px;
+        background: #333;
+        color: white;
+        box-sizing: border-box;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin-top: 10px;
+        max-height: 200px;
+        overflow-y: auto;
+        will-change: transform;
+        flex-grow: 1;
+      }
+
+      li {
+        background: #2a2a2a;
+        padding: 6px 10px;
+        margin: 6px 0;
+        border-radius: 4px;
+        font-size: 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      @media (max-width: 480px) {
+        body {
+          padding: 10px;
+        }
+
+        h1 {
+          font-size: 24px;
+        }
+
+        .btn-group {
+          flex-direction: column;
+        }
+
+        button {
+          flex: none;
+          width: 100%;
+          min-width: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>
+      <img src="icon-32.png" alt="uKickBlock Logo" draggable="false" />
+      uKickBlock
+    </h1>
+
+    <div class="container">
+      <div class="section" id="channelsSection">
+        <h2 id="channelTitle">Blocked Channels</h2>
+        <button id="showChannelsBtn">▶️ Show</button>
+        <div class="btn-group" style="display: none" id="channelsControls">
+          <button id="exportChannelsBtn">📤 Export</button>
+          <button id="importChannelsBtn">📥 Import</button>
+          <button id="clearChannelsBtn">🧹 Clear All</button>
+          <button id="refreshChannelsBtn">🔄 Refresh</button>
+        </div>
+        <input
+          type="text"
+          id="channelInput"
+          placeholder="Add channel..."
+          style="display: none"
+        />
+        <button id="addChannelBtn" style="display: none">➕ Add Channel</button>
+        <ul id="channelList" style="display: none"></ul>
+      </div>
+
+      <div class="section" id="categoriesSection">
+        <h2 id="categoryTitle">Blocked Categories</h2>
+        <button id="showCategoriesBtn">▶️ Show</button>
+        <div class="btn-group" style="display: none" id="categoriesControls">
+          <button id="exportCategoriesBtn">📤 Export</button>
+          <button id="importCategoriesBtn">📥 Import</button>
+          <button id="clearCategoriesBtn">🧹 Clear All</button>
+          <button id="refreshCategoriesBtn">🔄 Refresh</button>
+        </div>
+        <input
+          type="text"
+          id="categoryInput"
+          placeholder="Add category..."
+          style="display: none"
+        />
+        <button id="addCategoryBtn" style="display: none">
+          ➕ Add Category
+        </button>
+        <ul id="categoryList" style="display: none"></ul>
+      </div>
+    </div>
+
+    <script src="options.js"></script>
+  </body>
+</html>
