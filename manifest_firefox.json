@@ -1,37 +1,53 @@
 {
+  "name": "uKickBlock — Block & Filter Streamers, Channels, Categories, and Chat on Kick",
+  "short_name": "uKickBlock",
+  "version": "1.1.0",
   "manifest_version": 3,
-  "name": "uKickBlock",
-  "version": "1.0",
-  "description": "Lightning-fast content filtering for Kick.",
-  "author": "Berkay Gediz",
-  "homepage_url": "https://berkaygediz.net",
-  "permissions": ["storage"],
-  "host_permissions": ["https://kick.com/*"],
+  "description": "Block and filter streamers, channels, categories, and chat messages on Kick.",
+  "permissions": [
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://kick.com/*",
+    "https://www.kick.com/*"
+  ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
   "content_scripts": [
     {
-      "matches": ["https://kick.com/*"],
-      "js": ["script.js"],
+      "matches": [
+        "https://kick.com/*",
+        "https://www.kick.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
       "run_at": "document_idle"
     }
   ],
   "action": {
+    "default_popup": "popup.html",
     "default_title": "uKickBlock",
     "default_icon": {
-      "16": "icon.png",
-      "32": "icon.png",
-      "48": "icon.png",
-      "128": "icon.png"
+      "16": "icon-16.png",
+      "32": "icon-32.png",
+      "48": "icon-48.png",
+      "128": "icon-128.png"
     }
   },
   "icons": {
-    "16": "icon.png",
-    "32": "icon.png",
-    "48": "icon.png",
-    "128": "icon.png"
+    "16": "icon-16.png",
+    "32": "icon-32.png",
+    "48": "icon-48.png",
+    "128": "icon-128.png"
   },
+  "homepage_url": "https://github.com/berkaygediz/uKickBlock",
   "browser_specific_settings": {
     "gecko": {
-      "id": "help@berkaygediz.net",
+      "id": "ukickblock@berkaygediz",
       "strict_min_version": "109.0"
     }
   }
