@@ -530,7 +530,7 @@
     function hideChatMessage(node, username) {
       const content = node.querySelector('div[class*="betterhover"]');
       if (content) {
-        content.innerHTML = `<span style="color: gray; font-style: italic;">[${username}]</span>`;
+        content.innerHTML = `<span style="color: gray; font-style: italic;">[${escapeHTML(username)}]</span>`;
         content.style.opacity = "0.3";
       }
     }
