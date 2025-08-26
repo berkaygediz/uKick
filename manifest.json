@@ -41,11 +41,5 @@
     "48": "images/icon-48.png",
     "128": "images/icon-128.png"
   },
-  "homepage_url": "https://github.com/berkaygediz/uKick",
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "ukickblock@berkaygediz",
-      "strict_min_version": "109.0"
-    }
-  }
+  "homepage_url": "https://github.com/berkaygediz/uKick"
 }
