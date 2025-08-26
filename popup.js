@@ -59,8 +59,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   function notifyContentScript(message) {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const tab = tabs[0];
-      if (tab?.id && tab.url?.includes("kick.com")) {
-        chrome.tabs.sendMessage(tab.id, message);
+      if (tab?.id && tab.url) {
+        try {
+          const allowedHosts = [
+            "kick.com",
+            "www.kick.com"
+          ];
+          const tabHost = new URL(tab.url).hostname;
+          if (allowedHosts.includes(tabHost)) {
+            chrome.tabs.sendMessage(tab.id, message);
+          }
+        } catch (e) {
+          // Invalid URL, do nothing
+        }
       }
     });
   }
