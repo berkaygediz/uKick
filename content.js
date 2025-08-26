@@ -517,6 +517,16 @@
         check();
       });
 
+    // Helper function to escape HTML meta-characters to prevent XSS
+    function escapeHTML(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
     function hideChatMessage(node, username) {
       const content = node.querySelector('div[class*="betterhover"]');
       if (content) {
