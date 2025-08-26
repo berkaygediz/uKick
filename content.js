@@ -1,16 +1,16 @@
 // ==UserScript==
-// @name         uKickBlock — Block & Filter Streamers, Channels, Categories, and Chat on Kick
-// @namespace    https://github.com/berkaygediz/uKickBlock
+// @name         uKick — Block Everything & Stream Tweaks
+// @namespace    https://github.com/berkaygediz/uKick
 // @version      1.1.0
-// @description  Block and filter streamers, channels, categories, and chat messages on Kick.
+// @description  All-in-one extension to block, boost, and tweak everything on Kick for a better streaming experience.
 // @author       berkaygediz
 // @match        https://kick.com/*
 // @match        https://www.kick.com/*
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @license      GPL-3.0
-// @homepageURL  https://github.com/berkaygediz/uKickBlock
-// @supportURL   https://github.com/berkaygediz/uKickBlock/issues
+// @homepageURL  https://github.com/berkaygediz/uKick
+// @supportURL   https://github.com/berkaygediz/uKick/issues
 // ==/UserScript==
 
 (function () {
@@ -20,7 +20,7 @@
     return str?.toLowerCase().trim() || "";
   }
   // ===== Chrome Extension (callback) =====
-  /*
+
   async function getBlockedChannels() {
     return new Promise((resolve) => {
       chrome.storage.local.get("blockedChannels", (result) => {
@@ -42,7 +42,6 @@
       );
     });
   }
-  */
 
   // ===== Firefox Extension (Promise) =====
   /*
@@ -64,7 +63,7 @@
   */
 
   // ===== Tampermonkey UserScript (GM) =====
-
+  /*
   async function getBlockedChannels() {
     try {
       const val = await GM_getValue("blockedChannels", "[]");
@@ -78,6 +77,7 @@
   async function saveBlockedChannels(list) {
     await GM_setValue("blockedChannels", JSON.stringify(list));
   }
+  */
 
   async function blockChannel(username) {
     username = normalizeData(username);
@@ -96,7 +96,7 @@
   }
 
   // ==== Chrome Extension ==== getBlockedCategories & saveBlockedCategories
-  /*
+
   async function getBlockedCategories() {
     return new Promise((resolve) => {
       try {
@@ -136,7 +136,6 @@
       }
     });
   }
-  */
 
   // ==== Firefox Extension ==== getBlockedCategories & saveBlockedCategories
   /*
@@ -162,7 +161,7 @@
   */
 
   // ==== Tampermonkey ==== getBlockedCategories & saveBlockedCategories
-
+  /*
   async function getBlockedCategories() {
     try {
       const val = await GM_getValue("blockedCategories", "[]");
@@ -182,9 +181,10 @@
       console.error(err);
     }
   }
+  */
 
   // ==== Chrome Extension ====
-  /*
+
   async function blockCategory(categoryName) {
     const blocked = await getBlockedCategories();
     const normalizedCategory = normalizeData(categoryName);
@@ -198,7 +198,7 @@
       });
     }
   }
-  */
+
   // ==== Firefox Extension ====
   /*
   async function blockCategory(categoryName) {
@@ -214,7 +214,7 @@
   */
 
   // ==== Tampermonkey/Violentmonkey UserScript ====
-
+  /*
   async function blockCategory(categoryName) {
     const blocked = await getBlockedCategories();
     const normalizedCategory = normalizeData(categoryName);
@@ -223,7 +223,7 @@
       await GM_setValue("blockedCategories", JSON.stringify(blocked));
     }
   }
-
+  */
   async function processCategoryCards() {
     const blockedCategories = await getBlockedCategories();
 
@@ -520,7 +520,7 @@
     function hideChatMessage(node, username) {
       const content = node.querySelector('div[class*="betterhover"]');
       if (content) {
-        content.innerHTML = `<span style="color: gray; font-style: italic;">[${username} is blocked]</span>`;
+        content.innerHTML = `<span style="color: gray; font-style: italic;">[${username}]</span>`;
         content.style.opacity = "0.3";
       }
     }
@@ -628,7 +628,6 @@
           if (window.refreshBlockedUsers) {
             await window.refreshBlockedUsers();
           }
-          console.log(`${username} blocked!`);
         });
 
         userButton.parentElement.appendChild(btn);
@@ -720,7 +719,7 @@
   }
 
   // Menu for Tampermonkey/Violentmonkey/Userscript
-
+  /*
   async function createToggleButtonAndPanel() {
     const toggleBtn = document.createElement("div");
     toggleBtn.id = "kickToggleBtn";
@@ -768,7 +767,7 @@
     });
 
     panel.innerHTML = `
-    <h1 style="color:#00b660; font-size:20px; margin-bottom:5px;">🛡️ uKickBlock</h1>
+    <h1 style="color:#00b660; font-size:20px; margin-bottom:5px;">🛡️ uKick</h1>
     <div style="color:#888; font-size:12px; margin-bottom:15px; font-style: italic;">
       For Violentmonkey/Tampermonkey users
     </div>
@@ -987,6 +986,240 @@
     renderChannels();
     renderCategories();
   }
+  */
+
+  // === Quality Control ===
+  // ==== Chrome Extension ====
+  let lastKickUrl = location.href;
+
+  initAutoQualityControl();
+
+  async function initAutoQualityControl() {
+    sessionStorage.removeItem("quality_reload_done");
+
+    const { autoQuality, preferredQuality } = await getQualitySettings();
+
+    if (autoQuality && isKickStreamUrl(location.href)) {
+      setPreferredQuality(preferredQuality, false);
+    }
+
+    new MutationObserver(() => {
+      const currentUrl = location.href;
+      if (currentUrl !== lastKickUrl) {
+        lastKickUrl = currentUrl;
+
+        if (autoQuality && isKickStreamUrl(currentUrl)) {
+          setTimeout(() => {
+            setPreferredQuality(preferredQuality, false);
+          }, 1000);
+        }
+      }
+    }).observe(document, { subtree: true, childList: true });
+
+    chrome.runtime.onMessage.addListener((request) => {
+      if (request.action === "setQuality") {
+        setPreferredQuality(request.quality, true);
+      } else if (request.action === "updateQualitySettings") {
+        getQualitySettings().then(({ autoQuality, preferredQuality }) => {
+          if (autoQuality && isKickStreamUrl(location.href)) {
+            setPreferredQuality(preferredQuality, false);
+          }
+        });
+      }
+    });
+  }
+
+  // ==== Firefox Extension ====
+  /*
+  let lastKickUrl = location.href;
+
+  initAutoQualityControl();
+
+  async function initAutoQualityControl() {
+    sessionStorage.removeItem("quality_reload_done");
+
+    const { autoQuality, preferredQuality } = await getQualitySettings();
+
+    if (autoQuality && isKickStreamUrl(location.href)) {
+      setPreferredQuality(preferredQuality, false);
+    }
+
+    new MutationObserver(() => {
+      const currentUrl = location.href;
+      if (currentUrl !== lastKickUrl) {
+        lastKickUrl = currentUrl;
+
+        if (autoQuality && isKickStreamUrl(currentUrl)) {
+          setTimeout(() => {
+            setPreferredQuality(preferredQuality, false);
+          }, 1000);
+        }
+      }
+    }).observe(document, { subtree: true, childList: true });
+
+    browser.runtime.onMessage.addListener((request) => {
+      if (request.action === "setQuality") {
+        setPreferredQuality(request.quality, true);
+      } else if (request.action === "updateQualitySettings") {
+        getQualitySettings().then(({ autoQuality, preferredQuality }) => {
+          if (autoQuality && isKickStreamUrl(location.href)) {
+            setPreferredQuality(preferredQuality, false);
+          }
+        });
+      }
+    });
+  }
+  */
+
+  function isKickStreamUrl(url) {
+    return /^https:\/\/(www\.)?kick\.com\/[^\/?#]+/.test(url);
+  }
+
+  function setPreferredQuality(preferredQuality, shouldReload) {
+    const qualityButtons = document.querySelectorAll(
+      '[data-testid="player-quality-option"]'
+    );
+    const availableQualities = Array.from(qualityButtons).map((btn) =>
+      btn.textContent.trim()
+    );
+
+    if (availableQualities.length === 0) {
+      sessionStorage.setItem("stream_quality", preferredQuality);
+      if (shouldReload && !sessionStorage.getItem("quality_reload_done")) {
+        sessionStorage.setItem("quality_reload_done", "true");
+        location.reload();
+      }
+      return;
+    }
+
+    let selected = preferredQuality;
+    if (!availableQualities.includes(preferredQuality)) {
+      availableQualities.sort((a, b) => parseInt(b) - parseInt(a));
+      selected =
+        availableQualities.find(
+          (q) => parseInt(q) <= parseInt(preferredQuality)
+        ) || availableQualities[0];
+    }
+
+    sessionStorage.setItem("stream_quality", selected);
+
+    if (shouldReload && !sessionStorage.getItem("quality_reload_done")) {
+      sessionStorage.setItem("quality_reload_done", "true");
+      location.reload();
+    }
+  }
+
+  // ==== Chrome Extension ====
+  function getQualitySettings() {
+    return new Promise((resolve) => {
+      chrome.storage.local.get(["autoQuality", "preferredQuality"], (data) => {
+        resolve({
+          autoQuality: data.autoQuality ?? false,
+          preferredQuality: data.preferredQuality ?? "1080",
+        });
+      });
+    });
+  }
+
+  // ==== Firefox Extension ====
+  /*
+  function getQualitySettings() {
+    return new Promise((resolve) => {
+      browser.storage.local.get(["autoQuality", "preferredQuality"]).then((data) => {
+        resolve({
+          autoQuality: data.autoQuality ?? false,
+          preferredQuality: data.preferredQuality ?? "1080",
+        });
+      });
+    });
+  }
+  */
+
+  // Volume Boost
+  let audioContext;
+  let gainNode;
+  let source;
+  let currentBoost = 1;
+  let currentVideo = null;
+  let isAudioContextInitialized = false;
+
+  function setupAudioContext() {
+    const video = document.getElementById("video-player");
+    if (!video || !audioContext) return;
+
+    if (video !== currentVideo || !source) {
+      currentVideo = video;
+
+      if (source) {
+        try {
+          source.disconnect();
+        } catch (e) {
+          console.warn("Audio source disconnect hatası:", e);
+        }
+      }
+
+      source = audioContext.createMediaElementSource(video);
+
+      if (!gainNode) {
+        gainNode = audioContext.createGain();
+      }
+
+      gainNode.gain.value = currentBoost;
+      source.connect(gainNode).connect(audioContext.destination);
+    }
+  }
+
+  function setVolumeBoost(boostAmount) {
+    if (!audioContext) return;
+
+    currentBoost = boostAmount;
+
+    if (gainNode) {
+      gainNode.gain.value = boostAmount;
+    }
+
+    if (audioContext.state === "suspended") {
+      audioContext.resume();
+    }
+  }
+
+  // ==== Chrome Extension ====
+  async function applyStoredVolumeBoost() {
+    const { volumeBoost = 1 } = await chrome.storage.local.get("volumeBoost");
+    const parsed = isNaN(Number(volumeBoost)) ? 1 : Number(volumeBoost);
+    setVolumeBoost(parsed);
+  }
+
+  // ==== Firefox Extension ====
+  /*
+  async function applyStoredVolumeBoost() {
+    const { volumeBoost = 1 } = await browser.storage.local.get("volumeBoost");
+    const parsed = isNaN(Number(volumeBoost)) ? 1 : Number(volumeBoost);
+    setVolumeBoost(parsed);
+  }
+  */
+
+  function enableAudioContextOnUserGesture() {
+    function initialize() {
+      if (!audioContext) {
+        audioContext = new AudioContext();
+      }
+
+      if (audioContext.state === "suspended") {
+        audioContext.resume();
+      }
+
+      isAudioContextInitialized = true;
+      setupAudioContext();
+      applyStoredVolumeBoost();
+
+      window.removeEventListener("click", initialize);
+      window.removeEventListener("keydown", initialize);
+    }
+
+    window.addEventListener("click", initialize);
+    window.addEventListener("keydown", initialize);
+  }
 
   function debounce(fn, delay = 25) {
     let timer;
@@ -995,15 +1228,23 @@
       timer = setTimeout(() => fn(), delay);
     };
   }
-
   // ==== Chrome Extension ====
-  /*
   (async () => {
-    const { enabled = true } = await chrome.storage.local.get("enabled");
+    if (typeof chrome === "undefined" || !chrome.storage) return;
 
+    async function isEnabled() {
+      return new Promise((resolve) => {
+        chrome.storage.local.get("enabled", (result) => {
+          resolve(result.enabled ?? true);
+        });
+      });
+    }
+
+    let enabled = await isEnabled();
     let observer = null;
 
     async function startProcessing() {
+      setupAudioContext();
       await processCards();
       await processSidebarChannels();
       await processCategoryCards();
@@ -1017,15 +1258,12 @@
 
     function startObserver() {
       if (observer) return;
-
       observer = new MutationObserver(
         debounce(async () => {
           if (!(await isEnabled())) return;
-
           await startProcessing();
         }, 50)
       );
-
       observer.observe(document.body, { childList: true, subtree: true });
     }
 
@@ -1036,38 +1274,53 @@
       }
     }
 
-    async function isEnabled() {
-      const { enabled = true } = await chrome.storage.local.get("enabled");
-      return enabled;
-    }
-
     if (enabled) {
       startObserver();
       await startProcessing();
     }
 
+    enableAudioContextOnUserGesture();
+
     chrome.storage.onChanged.addListener((changes, areaName) => {
-      if (areaName === "local" && "enabled" in changes) {
-        const newValue = changes.enabled.newValue;
-        if (newValue) {
-          startObserver();
-          startProcessing();
-        } else {
-          stopObserver();
+      if (areaName === "local") {
+        if ("enabled" in changes) {
+          const newValue = changes.enabled.newValue;
+          if (newValue) {
+            initAutoQualityControl();
+            startObserver();
+            startProcessing();
+          } else {
+            stopObserver();
+          }
+        }
+        if ("volumeBoost" in changes) {
+          let rawValue = changes.volumeBoost.newValue;
+          let parsed =
+            typeof rawValue === "string"
+              ? parseFloat(rawValue)
+              : Number(rawValue);
+          const newBoost = isNaN(parsed) ? 1 : parsed;
+          setVolumeBoost(newBoost);
         }
       }
     });
   })();
-  */
 
   // ==== Firefox Extension ====
   /*
   (async () => {
-    const { enabled = true } = await browser.storage.local.get("enabled");
+    if (typeof browser === "undefined" || !browser.storage) return;
 
+    async function isEnabled() {
+      const result = await browser.storage.local.get("enabled");
+      return result.enabled ?? true;
+    }
+
+    let enabled = await isEnabled();
     let observer = null;
 
     async function startProcessing() {
+      setupAudioContext();
       await processCards();
       await processSidebarChannels();
       await processCategoryCards();
@@ -1081,15 +1334,12 @@
 
     function startObserver() {
       if (observer) return;
-
       observer = new MutationObserver(
         debounce(async () => {
           if (!(await isEnabled())) return;
-
           await startProcessing();
         }, 50)
       );
-
       observer.observe(document.body, { childList: true, subtree: true });
     }
 
@@ -1100,24 +1350,33 @@
       }
     }
 
-    async function isEnabled() {
-      const { enabled = true } = await browser.storage.local.get("enabled");
-      return enabled;
-    }
-
     if (enabled) {
       startObserver();
       await startProcessing();
     }
 
+    enableAudioContextOnUserGesture();
+
     browser.storage.onChanged.addListener((changes, areaName) => {
-      if (areaName === "local" && "enabled" in changes) {
-        const newValue = changes.enabled.newValue;
-        if (newValue) {
-          startObserver();
-          startProcessing();
-        } else {
-          stopObserver();
+      if (areaName === "local") {
+        if ("enabled" in changes) {
+          const newValue = changes.enabled.newValue;
+          if (newValue) {
+            initAutoQualityControl();
+            startObserver();
+            startProcessing();
+          } else {
+            stopObserver();
+          }
+        }
+        if ("volumeBoost" in changes) {
+          let rawValue = changes.volumeBoost.newValue;
+          let parsed =
+            typeof rawValue === "string"
+              ? parseFloat(rawValue)
+              : Number(rawValue);
+          const newBoost = isNaN(parsed) ? 1 : parsed;
+          setVolumeBoost(newBoost);
         }
       }
     });
@@ -1125,7 +1384,7 @@
   */
 
   // ==== Tampermonkey/Violentmonkey UserScript ====
-
+  /*
   (async () => {
     let observer = null;
 
@@ -1157,4 +1416,5 @@
     await createToggleButtonAndPanel();
     await startProcessing();
   })();
+  */
 })();

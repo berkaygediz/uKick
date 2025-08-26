@@ -2,15 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>uKickBlock</title>
+    <title>uKick</title>
     <style>
       body {
         background: #1e1e1e;
         color: white;
-        font-family: sans-serif;
+        font-family: "Segoe UI", sans-serif;
         padding: 20px;
         margin: 0;
-        width: 280px;
+        width: 300px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -18,22 +18,30 @@
       }
 
       h1 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
         color: #00b660;
-        font-size: 24px;
-        margin-bottom: 16px;
-        text-align: center;
+        font-size: 28px;
+        margin-bottom: 20px;
+        user-select: none;
+      }
+
+      h1 img {
+        -webkit-user-drag: none;
       }
 
       .section {
-        background: #222;
+        background: #2a2a2a;
         padding: 16px;
-        border-radius: 8px;
+        border-radius: 10px;
         box-sizing: border-box;
-        margin-bottom: 12px;
+        margin-bottom: 16px;
         width: 100%;
         display: flex;
         flex-direction: column;
-        align-items: center;
+        gap: 12px;
       }
 
       .toggle-container {
@@ -41,7 +49,13 @@
         align-items: center;
         justify-content: space-between;
         width: 100%;
-        margin-bottom: 12px;
+        gap: 8px;
+      }
+
+      .toggle-label {
+        flex: 1;
+        font-size: 14px;
+        font-weight: 500;
       }
 
       .switch {
@@ -91,9 +105,9 @@
 
       h2 {
         color: #b2ff59;
-        font-size: 16px;
-        margin: 12px 0 8px;
-        align-self: flex-start;
+        font-size: 15px;
+        margin: 0;
+        font-weight: 600;
       }
 
       .counts {
@@ -104,7 +118,7 @@
       }
 
       .count-box {
-        background: #2a2a2a;
+        background: #1e1e1e;
         border-radius: 6px;
         padding: 10px;
         flex: 1;
@@ -122,17 +136,25 @@
         font-weight: bold;
       }
 
+      select {
+        padding: 4px 8px;
+        border-radius: 6px;
+        background: #333;
+        color: white;
+        border: none;
+        font-size: 14px;
+      }
+
       button {
         background: #00b660;
         color: white;
         border: none;
-        border-radius: 4px;
+        border-radius: 6px;
         cursor: pointer;
-        padding: 8px 12px;
+        padding: 10px 14px;
         font-size: 14px;
         transition: background 0.3s ease;
         width: 100%;
-        margin-top: 14px;
       }
 
       button:hover {
@@ -155,11 +177,14 @@
     </style>
   </head>
   <body>
-    <h1>🛡️ uKickBlock</h1>
+    <h1>
+      <img src="images/icon-32.png" alt="uKick Logo" draggable="false" />
+      uKick
+    </h1>
 
     <div class="section">
       <div class="toggle-container">
-        <span>ON/OFF</span>
+        <span class="toggle-label">Filtering</span>
         <label class="switch">
           <input type="checkbox" id="enableSwitch" />
           <span class="slider"></span>
@@ -176,6 +201,50 @@
           <span class="count-label">Categories</span>
           <span class="count-value" id="categoryCount">...</span>
         </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="toggle-container">
+        <span class="toggle-label">Adaptive Stream</span>
+        <label class="switch">
+          <input type="checkbox" id="qualityToggle" />
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="toggle-container">
+        <span class="toggle-label count-label">Quality</span>
+        <select id="qualitySelect">
+          <option value="2160">2160p (4K)</option>
+          <option value="1440">1440p (2K)</option>
+          <option value="1080">1080p</option>
+          <option value="720">720p</option>
+          <option value="480">480p</option>
+          <option value="360">360p</option>
+          <option value="160">160p</option>
+        </select>
+      </div>
+      <div class="toggle-container" style="gap: 8px; align-items: center">
+        <label
+          for="volumeBoostSelect"
+          class="toggle-label count-label"
+          style="flex: unset; min-width: 90px"
+        >
+          Volume Boost
+        </label>
+        <select id="volumeBoostSelect" style="flex: 1; max-width: 100px">
+          <option value="1">1x</option>
+          <option value="2">2x</option>
+          <option value="3">3x</option>
+          <option value="4">4x</option>
+          <option value="5">5x</option>
+          <option value="6">6x</option>
+          <option value="7">7x</option>
+          <option value="8">8x</option>
+          <option value="9">9x</option>
+          <option value="10">10x</option>
+        </select>
       </div>
     </div>
 
