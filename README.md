@@ -16,10 +16,10 @@ Take full control of your Kick experience with **uKick** — block unwanted cont
   <a href="https://microsoftedge.microsoft.com/addons/detail/ukick-%E2%80%94-block-everything-/dpkahlbhnkllhalhggfogkppbnlajfle">
     <img src="https://img.shields.io/badge/Edge-Add--ons-0078D7?style=for-the-badge&logo=microsoft-edge&logoColor=white" alt="Edge Add-ons">
   </a>
-  <a href="https://addons.mozilla.org/firefox/addon/ukick-block-everything/">
+  <a href="https://addons.mozilla.org/en-US/firefox/addon/ukick/">
     <img src="https://img.shields.io/badge/Firefox-Add--ons-FF7139?style=for-the-badge&logo=firefox-browser&logoColor=white" alt="Firefox Add-on">
   </a>
-  <a href="https://greasyfork.org/">
+  <a href="https://greasyfork.org/en/scripts/548672-ukick-block-everything-stream-tweaks">
     <img src="https://img.shields.io/badge/GreasyFork-Userscript-5A5A5A?style=for-the-badge&logo=greasyfork&logoColor=white" alt="GreasyFork">
   </a>
 </p>
