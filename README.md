@@ -4,7 +4,7 @@
 
 <h1 align="center">uKick</h1>
 
-All-in-one extension to **block, boost, and tweak everything** on [Kick.com](https://kick.com) for a better streaming experience.  
+All-in-one extension to **block, boost, and tweak everything** on Kick.com for a better streaming experience.  
 Take full control of your Kick experience with **uKick** — block unwanted content, filter toxic chat, and enhance your streams with adaptive quality and volume boosting.  
 
 ## Install
