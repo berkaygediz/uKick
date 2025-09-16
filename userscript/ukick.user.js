@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uKick — Block Everything & Stream Tweaks
 // @namespace    https://github.com/berkaygediz/uKick
-// @version      1.1.2
+// @version      1.1.3
 // @description  All-in-one extension to block, boost, and tweak everything on Kick for a better streaming experience.
 // @author       berkaygediz
 // @match        https://kick.com/*
@@ -169,19 +169,19 @@
 
   async function removeBlockedCards() {
     const blockedChannels = (await getBlockedChannels()).map(normalizeData);
-    const blockedCategories = (await getBlockedCategories()).map(normalizeData);
+    const blockedCategories = (await getBlockedCategories?.()).map(normalizeData) || [];
 
     document.querySelectorAll('.group\\/card').forEach((card) => {
       let hide = false;
 
-      // === Channel ===
+      // Kanal kontrolü
       const channelAnchor = card.querySelector('a[href^="/"]:not([href^="/category/"])');
       if (channelAnchor) {
         const username = normalizeData(channelAnchor.getAttribute("href").slice(1));
         if (blockedChannels.includes(username)) hide = true;
       }
 
-      // === Category ===
+      // Kategori kontrolü
       const categoryAnchor = card.querySelector('a[href^="/category/"]');
       if (categoryAnchor) {
         const rawCategoryText = categoryAnchor.querySelector("span")?.textContent || categoryAnchor.textContent;
@@ -192,7 +192,22 @@
       card.style.display = hide ? "none" : "";
     });
 
-    // === Video player kontrolü (kanal engeli için) ===
+    document.querySelectorAll('div.flex.flex-row.items-center').forEach((card) => {
+      const anchor = card.querySelector('a[href^="/"]:not([href^="/category/"])');
+      if (!anchor) return;
+
+      const username = normalizeData(anchor.getAttribute("href").slice(1));
+      if (blockedChannels.includes(username)) {
+        const outerContainer = card.closest('div.flex.w-full.shrink-0.grow-0.flex-col');
+        if (outerContainer) {
+          outerContainer.style.display = "none";
+        } else {
+          card.style.display = "none";
+        }
+      }
+    });
+
+    // === Video player gizle ===
     const usernameEl = document.getElementById("channel-username");
     if (usernameEl) {
       const currentUsername = normalizeData(usernameEl.textContent);
@@ -207,7 +222,6 @@
       }
     }
   }
-
 
   // Sidebar, recommended channels
   async function removeSidebarBlockedChannels() {
