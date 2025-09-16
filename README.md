@@ -31,8 +31,8 @@ Take full control of your Kick experience with **uKick** — block unwanted cont
 - ✖️ **Quick Block Buttons** — add one-click block next to usernames and stream cards  
 - ⚡ **Real-Time Updates** — changes are applied instantly across Kick.com  
 - 🧰 **Manage Your List** — import, export, view, or clear your block list anytime  
-- 🎥 **Adaptive Stream Tweaks** — set your preferred resolution (4K → 160p) and let uKick auto-adjust quality  
-- 🔊 **Volume Boost (1x → 10x)** — go beyond Kick’s default volume limit for a better audio experience  
+- 🎥 **Adaptive Stream Tweaks** — set your preferred resolution (160p -> 4K) and let uKick auto-adjust quality  
+- 🔊 **Volume Boost (1x -> 10x)** — go beyond Kick’s default volume limit for a better audio experience  
 - 🔒 **Privacy Friendly** — runs only on Kick.com  
 
 ## Who Should Use uKick
