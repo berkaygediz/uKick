@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uKick — Block Everything & Stream Tweaks
 // @namespace    https://github.com/berkaygediz/uKick
-// @version      1.1.2
+// @version      1.1.3
 // @description  All-in-one extension to block, boost, and tweak everything on Kick for a better streaming experience.
 // @author       berkaygediz
 // @match        https://kick.com/*
@@ -200,19 +200,19 @@
 
   async function removeBlockedCards() {
     const blockedChannels = (await getBlockedChannels()).map(normalizeData);
-    const blockedCategories = (await getBlockedCategories()).map(normalizeData);
+    const blockedCategories = (await getBlockedCategories?.()).map(normalizeData) || [];
 
     document.querySelectorAll('.group\\/card').forEach((card) => {
       let hide = false;
 
-      // === Channel ===
+      // Kanal kontrolü
       const channelAnchor = card.querySelector('a[href^="/"]:not([href^="/category/"])');
       if (channelAnchor) {
         const username = normalizeData(channelAnchor.getAttribute("href").slice(1));
         if (blockedChannels.includes(username)) hide = true;
       }
 
-      // === Category ===
+      // Kategori kontrolü
       const categoryAnchor = card.querySelector('a[href^="/category/"]');
       if (categoryAnchor) {
         const rawCategoryText = categoryAnchor.querySelector("span")?.textContent || categoryAnchor.textContent;
@@ -223,7 +223,22 @@
       card.style.display = hide ? "none" : "";
     });
 
-    // === Video player ===
+    document.querySelectorAll('div.flex.flex-row.items-center').forEach((card) => {
+      const anchor = card.querySelector('a[href^="/"]:not([href^="/category/"])');
+      if (!anchor) return;
+
+      const username = normalizeData(anchor.getAttribute("href").slice(1));
+      if (blockedChannels.includes(username)) {
+        const outerContainer = card.closest('div.flex.w-full.shrink-0.grow-0.flex-col');
+        if (outerContainer) {
+          outerContainer.style.display = "none";
+        } else {
+          card.style.display = "none";
+        }
+      }
+    });
+
+    // === Video player gizle ===
     const usernameEl = document.getElementById("channel-username");
     if (usernameEl) {
       const currentUsername = normalizeData(usernameEl.textContent);
@@ -238,7 +253,6 @@
       }
     }
   }
-
 
   // Sidebar, recommended channels
   async function removeSidebarBlockedChannels() {
@@ -317,8 +331,21 @@
       }
     }
   }
-
   async function processCards() {
+    // Multilingual "Follow" buttons
+    const followTexts = [
+      "takip et",   // Turkish
+      "follow",     // English
+      "folgen",     // German
+      "suivre",     // French
+      "seguir",     // Spanish / Portuguese
+      "segui",      // Italian
+      "obserwuj",   // Polish
+      "关注",        // Chinese (Simplified)
+      "フォロー",     // Japanese
+      "팔로우"       // Korean
+    ];
+
     document.querySelectorAll('[class*="group/card"]').forEach((card) => {
       if (card.querySelector(".block-btn")) return;
 
@@ -326,6 +353,7 @@
       if (!anchor) return;
 
       const username = anchor.getAttribute("href").split("/")[1];
+
       const titleEl = card.querySelector("a[title]");
       if (!titleEl) return;
 
@@ -334,25 +362,26 @@
       titleEl.parentElement.appendChild(btn);
     });
 
-    document
-      .querySelectorAll("div.flex.w-full.shrink-0.grow-0.flex-col")
-      .forEach((card) => {
-        if (card.querySelector(".block-btn")) return;
+    document.querySelectorAll("div.flex.w-full.shrink-0.grow-0.flex-col").forEach((card) => {
+      if (card.querySelector(".block-btn")) return;
 
-        const anchor = card.querySelector('a[href^="/"]');
-        if (!anchor) return;
+      const anchor = card.querySelector('a[href^="/"]');
+      if (!anchor) return;
 
-        const username = anchor.getAttribute("href").split("/")[1];
-        const followBtn = card.querySelector('button[aria-label="Takip Et"]');
+      const username = anchor.getAttribute("href").split("/")[1];
 
-        if (!followBtn) {
-          return;
-        }
-        const btn = createBlockButton(username);
-        btn.classList.add("block-btn");
-        btn.style.marginLeft = "8px";
-        followBtn.insertAdjacentElement("afterend", btn);
+      const followBtn = Array.from(card.querySelectorAll("button")).find((btn) => {
+        const text = btn.textContent.trim().toLowerCase();
+        return followTexts.some((kw) => text.includes(kw));
       });
+
+      if (!followBtn) return;
+
+      const btn = createBlockButton(username);
+      btn.classList.add("block-btn");
+      btn.style.marginLeft = "8px";
+      followBtn.insertAdjacentElement("afterend", btn);
+    });
   }
 
   async function processSidebarChannels() {
