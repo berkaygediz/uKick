@@ -26,22 +26,14 @@ Take full control of your Kick experience with **uKick** — block unwanted cont
 
 ## Features
 
-- 🛑 **Block Channels & Categories** — instantly hide streams, categories, and sidebars you don’t want to see  
-- 💬 **Filter Chat Users** — automatically remove messages from blocked users in Kick.com chat  
-- ✖️ **Quick Block Buttons** — add one-click block next to usernames and stream cards  
-- ⚡ **Real-Time Updates** — changes are applied instantly across Kick.com  
-- 🧰 **Manage Your List** — import, export, view, or clear your block list anytime  
-- 🎥 **Adaptive Stream Tweaks** — set your preferred resolution (160p -> 4K) and let uKick auto-adjust quality  
-- 🔊 **Volume Boost (1x -> 10x)** — go beyond Kick’s default volume limit for a better audio experience  
-- 🔒 **Privacy Friendly** — runs only on Kick.com  
-
-## Who Should Use uKick
-
-- Kick.com users who want a cleaner and distraction-free feed  
-- Viewers avoiding specific streamers, topics, or categories  
-- Parents who want to filter inappropriate content  
-- Users who want better control over video quality & sound  
-- Anyone who values custom control over their Kick.com experience
+- **Block Channels & Categories** — instantly hide streams, categories, and sidebars you don’t want to see  
+- **Filter Chat Users** — automatically remove messages from blocked users in Kick.com chat  
+- **Quick Block Buttons** — add one-click block next to usernames and stream cards  
+- **Real-Time Updates** — changes are applied instantly across Kick.com  
+- **Manage Your List** — import, export, view, or clear your block list anytime  
+- **Adaptive Stream Tweaks** — set your preferred resolution (160p -> 4K) and let uKick auto-adjust quality  
+- **Volume Boost (1x -> 10x)** — go beyond Kick’s default volume limit for a better audio experience  
+- **Privacy Friendly** — runs only on Kick.com  
 
 ## Disclaimer
 
