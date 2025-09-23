@@ -1,13 +1,11 @@
 // ==UserScript==
-// @name         uKick — Block Everything & Stream Tweaks
+// @name         uKick — Block & Stream Tweaks for Kick
 // @namespace    https://github.com/berkaygediz/uKick
-// @version      1.1.3
+// @version      1.1.4.0
 // @description  All-in-one extension to block, boost, and tweak everything on Kick for a better streaming experience.
 // @author       berkaygediz
 // @match        https://kick.com/*
 // @match        https://www.kick.com/*
-// @grant        GM_getValue
-// @grant        GM_setValue
 // @license      GPL-3.0
 // @homepageURL  https://github.com/berkaygediz/uKick
 // @supportURL   https://github.com/berkaygediz/uKick/issues
@@ -205,14 +203,13 @@
     document.querySelectorAll('.group\\/card').forEach((card) => {
       let hide = false;
 
-      // Kanal kontrolü
-      const channelAnchor = card.querySelector('a[href^="/"]:not([href^="/category/"])');
+      const channelAnchor = card.querySelector('a[href^="/"] img.rounded-full')?.closest('a');
       if (channelAnchor) {
         const username = normalizeData(channelAnchor.getAttribute("href").slice(1));
         if (blockedChannels.includes(username)) hide = true;
       }
 
-      // Kategori kontrolü
+      // Category
       const categoryAnchor = card.querySelector('a[href^="/category/"]');
       if (categoryAnchor) {
         const rawCategoryText = categoryAnchor.querySelector("span")?.textContent || categoryAnchor.textContent;
@@ -238,7 +235,7 @@
       }
     });
 
-    // === Video player gizle ===
+    // Video player
     const usernameEl = document.getElementById("channel-username");
     if (usernameEl) {
       const currentUsername = normalizeData(usernameEl.textContent);
