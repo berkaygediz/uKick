@@ -64,4 +64,19 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     });
   }
+
+  const quettaPromo = document.getElementById("quettaPromo");
+  const hideQuettaBtn = document.getElementById("hideQuettaBtn");
+
+  chrome.storage.local.get("hideQuettaPromo", ({ hideQuettaPromo = false }) => {
+    if (hideQuettaPromo && quettaPromo) quettaPromo.style.display = "none";
+  });
+
+  if (hideQuettaBtn) {
+    hideQuettaBtn.addEventListener("click", async () => {
+      if (quettaPromo) quettaPromo.style.display = "none";
+      await chrome.storage.local.set({ hideQuettaPromo: true });
+    });
+  }
+
 });
