@@ -7,6 +7,26 @@ document.addEventListener("DOMContentLoaded", async () => {
     ["blockedChannels", "blockedCategories"]
   );
 
+  const translations = {
+    filteringLabel: chrome.i18n.getMessage("popup_filtering"),
+    statusTitle: chrome.i18n.getMessage("popup_status"),
+    channelsLabel: chrome.i18n.getMessage("popup_channels"),
+    categoriesLabel: chrome.i18n.getMessage("popup_categories"),
+    adaptiveLabel: chrome.i18n.getMessage("popup_adaptive_stream"),
+    qualityLabel: chrome.i18n.getMessage("popup_quality"),
+    volumeBoostLabel: chrome.i18n.getMessage("popup_volume_boost"),
+    openOptionsBtn: chrome.i18n.getMessage("popup_open_options"),
+  };
+
+  for (const [id, text] of Object.entries(translations)) {
+    const el = document.getElementById(id);
+    if (el && text) {
+      const bold = el.querySelector("b");
+      if (bold) bold.textContent = text;
+      else el.textContent = text;
+    }
+  }
+
   const channels = JSON.parse(blockedChannels || "[]");
   const categories = JSON.parse(blockedCategories || "[]");
 

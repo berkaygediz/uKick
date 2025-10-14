@@ -1,0 +1,73 @@
+{
+    "app_name": {
+        "message": "uKick — Block & Stream Tweaks for Kick"
+    },
+    "app_description": {
+        "message": "Kick에서 모든 것을 차단, 강화 및 조정하여 더 나은 스트리밍 경험을 제공하는 올인원 확장 프로그램입니다."
+    },
+    "btn_block_channel": {
+        "message": "이 채널 차단"
+    },
+    "btn_block_category": {
+        "message": "카테고리 숨기기"
+    },
+    "alert_channel_blocked": {
+        "message": "$CHANNEL$ 차단됨!",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_filtering": {
+        "message": "필터링"
+    },
+    "popup_status": {
+        "message": "상태"
+    },
+    "popup_channels": {
+        "message": "채널"
+    },
+    "popup_categories": {
+        "message": "카테고리"
+    },
+    "popup_adaptive_stream": {
+        "message": "적응형 스트림"
+    },
+    "popup_quality": {
+        "message": "화질"
+    },
+    "popup_volume_boost": {
+        "message": "볼륨 증폭"
+    },
+    "popup_open_options": {
+        "message": "옵션"
+    },
+    "options_blocked_channels": {
+        "message": "차단된 채널"
+    },
+    "options_blocked_categories": {
+        "message": "차단된 카테고리"
+    },
+    "options_show": {
+        "message": "▶️ 표시"
+    },
+    "options_export": {
+        "message": "📤 내보내기"
+    },
+    "options_import": {
+        "message": "📥 가져오기"
+    },
+    "options_clear_all": {
+        "message": "🧹 모두 지우기"
+    },
+    "options_refresh": {
+        "message": "🔄 새로고침"
+    },
+    "options_add_channel": {
+        "message": "➕ 채널 추가"
+    },
+    "options_add_category": {
+        "message": "➕ 카테고리 추가"
+    }
+}

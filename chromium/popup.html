@@ -234,21 +234,21 @@
 
     <div class="section">
       <div class="toggle-container">
-        <span class="toggle-label"><b>Filtering</b></span>
+        <span class="toggle-label" id="filteringLabel"><b>Filtering</b></span>
         <label class="switch">
           <input type="checkbox" id="enableSwitch" />
           <span class="slider"></span>
         </label>
       </div>
 
-      <h2>Status</h2>
+      <h2 id="statusTitle">Status</h2>
       <div class="counts">
         <div class="count-box">
-          <span class="count-label">Channels</span>
+          <span class="count-label" id="channelsLabel">Channels</span>
           <span class="count-value" id="channelCount">...</span>
         </div>
         <div class="count-box">
-          <span class="count-label">Categories</span>
+          <span class="count-label" id="categoriesLabel">Categories</span>
           <span class="count-value" id="categoryCount">...</span>
         </div>
       </div>
@@ -256,7 +256,9 @@
 
     <div class="section">
       <div class="toggle-container">
-        <span class="toggle-label"><b>Adaptive Stream</b></span>
+        <span class="toggle-label" id="adaptiveLabel"
+          ><b>Adaptive Stream</b></span
+        >
         <label class="switch">
           <input type="checkbox" id="qualityToggle" />
           <span class="slider"></span>
@@ -264,7 +266,7 @@
       </div>
 
       <div class="toggle-container">
-        <span class="toggle-label count-label">Quality</span>
+        <span class="toggle-label count-label" id="qualityLabel">Quality</span>
         <select id="qualitySelect">
           <option value="2160">2160p (4K)</option>
           <option value="1440">1440p (2K)</option>
@@ -275,9 +277,11 @@
           <option value="160">160p</option>
         </select>
       </div>
+
       <div class="toggle-container" style="gap: 8px; align-items: center">
         <label
           for="volumeBoostSelect"
+          id="volumeBoostLabel"
           class="toggle-label count-label"
           style="flex: unset; min-width: 90px"
         >

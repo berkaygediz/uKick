@@ -1,0 +1,73 @@
+{
+    "app_name": {
+        "message": "uKick — Block & Stream Tweaks for Kick"
+    },
+    "app_description": {
+        "message": "一款全能扩展，可在 Kick 上屏蔽、增强和调整所有功能，为您提供更好的直播体验。"
+    },
+    "btn_block_channel": {
+        "message": "屏蔽此频道"
+    },
+    "btn_block_category": {
+        "message": "隐藏类别"
+    },
+    "alert_channel_blocked": {
+        "message": "$CHANNEL$ 已屏蔽！",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_filtering": {
+        "message": "过滤"
+    },
+    "popup_status": {
+        "message": "状态"
+    },
+    "popup_channels": {
+        "message": "频道"
+    },
+    "popup_categories": {
+        "message": "类别"
+    },
+    "popup_adaptive_stream": {
+        "message": "自适应流"
+    },
+    "popup_quality": {
+        "message": "清晰度"
+    },
+    "popup_volume_boost": {
+        "message": "音量增强"
+    },
+    "popup_open_options": {
+        "message": "选项"
+    },
+    "options_blocked_channels": {
+        "message": "已屏蔽频道"
+    },
+    "options_blocked_categories": {
+        "message": "已屏蔽类别"
+    },
+    "options_show": {
+        "message": "▶️ 显示"
+    },
+    "options_export": {
+        "message": "📤 导出"
+    },
+    "options_import": {
+        "message": "📥 导入"
+    },
+    "options_clear_all": {
+        "message": "🧹 清空"
+    },
+    "options_refresh": {
+        "message": "🔄 刷新"
+    },
+    "options_add_channel": {
+        "message": "➕ 添加频道"
+    },
+    "options_add_category": {
+        "message": "➕ 添加类别"
+    }
+}

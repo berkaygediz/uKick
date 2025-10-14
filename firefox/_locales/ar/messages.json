@@ -1,0 +1,73 @@
+{
+    "app_name": {
+        "message": "uKick — Block & Stream Tweaks for Kick"
+    },
+    "app_description": {
+        "message": "امتداد شامل لحظر، تعزيز وتخصيص كل شيء على Kick لتجربة بث أفضل."
+    },
+    "btn_block_channel": {
+        "message": "حظر هذا القناة"
+    },
+    "btn_block_category": {
+        "message": "إخفاء الفئة"
+    },
+    "alert_channel_blocked": {
+        "message": "$CHANNEL$ تم حظره!",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_filtering": {
+        "message": "تصفية"
+    },
+    "popup_status": {
+        "message": "الحالة"
+    },
+    "popup_channels": {
+        "message": "القنوات"
+    },
+    "popup_categories": {
+        "message": "الفئات"
+    },
+    "popup_adaptive_stream": {
+        "message": "البث التكيفي"
+    },
+    "popup_quality": {
+        "message": "الجودة"
+    },
+    "popup_volume_boost": {
+        "message": "زيادة الصوت"
+    },
+    "popup_open_options": {
+        "message": "الإعدادات"
+    },
+    "options_blocked_channels": {
+        "message": "القنوات المحظورة"
+    },
+    "options_blocked_categories": {
+        "message": "الفئات المحظورة"
+    },
+    "options_show": {
+        "message": "▶️ عرض"
+    },
+    "options_export": {
+        "message": "📤 تصدير"
+    },
+    "options_import": {
+        "message": "📥 استيراد"
+    },
+    "options_clear_all": {
+        "message": "🧹 مسح الكل"
+    },
+    "options_refresh": {
+        "message": "🔄 تحديث"
+    },
+    "options_add_channel": {
+        "message": "➕ إضافة قناة"
+    },
+    "options_add_category": {
+        "message": "➕ إضافة فئة"
+    }
+}

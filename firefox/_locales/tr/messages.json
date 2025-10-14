@@ -1,0 +1,73 @@
+{
+    "app_name": {
+        "message": "uKick — Block & Stream Tweaks for Kick"
+    },
+    "app_description": {
+        "message": "Kick üzerinde her şeyi engellemek, güçlendirmek ve özelleştirmek için hepsi bir arada eklenti."
+    },
+    "btn_block_channel": {
+        "message": "Bu kanalı engelle"
+    },
+    "btn_block_category": {
+        "message": "Kategoriyi gizle"
+    },
+    "alert_channel_blocked": {
+        "message": "$CHANNEL$ engellendi!",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_filtering": {
+        "message": "Filtreleme"
+    },
+    "popup_status": {
+        "message": "Durum"
+    },
+    "popup_channels": {
+        "message": "Kanallar"
+    },
+    "popup_categories": {
+        "message": "Kategoriler"
+    },
+    "popup_adaptive_stream": {
+        "message": "Uyarlanabilir Yayın"
+    },
+    "popup_quality": {
+        "message": "Kalite"
+    },
+    "popup_volume_boost": {
+        "message": "Ses Güçlendirme"
+    },
+    "popup_open_options": {
+        "message": "Ayarlar"
+    },
+    "options_blocked_channels": {
+        "message": "Engellenen Kanallar"
+    },
+    "options_blocked_categories": {
+        "message": "Engellenen Kategoriler"
+    },
+    "options_show": {
+        "message": "▶️ Göster"
+    },
+    "options_export": {
+        "message": "📤 Dışa Aktar"
+    },
+    "options_import": {
+        "message": "📥 İçe Aktar"
+    },
+    "options_clear_all": {
+        "message": "🧹 Tümünü Temizle"
+    },
+    "options_refresh": {
+        "message": "🔄 Yenile"
+    },
+    "options_add_channel": {
+        "message": "➕ Kanal Ekle"
+    },
+    "options_add_category": {
+        "message": "➕ Kategori Ekle"
+    }
+}
