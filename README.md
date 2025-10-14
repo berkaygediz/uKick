@@ -48,6 +48,7 @@ Take full control of your Kick experience with **uKick** — block unwanted cont
 - **Adaptive Stream Tweaks** — set your preferred resolution (160p -> 4K) and let uKick auto-adjust quality
 - **Volume Boost (1x -> 10x)** — go beyond Kick’s default volume limit for a better audio experience
 - **Privacy Friendly** — runs only on Kick.com
+- **Multi-language** — supports English, Spanish (es), Portuguese (pt_BR, pt_PT), Chinese (Simplified zh_CN), Polish (pl), German (de), Korean (ko), Japanese (ja), Arabic (ar), Turkish (tr)
 
 ## Disclaimer
 

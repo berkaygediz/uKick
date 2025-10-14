@@ -22,7 +22,8 @@ async function loadBlockedChannels() {
   const channelList = document.getElementById("channelList");
   const channelTitle = document.getElementById("channelTitle");
 
-  channelTitle.textContent = `Blocked Channels (${channels.length})`;
+  const titleBase = chrome.i18n.getMessage("options_blocked_channels");
+  channelTitle.textContent = `${titleBase} (${channels.length})`;
   channelList.innerHTML = "";
 
   const fragment = document.createDocumentFragment();
@@ -46,7 +47,8 @@ async function loadBlockedCategories() {
   const categoryList = document.getElementById("categoryList");
   const categoryTitle = document.getElementById("categoryTitle");
 
-  categoryTitle.textContent = `Blocked Categories (${categories.length})`;
+  const titleBase = chrome.i18n.getMessage("options_blocked_categories");
+  categoryTitle.textContent = `${titleBase} (${categories.length})`;
   categoryList.innerHTML = "";
 
   const fragment = document.createDocumentFragment();
@@ -172,6 +174,31 @@ function toggleCategoriesSection(show) {
 }
 
 function setupEventListeners() {
+  const translations = {
+    channelTitle: chrome.i18n.getMessage("options_blocked_channels"),
+    categoryTitle: chrome.i18n.getMessage("options_blocked_categories"),
+    showChannelsBtn: chrome.i18n.getMessage("options_show"),
+    showCategoriesBtn: chrome.i18n.getMessage("options_show"),
+    exportChannelsBtn: chrome.i18n.getMessage("options_export"),
+    importChannelsBtn: chrome.i18n.getMessage("options_import"),
+    clearChannelsBtn: chrome.i18n.getMessage("options_clear_all"),
+    refreshChannelsBtn: chrome.i18n.getMessage("options_refresh"),
+    addChannelBtn: chrome.i18n.getMessage("options_add_channel"),
+    exportCategoriesBtn: chrome.i18n.getMessage("options_export"),
+    importCategoriesBtn: chrome.i18n.getMessage("options_import"),
+    clearCategoriesBtn: chrome.i18n.getMessage("options_clear_all"),
+    refreshCategoriesBtn: chrome.i18n.getMessage("options_refresh"),
+    addCategoryBtn: chrome.i18n.getMessage("options_add_category")
+  };
+
+  for (const [id, text] of Object.entries(translations)) {
+    const el = document.getElementById(id);
+    if (el && text) {
+      const bold = el.querySelector("b");
+      if (bold) bold.textContent = text;
+      else el.textContent = text;
+    }
+  }
   document
     .getElementById("showChannelsBtn")
     .addEventListener("click", () => toggleChannelsSection(true));

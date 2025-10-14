@@ -1,16 +1,20 @@
 {
-  "name": "uKick — Block & Stream Tweaks for Kick",
+  "name": "__MSG_app_name__",
   "short_name": "uKick",
-  "version": "1.1.4.0",
+  "description": "__MSG_app_description__",
+  "version": "1.1.4.2",
+  "default_locale": "en",
   "manifest_version": 3,
-  "description": "All-in-one extension to block, boost, and tweak everything on Kick for a better streaming experience.",
   "permissions": [
     "storage",
     "activeTab"
   ],
   "host_permissions": [
     "https://kick.com/*",
-    "https://www.kick.com/*"
+    "https://www.kick.com/*",
+    "*://kick.com/*",
+    "*://*.kick.com/*",
+    "*://dashboard.kick.com/*"
   ],
   "options_ui": {
     "page": "options.html",
@@ -20,7 +24,10 @@
     {
       "matches": [
         "https://kick.com/*",
-        "https://www.kick.com/*"
+        "https://www.kick.com/*",
+        "*://kick.com/*",
+        "*://*.kick.com/*",
+        "*://dashboard.kick.com/*"
       ],
       "js": [
         "content.js"

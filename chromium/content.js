@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uKick — Block & Stream Tweaks for Kick
 // @namespace    https://github.com/berkaygediz/uKick
-// @version      1.1.4.0
+// @version      1.1.4.2
 // @description  All-in-one extension to block, boost, and tweak everything on Kick for a better streaming experience.
 // @author       berkaygediz
 // @match        https://kick.com/*
@@ -144,7 +144,7 @@
 
       const btn = document.createElement("button");
       btn.textContent = "✖";
-      btn.title = `Hide category: ${nameEl.textContent}`;
+      btn.title = chrome.i18n.getMessage("btn_block_category") + ": " + nameEl.textContent;
       btn.className = "category-block-btn";
       btn.style.cssText = `
       position: absolute;
@@ -289,7 +289,7 @@
     const btn = document.createElement("button");
     btn.id = "channelPageBlockBtn";
     btn.textContent = "X";
-    btn.title = "Block this channel";
+    btn.title = chrome.i18n.getMessage("btn_block_channel");
     Object.assign(btn.style, {
       marginLeft: "8px",
       color: "white",
@@ -308,7 +308,7 @@
       e.preventDefault();
       e.stopPropagation();
       await blockChannel(username);
-      alert(`${username} blocked!`);
+      alert(chrome.i18n.getMessage("alert_channel_blocked", username));
       location.reload();
     });
 
@@ -399,7 +399,7 @@
         const btn = document.createElement("button");
         btn.textContent = "✕";
         btn.className = "sidebar-block-btn";
-        btn.title = "Block this channel";
+        btn.title = chrome.i18n.getMessage("btn_block_channel");
         btn.style.cssText = `
           position: absolute;
           top: 6px;
@@ -549,7 +549,7 @@
 
         const btn = document.createElement("button");
         btn.textContent = "X";
-        btn.title = "Block this channel";
+        btn.title = chrome.i18n.getMessage("btn_block_channel");
         btn.className = "username-block-btn";
         Object.assign(btn.style, {
           marginLeft: "6px",
@@ -609,7 +609,7 @@
   function createBlockButton(username) {
     const btn = document.createElement("button");
     btn.textContent = "X";
-    btn.title = "Block this channel";
+    btn.title = chrome.i18n.getMessage("btn_block_channel");
     Object.assign(btn.style, {
       marginLeft: "8px",
       color: "white",
@@ -637,7 +637,7 @@
   function createBlockButtonAbsolute(username) {
     const btn = document.createElement("button");
     btn.textContent = "X";
-    btn.title = "Block this channel";
+    btn.title = chrome.i18n.getMessage("btn_block_channel");
     btn.style.cssText = `
       position: absolute;
       top: 6px;

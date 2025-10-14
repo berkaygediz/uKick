@@ -138,3 +138,7 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+chromium/ukick-*.zip
+firefox/ukick-*.zip
+userscript/ukick-*.zip

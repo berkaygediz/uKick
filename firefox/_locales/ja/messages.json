@@ -1,0 +1,73 @@
+{
+    "app_name": {
+        "message": "uKick — Block & Stream Tweaks for Kick"
+    },
+    "app_description": {
+        "message": "Kick 上のすべてをブロック、強化、調整して、より良いストリーミング体験を提供するオールインワン拡張機能です。"
+    },
+    "btn_block_channel": {
+        "message": "このチャンネルをブロック"
+    },
+    "btn_block_category": {
+        "message": "カテゴリーを非表示"
+    },
+    "alert_channel_blocked": {
+        "message": "$CHANNEL$ をブロックしました！",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_filtering": {
+        "message": "フィルタリング"
+    },
+    "popup_status": {
+        "message": "ステータス"
+    },
+    "popup_channels": {
+        "message": "チャンネル"
+    },
+    "popup_categories": {
+        "message": "カテゴリー"
+    },
+    "popup_adaptive_stream": {
+        "message": "アダプティブストリーム"
+    },
+    "popup_quality": {
+        "message": "画質"
+    },
+    "popup_volume_boost": {
+        "message": "音量ブースト"
+    },
+    "popup_open_options": {
+        "message": "オプション"
+    },
+    "options_blocked_channels": {
+        "message": "ブロックされたチャンネル"
+    },
+    "options_blocked_categories": {
+        "message": "ブロックされたカテゴリー"
+    },
+    "options_show": {
+        "message": "▶️ 表示"
+    },
+    "options_export": {
+        "message": "📤 エクスポート"
+    },
+    "options_import": {
+        "message": "📥 インポート"
+    },
+    "options_clear_all": {
+        "message": "🧹 すべてクリア"
+    },
+    "options_refresh": {
+        "message": "🔄 更新"
+    },
+    "options_add_channel": {
+        "message": "➕ チャンネル追加"
+    },
+    "options_add_category": {
+        "message": "➕ カテゴリー追加"
+    }
+}

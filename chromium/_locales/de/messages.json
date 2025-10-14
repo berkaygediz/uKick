@@ -1,0 +1,73 @@
+{
+    "app_name": {
+        "message": "uKick — Block & Stream Tweaks for Kick"
+    },
+    "app_description": {
+        "message": "All-in-One-Erweiterung zum Blockieren, Verstärken und Anpassen von allem auf Kick für ein besseres Streaming-Erlebnis."
+    },
+    "btn_block_channel": {
+        "message": "Diesen Kanal blockieren"
+    },
+    "btn_block_category": {
+        "message": "Kategorie ausblenden"
+    },
+    "alert_channel_blocked": {
+        "message": "$CHANNEL$ blockiert!",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_filtering": {
+        "message": "Filter"
+    },
+    "popup_status": {
+        "message": "Status"
+    },
+    "popup_channels": {
+        "message": "Kanäle"
+    },
+    "popup_categories": {
+        "message": "Kategorien"
+    },
+    "popup_adaptive_stream": {
+        "message": "Adaptive Übertragung"
+    },
+    "popup_quality": {
+        "message": "Qualität"
+    },
+    "popup_volume_boost": {
+        "message": "Lautstärkeverstärkung"
+    },
+    "popup_open_options": {
+        "message": "Optionen"
+    },
+    "options_blocked_channels": {
+        "message": "Blockierte Kanäle"
+    },
+    "options_blocked_categories": {
+        "message": "Blockierte Kategorien"
+    },
+    "options_show": {
+        "message": "▶️ Anzeigen"
+    },
+    "options_export": {
+        "message": "📤 Exportieren"
+    },
+    "options_import": {
+        "message": "📥 Importieren"
+    },
+    "options_clear_all": {
+        "message": "🧹 Alle löschen"
+    },
+    "options_refresh": {
+        "message": "🔄 Aktualisieren"
+    },
+    "options_add_channel": {
+        "message": "➕ Kanal hinzufügen"
+    },
+    "options_add_category": {
+        "message": "➕ Kategorie hinzufügen"
+    }
+}
