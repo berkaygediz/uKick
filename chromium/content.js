@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uKick — Block & Stream Tweaks for Kick
 // @namespace    https://github.com/berkaygediz/uKick
-// @version      1.1.4.2
+// @version      2.0.0.0
 // @description  All-in-one extension to block, boost, and tweak everything on Kick for a better streaming experience.
 // @author       berkaygediz
 // @match        https://kick.com/*
@@ -99,6 +99,133 @@
     });
   }
 
+  // ==== Chrome Extension ==== getBlockedTags & saveBlockedTags
+
+  async function getBlockedTags() {
+    return new Promise((resolve) => {
+      try {
+        chrome.storage.local.get("blockedTags", (result) => {
+          if (chrome.runtime.lastError) {
+            console.error(chrome.runtime.lastError);
+            resolve([]);
+            return;
+          }
+          try {
+            const list = JSON.parse(result.blockedTags || "[]");
+            resolve(list.map(normalizeData));
+          } catch {
+            resolve([]);
+          }
+        });
+      } catch (err) {
+        console.error(err);
+        resolve([]);
+      }
+    });
+  }
+
+  async function saveBlockedTags(list) {
+    return new Promise((resolve) => {
+      try {
+        const data = JSON.stringify(list);
+        chrome.storage.local.set({ blockedTags: data }, () => {
+          if (chrome.runtime.lastError) {
+            console.error(chrome.runtime.lastError);
+          }
+          resolve();
+        });
+      } catch (err) {
+        console.error(err);
+        resolve();
+      }
+    });
+  }
+
+  async function blockTag(tagName) {
+    const blocked = await getBlockedTags();
+    const normalizedTag = normalizeData(tagName);
+    if (!blocked.includes(normalizedTag)) {
+      blocked.push(normalizedTag);
+      await new Promise((resolve) => {
+        chrome.storage.local.set(
+          { blockedTags: JSON.stringify(blocked) },
+          resolve
+        );
+      });
+    }
+  }
+
+  async function processTagButtons() {
+    const blockedTags = await getBlockedTags();
+    const blockedNormalized = blockedTags.map(tag =>
+      normalizeData(tag).toLowerCase().trim()
+    );
+
+    const { disableBlockButtons = false } = await chrome.storage.local.get("disableBlockButtons");
+    if (disableBlockButtons) return;
+
+    const containers = document.querySelectorAll('div.mt-1.flex');
+
+    containers.forEach(container => {
+      const tagElements = container.querySelectorAll('button, a');
+
+      tagElements.forEach(tagEl => {
+        if (tagEl.classList.contains("tag-block-btn")) return;
+
+        if (tagEl.dataset.xAdded === "true") return;
+
+        if (tagEl.querySelector(".tag-block-btn")) {
+          tagEl.dataset.xAdded = "true";
+          return;
+        }
+
+        let rawText = tagEl.childNodes[0]?.textContent || tagEl.textContent || "";
+        rawText = rawText.replace(/\s+/g, ' ').trim();
+        if (!rawText) return;
+
+        const normalized = normalizeData(rawText).toLowerCase().trim();
+
+        if (blockedNormalized.includes(normalized)) return;
+
+        const xBtn = document.createElement("button");
+        xBtn.textContent = "✖";
+        xBtn.title = "Block tag: " + rawText;
+        xBtn.className = "tag-block-btn";
+        xBtn.style.cssText = `
+        margin-left: 4px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+        font-size: 12px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        flex-shrink: 0;
+      `;
+
+        xBtn.addEventListener("click", async (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          await blockTag(rawText);
+        });
+
+        tagEl.style.display = 'inline-flex';
+        tagEl.style.alignItems = 'center';
+        tagEl.style.gap = '2px';
+
+        tagEl.appendChild(xBtn);
+
+        tagEl.dataset.xAdded = "true";
+      });
+    });
+  }
+
+
   // ==== Chrome Extension ====
 
   async function blockCategory(categoryName) {
@@ -122,6 +249,8 @@
       normalizeData(cat).toLowerCase().trim()
     );
 
+    const { disableBlockButtons = false } = await chrome.storage.local.get("disableBlockButtons");
+
     document.querySelectorAll('[class*="group/card"]').forEach((card) => {
       const nameEl = card.querySelector('[data-testid^="category-"]');
       if (!nameEl) return;
@@ -134,6 +263,8 @@
         card.style.display = "none";
         return;
       }
+
+      if (disableBlockButtons) return;
 
       if (card.querySelector(".category-block-btn")) return;
 
@@ -199,54 +330,84 @@
   async function removeBlockedCards() {
     const blockedChannels = (await getBlockedChannels()).map(normalizeData);
     const blockedCategories = (await getBlockedCategories?.()).map(normalizeData) || [];
+    const blockedTags = (await getBlockedTags?.()).map(normalizeData) || [];
 
     document.querySelectorAll('.group\\/card').forEach((card) => {
-      let hide = false;
+      let shouldHide = false;
 
-      const channelAnchor = card.querySelector('a[href^="/"] img.rounded-full')?.closest('a');
-      if (channelAnchor) {
-        const username = normalizeData(channelAnchor.getAttribute("href").slice(1));
-        if (blockedChannels.includes(username)) hide = true;
+      const channelLink = card.querySelector('a[href^="/"]:not([href^="/category/"]) img.rounded-full')?.closest('a');
+      if (channelLink) {
+        const username = normalizeData(channelLink.getAttribute("href").slice(1));
+        if (blockedChannels.includes(username)) {
+          shouldHide = true;
+        }
       }
 
-      // Category
-      const categoryAnchor = card.querySelector('a[href^="/category/"]');
-      if (categoryAnchor) {
-        const rawCategoryText = categoryAnchor.querySelector("span")?.textContent || categoryAnchor.textContent;
-        const categoryName = normalizeData(rawCategoryText);
-        if (blockedCategories.includes(categoryName)) hide = true;
+      if (!shouldHide) {
+        const categoryLink = card.querySelector('a[href^="/category/"]');
+        if (categoryLink) {
+          const categoryText = categoryLink.querySelector("span")?.textContent || categoryLink.textContent;
+          const categoryName = normalizeData(categoryText);
+          if (blockedCategories.includes(categoryName)) {
+            shouldHide = true;
+          }
+        }
       }
 
-      card.style.display = hide ? "none" : "";
+      if (!shouldHide && blockedTags.length > 0) {
+
+        const tagsContainer = card.querySelector('div.flex.mt-1');
+
+        if (tagsContainer) {
+
+          const tagElements = tagsContainer.querySelectorAll('button, a');
+
+          for (const tag of tagElements) {
+            let tagName = "";
+
+            tagName =
+              tag.getAttribute('aria-label') ||
+              tag.getAttribute('title') ||
+              tag.textContent ||
+              "";
+
+            tagName = tagName.trim();
+            if (!tagName) continue;
+
+            const normalizedTag = normalizeData(tagName);
+
+            if (blockedTags.includes(normalizedTag)) {
+              shouldHide = true;
+              break;
+            }
+          }
+        }
+      }
+
+
+      card.style.display = shouldHide ? "none" : "";
     });
 
-    document.querySelectorAll('div.flex.flex-row.items-center').forEach((card) => {
-      const anchor = card.querySelector('a[href^="/"]:not([href^="/category/"])');
+    document.querySelectorAll('div.flex.flex-row.items-center').forEach((item) => {
+      const anchor = item.querySelector('a[href^="/"]:not([href^="/category/"])');
       if (!anchor) return;
 
       const username = normalizeData(anchor.getAttribute("href").slice(1));
       if (blockedChannels.includes(username)) {
-        const outerContainer = card.closest('div.flex.w-full.shrink-0.grow-0.flex-col');
-        if (outerContainer) {
-          outerContainer.style.display = "none";
-        } else {
-          card.style.display = "none";
-        }
+        const outer = item.closest('div.flex.w-full.shrink-0.grow-0.flex-col');
+        (outer || item).style.display = "none";
       }
     });
 
-    // Video player
     const usernameEl = document.getElementById("channel-username");
     if (usernameEl) {
       const currentUsername = normalizeData(usernameEl.textContent);
       const videoPlayer = document.getElementById("video-player");
-      if (videoPlayer) {
-        if (blockedChannels.includes(currentUsername)) {
-          videoPlayer.style.display = "none";
-          if (typeof videoPlayer.pause === "function") videoPlayer.pause();
-        } else {
-          videoPlayer.style.display = "";
-        }
+      if (videoPlayer && blockedChannels.includes(currentUsername)) {
+        videoPlayer.style.display = "none";
+        if (typeof videoPlayer.pause === "function") videoPlayer.pause();
+      } else if (videoPlayer) {
+        videoPlayer.style.display = "";
       }
     }
   }
@@ -328,6 +489,7 @@
       }
     }
   }
+
   async function processCards() {
     // Multilingual "Follow" buttons
     const followTexts = [
@@ -343,7 +505,10 @@
       "팔로우"       // Korean
     ];
 
+    const { disableBlockButtons = false } = await chrome.storage.local.get("disableBlockButtons");
+
     document.querySelectorAll('[class*="group/card"]').forEach((card) => {
+      if (disableBlockButtons) return;
       if (card.querySelector(".block-btn")) return;
 
       const anchor = card.querySelector('a[href^="/"]');
@@ -360,6 +525,7 @@
     });
 
     document.querySelectorAll("div.flex.w-full.shrink-0.grow-0.flex-col").forEach((card) => {
+      if (disableBlockButtons) return;
       if (card.querySelector(".block-btn")) return;
 
       const anchor = card.querySelector('a[href^="/"]');
@@ -383,6 +549,8 @@
 
   async function processSidebarChannels() {
     const blocked = await getBlockedChannels();
+    const { disableBlockButtons = false } = await chrome.storage.local.get("disableBlockButtons");
+
     document
       .querySelectorAll('[data-testid^="sidebar-recommended-channel-"]')
       .forEach((anchor) => {
@@ -393,6 +561,8 @@
           anchor.style.display = "none";
           return;
         }
+
+        if (disableBlockButtons) return;
 
         if (anchor.querySelector(".sidebar-block-btn")) return;
 
@@ -437,6 +607,8 @@
   }
 
   async function observeBlockedChatMessages() {
+    const { disableChatBlocking = false } = await chrome.storage.local.get("disableChatBlocking");
+    if (disableChatBlocking) return;
     let blockedUsers = await getBlockedChannels();
 
     function normalize(name) {
@@ -453,7 +625,6 @@
         check();
       });
 
-    // Helper function to escape HTML meta-characters to prevent XSS
     function escapeHTML(str) {
       return String(str)
         .replace(/&/g, "&amp;")
@@ -541,10 +712,17 @@
     }
 
     async function addBlockButtonsToNodes(nodes) {
+      const { disableBlockButtons = false } = await chrome.storage.local.get("disableBlockButtons");
+      const { disableChatBlocking = false } = await chrome.storage.local.get("disableChatBlocking");
+
+      if (disableChatBlocking) return;
       nodes.forEach((msg) => {
+        if (disableBlockButtons) return;
+
         if (msg.querySelector(".username-block-btn")) return;
 
         const userButton = msg.querySelector("button[title]");
+
         if (!userButton) return;
 
         const btn = document.createElement("button");
@@ -642,12 +820,12 @@
       position: absolute;
       top: 6px;
       right: 6px;
-      background: rgba(255, 0, 0, 0.7);
+      background: rgba(255, 0, 0, 0.6);
       color: white;
       border: none;
       border-radius: 25%;
-      width: 25px;
-      height: 25px;
+      width: 24px;
+      height: 24px;
       font-size: 14px;
       cursor: pointer;
       z-index: 9999;
@@ -665,18 +843,28 @@
   }
 
   // === Quality Control ===
-  // ==== Chrome Extension ====
+  // ==== Chrome Extension ===
+
   let lastKickUrl = location.href;
+  let lastAppliedQuality = null;
+  let _persistTimer = null;
 
   initAutoQualityControl();
 
   async function initAutoQualityControl() {
     sessionStorage.removeItem("quality_reload_done");
 
-    const { autoQuality, preferredQuality } = await getQualitySettings();
+    chrome.storage.local.get(["preferredQuality"], (data) => {
+      if (data.preferredQuality) {
+        persistSessionQuality(String(data.preferredQuality));
+        lastAppliedQuality = String(data.preferredQuality);
+      }
+    });
 
-    if (autoQuality && isKickStreamUrl(location.href)) {
-      setPreferredQuality(preferredQuality, false);
+    const settings = await getQualitySettings();
+
+    if (settings.autoQuality && isKickStreamUrl(location.href)) {
+      waitForPlayerAndApply(settings.preferredQuality, false);
     }
 
     new MutationObserver(() => {
@@ -684,21 +872,21 @@
       if (currentUrl !== lastKickUrl) {
         lastKickUrl = currentUrl;
 
-        if (autoQuality && isKickStreamUrl(currentUrl)) {
-          setTimeout(() => {
-            setPreferredQuality(preferredQuality, false);
-          }, 1000);
+        if (settings.autoQuality && isKickStreamUrl(currentUrl)) {
+          waitForPlayerAndApply(settings.preferredQuality, false);
         }
       }
     }).observe(document, { subtree: true, childList: true });
 
     chrome.runtime.onMessage.addListener((request) => {
       if (request.action === "setQuality") {
-        setPreferredQuality(request.quality, true);
-      } else if (request.action === "updateQualitySettings") {
-        getQualitySettings().then(({ autoQuality, preferredQuality }) => {
-          if (autoQuality && isKickStreamUrl(location.href)) {
-            setPreferredQuality(preferredQuality, false);
+        waitForPlayerAndApply(request.quality, true);
+      }
+
+      if (request.action === "updateQualitySettings") {
+        getQualitySettings().then((s) => {
+          if (s.autoQuality && isKickStreamUrl(location.href)) {
+            waitForPlayerAndApply(s.preferredQuality, false);
           }
         });
       }
@@ -709,41 +897,162 @@
     return /^https:\/\/(www\.)?kick\.com\/[^\/?#]+/.test(url);
   }
 
-  function setPreferredQuality(preferredQuality, shouldReload) {
-    const qualityButtons = document.querySelectorAll(
-      '[data-testid="player-quality-option"]'
-    );
-    const availableQualities = Array.from(qualityButtons).map((btn) =>
-      btn.textContent.trim()
-    );
+  function persistSessionQuality(pref) {
+    if (_persistTimer) {
+      clearInterval(_persistTimer);
+      _persistTimer = null;
+    }
 
-    if (availableQualities.length === 0) {
-      sessionStorage.setItem("stream_quality", preferredQuality);
-      if (shouldReload && !sessionStorage.getItem("quality_reload_done")) {
-        sessionStorage.setItem("quality_reload_done", "true");
-        location.reload();
+    if (!pref) return;
+
+    sessionStorage.setItem("stream_quality", String(pref));
+
+    const start = Date.now();
+    const maxMs = 10_000;
+    _persistTimer = setInterval(() => {
+      if (Date.now() - start > maxMs) {
+        clearInterval(_persistTimer);
+        _persistTimer = null;
+        return;
       }
+
+      const cur = sessionStorage.getItem("stream_quality");
+      const video = document.querySelector("video");
+      const qualityEls = document.querySelectorAll(
+        '[data-testid="player-quality-option"], [role="menuitemradio"], [role="menuitem"]'
+      );
+      if (cur === String(pref) && (video || qualityEls.length > 0)) {
+        clearInterval(_persistTimer);
+        _persistTimer = null;
+        return;
+      }
+
+      try {
+        sessionStorage.setItem("stream_quality", String(pref));
+      } catch (e) {
+      }
+    }, 400);
+  }
+
+  async function waitForPlayerAndApply(preferredQuality, shouldReload) {
+    const maxWait = 15000;
+    const start = Date.now();
+
+    persistSessionQuality(preferredQuality);
+
+    while (Date.now() - start < maxWait) {
+      const video = document.querySelector("video");
+      if (video) break;
+      await sleep(300);
+    }
+    applyKickQuality(preferredQuality, shouldReload);
+  }
+
+  async function applyKickQuality(preferredQuality, shouldReload) {
+    if (!preferredQuality) return;
+
+    const pref = parseInt(String(preferredQuality).replace(/\D/g, ""), 10);
+
+    sessionStorage.setItem("stream_quality", String(pref));
+    persistSessionQuality(pref);
+    lastAppliedQuality = String(pref);
+
+    const video =
+      document.querySelector("video") ||
+      document.getElementById("video-player");
+
+    if (!video) {
+      triggerReloadIfNeeded(shouldReload);
       return;
     }
 
-    let selected = preferredQuality;
-    if (!availableQualities.includes(preferredQuality)) {
-      availableQualities.sort((a, b) => parseInt(b) - parseInt(a));
-      selected =
-        availableQualities.find(
-          (q) => parseInt(q) <= parseInt(preferredQuality)
-        ) || availableQualities[0];
+    const r = video.getBoundingClientRect();
+    const cx = r.left + r.width / 2;
+    const cy = r.top + r.height / 2;
+
+    ["mouseenter", "mouseover", "mousemove"].forEach((t) => {
+      video.dispatchEvent(
+        new MouseEvent(t, { bubbles: true, clientX: cx, clientY: cy })
+      );
+    });
+
+    await sleep(700);
+
+    let settingsBtn =
+      document.querySelector('button[aria-label*="Settings"]') ||
+      document.querySelector('button[aria-label*="Ayarlar"]') ||
+      document.querySelector('button[title*="Settings"]') ||
+      document.querySelector('button[class*="settings"]');
+
+    if (!settingsBtn) {
+      triggerReloadIfNeeded(shouldReload);
+      return;
     }
 
-    sessionStorage.setItem("stream_quality", selected);
+    try {
+      settingsBtn.click();
+    } catch (e) {
+      try { settingsBtn.dispatchEvent(new MouseEvent('click', { bubbles: true })); } catch (e) { }
+    }
 
+    await sleep(700);
+
+    const qualityEls = Array.from(
+      document.querySelectorAll(
+        '[data-testid="player-quality-option"], [role="menuitemradio"], [role="menuitem"]'
+      )
+    );
+
+    let available = qualityEls
+      .map((el) => (el.textContent || "").toLowerCase().trim())
+      .map((t) => t.replace(/auto|fps|p60|p/g, "").trim())
+      .filter((t) => /^\d+$/.test(t))
+      .map((t) => parseInt(t));
+
+    if (!available.length) {
+      triggerReloadIfNeeded(shouldReload);
+      return;
+    }
+
+    available.sort((a, b) => b - a);
+    let target =
+      available.find((q) => q <= pref) || available[available.length - 1];
+
+    if (lastAppliedQuality === String(target)) {
+      sessionStorage.setItem("stream_quality", String(target));
+      return;
+    }
+
+    const targetEl = qualityEls.find((el) => {
+      const txt = (el.textContent || "").toLowerCase();
+      return txt.includes(String(target));
+    });
+
+    if (targetEl) {
+      try {
+        targetEl.click();
+      } catch (e) {
+        try { targetEl.dispatchEvent(new MouseEvent('click', { bubbles: true })); } catch (e) { }
+      }
+    }
+
+    sessionStorage.setItem("stream_quality", String(target));
+    lastAppliedQuality = String(target);
+
+    triggerReloadIfNeeded(shouldReload);
+  }
+
+  function triggerReloadIfNeeded(shouldReload) {
     if (shouldReload && !sessionStorage.getItem("quality_reload_done")) {
       sessionStorage.setItem("quality_reload_done", "true");
       location.reload();
     }
   }
 
-  // ==== Chrome Extension ====
+  function sleep(ms) {
+    return new Promise((r) => setTimeout(r, ms));
+  }
+
   function getQualitySettings() {
     return new Promise((resolve) => {
       chrome.storage.local.get(["autoQuality", "preferredQuality"], (data) => {
@@ -774,7 +1083,7 @@
         try {
           source.disconnect();
         } catch (e) {
-          console.warn("Audio source disconnect hatası:", e);
+          console.warn("Audio source disconnect error:", e);
         }
       }
 
@@ -832,6 +1141,21 @@
     window.addEventListener("keydown", initialize);
   }
 
+  function clearSearchHistory() {
+    try {
+      const key = "search-history";
+
+      if (!location.hostname.includes("kick.com")) return;
+
+      const current = localStorage.getItem(key);
+
+      if (current && current !== "[]") {
+        localStorage.setItem(key, "[]");
+      }
+    } catch (e) { }
+  }
+
+
   function debounce(fn, delay = 25) {
     let timer;
     return () => {
@@ -839,6 +1163,7 @@
       timer = setTimeout(() => fn(), delay);
     };
   }
+
   // ==== Chrome Extension ====
   (async () => {
     if (typeof chrome === "undefined" || !chrome.storage) return;
@@ -851,7 +1176,22 @@
       });
     }
 
+    function isSearchHistoryDisabled() {
+      return new Promise((resolve) => {
+        chrome.storage.local.get("disableSearchHistory", (res) => {
+          resolve(res.disableSearchHistory === true);
+        });
+      });
+    }
+
+
     let enabled = await isEnabled();
+
+    const disableSearchHistory = await isSearchHistoryDisabled();
+    if (disableSearchHistory) {
+      clearSearchHistory();
+    }
+
     let observer = null;
 
     async function startProcessing() {
@@ -859,12 +1199,16 @@
       await processCards();
       await processSidebarChannels();
       await processCategoryCards();
+      await processTagButtons();
       await removeBlockedCards();
       await removeSidebarBlockedChannels();
       await removeBlockedCategoryCards();
       await addBlockButtonOnChannelPage();
       await observeBlockedChatMessages();
       await observeChatUsernames();
+      if (await isSearchHistoryDisabled()) {
+        clearSearchHistory();
+      }
     }
 
     function startObserver() {
@@ -872,6 +1216,7 @@
       observer = new MutationObserver(
         debounce(async () => {
           if (!(await isEnabled())) return;
+
           await startProcessing();
         }, 50)
       );
@@ -912,6 +1257,11 @@
               : Number(rawValue);
           const newBoost = isNaN(parsed) ? 1 : parsed;
           setVolumeBoost(newBoost);
+        }
+        if ("disableSearchHistory" in changes) {
+          if (changes.disableSearchHistory.newValue === true) {
+            clearSearchHistory();
+          }
         }
       }
     });

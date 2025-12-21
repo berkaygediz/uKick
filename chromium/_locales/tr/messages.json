@@ -31,6 +31,9 @@
     "popup_categories": {
         "message": "Kategoriler"
     },
+    "popup_tags": {
+        "message": "Etiketler"
+    },
     "popup_adaptive_stream": {
         "message": "Uyarlanabilir Yayın"
     },
@@ -48,6 +51,9 @@
     },
     "options_blocked_categories": {
         "message": "Engellenen Kategoriler"
+    },
+    "options_blocked_tags": {
+        "message": "Engellenen Etiketler"
     },
     "options_show": {
         "message": "▶️ Göster"
@@ -69,5 +75,20 @@
     },
     "options_add_category": {
         "message": "➕ Kategori Ekle"
+    },
+    "options_add_tags": {
+        "message": "➕ Etiket Ekle"
+    },
+    "options_disable_search_history": {
+        "message": "Arama geçmişini devre dışı bırak"
+    },
+    "options_disable_chat_blocking": {
+        "message": "Sohbet engellemeyi devre dışı bırak"
+    },
+    "options_hide_block_buttons": {
+        "message": "Engelleme butonlarını gizle"
+    },
+    "options_customization": {
+        "message": "Özelleştirme"
     }
 }

@@ -5,10 +5,9 @@
     <title>uKick</title>
     <style>
       body {
-        background: #1e1e1e;
+        background: #1a1a1a;
         color: white;
-        font-family: sans-serif;
-        padding: 20px;
+        font-family: Arial, Helvetica, sans-serif;
         margin: 0;
       }
 
@@ -31,7 +30,7 @@
         display: flex;
         flex-direction: column;
         gap: 20px;
-        max-width: 500px;
+        max-width: 900px;
         margin: 0 auto;
       }
 
@@ -121,6 +120,49 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+      }
+
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 46px;
+        height: 24px;
+      }
+
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        inset: 0;
+        background-color: #444;
+        border-radius: 24px;
+        transition: 0.2s;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        top: 3px;
+        background-color: #ccc;
+        border-radius: 50%;
+        transition: 0.2s;
+      }
+
+      .switch input:checked + .slider {
+        background-color: #00b660;
+      }
+
+      .switch input:checked + .slider:before {
+        transform: translateX(22px);
+        background-color: #000;
       }
 
       @media (max-width: 480px) {
@@ -215,10 +257,12 @@
         <input
           type="text"
           id="channelInput"
-          placeholder="Add channel..."
+          placeholder="..."
           style="display: none"
         />
-        <button id="addChannelBtn" style="display: none">➕ Add Channel</button>
+        <button id="addChannelBtn" style="display: none">
+          <b style="color: #000000">➕ Add Channel</b>
+        </button>
         <ul id="channelList" style="display: none"></ul>
       </div>
 
@@ -244,30 +288,281 @@
         <input
           type="text"
           id="categoryInput"
-          placeholder="Add category..."
+          placeholder="..."
           style="display: none"
         />
         <button id="addCategoryBtn" style="display: none">
-          ➕ Add Category
+          <b style="color: #000000"> ➕ Add Category </b>
         </button>
         <ul id="categoryList" style="display: none"></ul>
       </div>
+
+      <div class="section" id="tagsSection">
+        <h2 id="tagTitle">Blocked Tags</h2>
+        <button id="showTagsBtn">
+          <b style="color: #000000">▶️ Show</b>
+        </button>
+        <div class="btn-group" style="display: none" id="tagsControls">
+          <button id="exportTagsBtn">
+            <b style="color: #000000">📤 Export</b>
+          </button>
+          <button id="importTagsBtn">
+            <b style="color: #000000">📥 Import</b>
+          </button>
+          <button id="clearTagsBtn">
+            <b style="color: #000000">🧹 Clear All</b>
+          </button>
+          <button id="refreshTagsBtn">
+            <b style="color: #000000">🔄 Refresh</b>
+          </button>
+        </div>
+        <input
+          type="text"
+          id="tagInput"
+          placeholder="..."
+          style="display: none"
+        />
+        <button id="addTagBtn" style="display: none">
+          <b style="color: #000000"> ➕ Add Tag</b>
+        </button>
+        <ul id="tagList" style="display: none"></ul>
+      </div>
+
+      <div class="section" id="customizationSection">
+        <h2 id="customizationTitle"></h2>
+
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2a2a2a;
+            padding: 12px 14px;
+            border-radius: 6px;
+            margin-top: 10px;
+          "
+        >
+          <div style="font-size: 14px; user-select: none; font-weight: bold">
+            <span id="disableSearchHistoryLabel"></span>
+          </div>
+
+          <label class="switch">
+            <input type="checkbox" id="disableSearchHistoryToggle" />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2a2a2a;
+            padding: 12px 14px;
+            border-radius: 6px;
+            margin-top: 10px;
+          "
+        >
+          <div style="font-size: 14px; user-select: none; font-weight: bold">
+            <span id="disableChatBlockingLabel"></span>
+          </div>
+
+          <label class="switch">
+            <input type="checkbox" id="disableChatBlockingToggle" />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2a2a2a;
+            padding: 12px 14px;
+            border-radius: 6px;
+            margin-top: 10px;
+          "
+        >
+          <div style="font-size: 14px; user-select: none; font-weight: bold">
+            <span id="disableBlockButtonsLabel"></span>
+          </div>
+
+          <label class="switch">
+            <input type="checkbox" id="disableBlockButtonsToggle" />
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
       <div
+        id="ecosystemShowcase"
         style="
-          text-align: center;
-          color: #888;
-          margin-top: 30px;
-          font-size: 13px;
+          margin: 4px 0;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          font-family: Arial, Helvetica, sans-serif;
         "
       >
+        <div style="font-size: 16px; color: #eaeaea">
+          <b>berkaygediz’s Ecosystem</b> -
+          <i style="font-size: 13px"
+            >A truly transparent, fully open-source ecosystem.
+          </i>
+        </div>
+        <div
+          style="
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 6px 2px 12px 2px;
+            scroll-snap-type: x mandatory;
+          "
+        >
+          <style>
+            .eco-card {
+              flex: 0 0 auto;
+              width: 200px;
+              background: #262626;
+              border: 1px solid #333;
+              border-radius: 12px;
+              padding: 14px;
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              scroll-snap-align: start;
+              transition: 0.15s ease;
+              cursor: pointer;
+              text-decoration: none !important;
+            }
+
+            .eco-card:hover {
+              background: #2e2e2e;
+              border-color: #4d4d4d;
+              transform: translateY(-2px);
+            }
+
+            .eco-title {
+              font-size: 14px;
+              font-weight: 600;
+              color: #fff;
+              margin-bottom: 6px;
+            }
+
+            .eco-desc {
+              font-size: 12px;
+              color: #cfcfcf;
+              line-height: 1.35;
+            }
+          </style>
+
+          <a
+            href="https://github.com/berkaygediz/SolidWriting"
+            target="_blank"
+            class="eco-card"
+          >
+            <div class="eco-title">SolidWriting</div>
+            <div class="eco-desc">
+              A modern word processor with AI integration, supporting real-time
+              computing and advanced formatting.
+            </div>
+          </a>
+
+          <a
+            href="https://github.com/berkaygediz/SolidSheets"
+            target="_blank"
+            class="eco-card"
+          >
+            <div class="eco-title">SolidSheets</div>
+            <div class="eco-desc">
+              A modern spreadsheet editor with ML integration, supporting
+              real-time graphs and formulas.
+            </div>
+          </a>
+
+          <a
+            href="https://github.com/berkaygediz/PASPAS"
+            target="_blank"
+            class="eco-card"
+          >
+            <div class="eco-title">PASPAS</div>
+            <div class="eco-desc">
+              Blazing-fast, all-in-one system optimizer.
+            </div>
+          </a>
+
+          <a
+            href="https://github.com/berkaygediz/uKick"
+            target="_blank"
+            class="eco-card"
+          >
+            <div class="eco-title">uKick</div>
+            <div class="eco-desc">
+              All-in-one extension to block, boost, and tweak everything on Kick
+              for a better streaming experience.
+            </div>
+          </a>
+
+          <a
+            href="https://github.com/berkaygediz/uDittor"
+            target="_blank"
+            class="eco-card"
+          >
+            <div class="eco-title">uDittor</div>
+            <div class="eco-desc">
+              Lightning-fast subreddit & user blocking for Reddit.
+            </div>
+          </a>
+
+          <a
+            href="https://github.com/berkaygediz/uSozluk"
+            target="_blank"
+            class="eco-card"
+          >
+            <div class="eco-title">uSozluk</div>
+            <div class="eco-desc">Lightning-fast blocking for Ekşi Sözlük.</div>
+          </a>
+
+          <a
+            href="https://github.com/berkaygediz/financeMONO"
+            target="_blank"
+            class="eco-card"
+          >
+            <div class="eco-title">financeMONO</div>
+            <div class="eco-desc">Banks, EMI & markets API wrapper.</div>
+          </a>
+
+          <a
+            href="https://github.com/berkaygediz/universal-blocklist"
+            target="_blank"
+            class="eco-card"
+          >
+            <div class="eco-title">Universal Blocklist</div>
+            <div class="eco-desc">
+              Global blocklist for YouTube, Reddit & more.
+            </div>
+          </a>
+
+          <div class="eco-card">
+            <div class="eco-desc">
+              And many more exciting projects in the pipeline!
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center; color: #888; font-size: 14px">
         Developed by <b>berkaygediz</b>
       </div>
+
       <div
         style="
           display: flex;
           justify-content: center;
           gap: 10px;
-          margin-top: 10px;
+          margin-top: 0px;
         "
       >
         <a

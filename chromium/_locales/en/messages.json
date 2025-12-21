@@ -31,6 +31,9 @@
     "popup_categories": {
         "message": "Categories"
     },
+    "popup_tags": {
+        "message": "Tags"
+    },
     "popup_adaptive_stream": {
         "message": "Adaptive Stream"
     },
@@ -48,6 +51,9 @@
     },
     "options_blocked_categories": {
         "message": "Blocked Categories"
+    },
+    "options_blocked_tags": {
+        "message": "Blocked Tags"
     },
     "options_show": {
         "message": "▶️ Show"
@@ -69,5 +75,20 @@
     },
     "options_add_category": {
         "message": "➕ Add Category"
+    },
+    "options_add_tags": {
+        "message": "➕ Add Tags"
+    },
+    "options_disable_search_history": {
+        "message": "Disable Search History"
+    },
+    "options_disable_chat_blocking": {
+        "message": "Disable Chat Blocking"
+    },
+    "options_hide_block_buttons": {
+        "message": "Hide Block Buttons"
+    },
+    "options_customization": {
+        "message": "Customization"
     }
 }

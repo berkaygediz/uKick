@@ -40,14 +40,17 @@ Take full control of your Kick experience with **uKick** — block unwanted cont
 
 ## Features
 
-- **Block Channels & Categories** — instantly hide streams, categories, and sidebars you don’t want to see
+- **Block Channels, Categories & Tags** — instantly hide streams and content you don’t want to see
 - **Filter Chat Users** — automatically remove messages from blocked users in Kick.com chat
 - **Quick Block Buttons** — add one-click block next to usernames and stream cards
 - **Real-Time Updates** — changes are applied instantly across Kick.com
-- **Manage Your List** — import, export, view, or clear your block list anytime
+- **Manage Your Lists** — import, export, view, or clear your block lists anytime
 - **Adaptive Stream Tweaks** — set your preferred resolution (160p -> 4K) and let uKick auto-adjust quality
 - **Volume Boost (1x -> 10x)** — go beyond Kick’s default volume limit for a better audio experience
-- **Privacy Friendly** — runs only on Kick.com
+- **Search History Control** — optionally disable Kick.com search history tracking
+- **Customizable Interface** — toggle chat filtering and block buttons on/off
+- **Mobile Support** — works on all Chromium-based browsers (via Quetta Browser)
+- **Privacy Friendly** — runs only on Kick.com, no tracking, no external connections
 - **Multi-language** — supports English, Spanish (es), Portuguese (pt_BR, pt_PT), Chinese (Simplified zh_CN), Polish (pl), German (de), Korean (ko), Japanese (ja), Arabic (ar), Turkish (tr)
 
 ## Disclaimer

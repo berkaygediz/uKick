@@ -7,7 +7,7 @@
       body {
         background: #0f0f0f;
         color: white;
-        font-family: "Segoe UI", sans-serif;
+        font-family: Arial, Helvetica, sans-serif;
         padding: 8px;
         margin: 0;
         width: 300px;
@@ -22,10 +22,10 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
+        gap: 4px;
         color: #00b660;
         font-size: 30px;
-        margin-bottom: 10px;
+        margin-bottom: 8px;
         user-select: none;
       }
 
@@ -38,7 +38,7 @@
         padding: 16px;
         border-radius: 10px;
         box-sizing: border-box;
-        margin-bottom: 16px;
+        margin-bottom: 8px;
         width: 100%;
         display: flex;
         flex-direction: column;
@@ -50,7 +50,7 @@
         align-items: center;
         justify-content: space-between;
         width: 100%;
-        gap: 8px;
+        gap: 4px;
       }
 
       .toggle-label {
@@ -114,14 +114,15 @@
       .counts {
         display: flex;
         justify-content: space-between;
-        gap: 10px;
+        gap: 6px;
         width: 100%;
       }
 
       .count-box {
         background: #1e1e1e;
-        border-radius: 6px;
-        padding: 10px;
+        border-radius: 10px;
+        border: 1px solid #000000;
+        padding: 8px;
         flex: 1;
         display: flex;
         justify-content: space-between;
@@ -137,7 +138,6 @@
         font-weight: bold;
       }
 
-      /* === Action Buttons Container === */
       .action-buttons {
         display: flex;
         justify-content: space-between;
@@ -148,7 +148,6 @@
         margin-bottom: 2px;
       }
 
-      /* === Donate Buttons (Buy Me a Coffee & GitHub) === */
       .donate-button {
         display: inline-flex;
         align-items: center;
@@ -161,37 +160,33 @@
         cursor: pointer;
       }
 
-      /* === SVG Icon Style === */
       .donate-button svg {
         width: 20px;
         height: 20px;
         fill: currentColor;
       }
 
-      /* === Buy Me a Coffee Button === */
       .donate-button.bmc {
         background-color: #ffdd00;
         color: #000;
       }
 
-      /* === GitHub Sponsors Button === */
       .donate-button.github {
         background-color: #ffffff;
         color: #fff;
       }
 
-      /* === Hover Effects === */
       .donate-button:hover {
         opacity: 0.9;
         transform: scale(1.05);
       }
 
       select {
-        padding: 4px 8px;
-        border-radius: 6px;
-        background: #333;
+        padding: 6px;
+        border-radius: 8px;
+        background: #333333;
         color: white;
-        border: none;
+        border: 1px solid #000000;
         font-size: 14px;
       }
 
@@ -208,14 +203,10 @@
       }
 
       button:hover {
-        background: #009e4c;
+        background: #018842;
       }
 
       @media (max-width: 480px) {
-        body {
-          padding: 10px;
-        }
-
         h1 {
           font-size: 20px;
         }
@@ -241,7 +232,6 @@
         </label>
       </div>
 
-      <h2 id="statusTitle">Status</h2>
       <div class="counts">
         <div class="count-box">
           <span class="count-label" id="channelsLabel">Channels</span>
@@ -250,6 +240,10 @@
         <div class="count-box">
           <span class="count-label" id="categoriesLabel">Categories</span>
           <span class="count-value" id="categoryCount">...</span>
+        </div>
+        <div class="count-box">
+          <span class="count-label" id="tagsLabel">Tags</span>
+          <span class="count-value" id="tagsCount">...</span>
         </div>
       </div>
     </div>
@@ -268,8 +262,8 @@
       <div class="toggle-container">
         <span class="toggle-label count-label" id="qualityLabel">Quality</span>
         <select id="qualitySelect">
-          <option value="2160">2160p (4K)</option>
-          <option value="1440">1440p (2K)</option>
+          <option value="2160">2160p (!)</option>
+          <option value="1440">1440p (!)</option>
           <option value="1080">1080p</option>
           <option value="720">720p</option>
           <option value="480">480p</option>
@@ -365,73 +359,189 @@
     </div>
 
     <div
-      class="section"
-      id="quettaPromo"
+      id="bgEcosystemPromo"
       style="
+        width: 100%;
         background: #2a2a2a;
-        border-radius: 8px;
-        padding: 6px 8px;
-        margin-top: 10px;
+        color: #ffffff;
+        border-radius: 12px;
+        padding: 10px 10px 14px 10px;
+        margin: 8px 0;
+        box-sizing: border-box;
+        border: 1px solid #3a3a3a;
+        font-family: Arial, Helvetica, sans-serif;
+        position: relative;
         display: flex;
         flex-direction: column;
-        gap: 6px;
-        font-size: 13px;
-        color: #ddd;
+        gap: 10px;
       "
     >
+      <button
+        id="bgPromoClose"
+        style="
+          position: absolute;
+          top: 8px;
+          right: 8px;
+          width: 22px;
+          height: 22px;
+          border-radius: 6px;
+          background: #1e1e1e;
+          border: 1px solid #333;
+          color: #d1d1d1;
+          font-size: 12px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: 0.15s;
+        "
+        onmouseover="this.style.background='#2a2a2a'"
+        onmouseout="this.style.background='#1e1e1e'"
+      >
+        ✕
+      </button>
+
+      <div style="display: flex; flex-direction: column; gap: 2px">
+        <div style="font-weight: 600; font-size: 15px">
+          berkaygediz’s Ecosystem
+        </div>
+        <div style="font-size: 11px; color: #cfcfcf">
+          A truly transparent, fully open-source.
+        </div>
+      </div>
+
       <div
         style="
           display: flex;
-          align-items: flex-start;
-          justify-content: space-between;
-          gap: 2px;
+          gap: 10px;
+          overflow-x: auto;
+          padding: 4px 2px 6px 2px;
+          scroll-snap-type: x mandatory;
         "
       >
-        <span style="line-height: 1.4; flex: 1">
-          Try <b>Quetta Browser</b> to use the extension on mobile too.
-        </span>
-        <button
-          id="hideQuettaBtn"
-          title="Hide this message"
-          style="
-            background: none;
-            border: none;
-            color: #aaff00;
-            font-size: 18px;
-            cursor: pointer;
-            padding: 10px;
+        <style>
+          .promo-card {
+            flex: 0 0 auto;
+            width: 180px;
+            background: #222;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 12px 14px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 24px;
-            height: 24px;
-            border-radius: 4px;
-            flex-shrink: 0;
-          "
-          aria-label="Close"
-        >
-          ✕
-        </button>
-      </div>
+            flex-direction: column;
+            scroll-snap-align: start;
+            transition: 0.12s ease;
+            cursor: pointer;
+            text-decoration: none;
+          }
 
-      <a
-        href="https://play.google.com/store/apps/details?id=net.quetta.browser"
-        target="_blank"
-        rel="noopener noreferrer"
-        style="
-          display: inline-block;
-          background: #d9425a;
-          color: #ffffff;
-          padding: 4px 30px;
-          border-radius: 6px;
-          font-weight: 700;
-          text-decoration: none;
-          align-self: flex-start;
-          line-height: 1.3;
-        "
-      >
-        Get Quetta Browser
-      </a>
+          .promo-card:hover {
+            background: #2e2e2e;
+            border-color: #4d4d4d;
+            transform: translateY(-2px);
+          }
+
+          .promo-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #fff;
+          }
+
+          .promo-desc {
+            font-size: 11px;
+            color: #cfcfcf;
+            line-height: 1.35;
+          }
+        </style>
+
+        <!-- Kartlar - A ETİKETİ HALİ -->
+        <a
+          href="https://github.com/berkaygediz/SolidWriting"
+          target="_blank"
+          class="promo-card"
+        >
+          <div class="promo-title">SolidWriting</div>
+          <div class="promo-desc">
+            Modern word processor with AI integration.
+          </div>
+        </a>
+
+        <a
+          href="https://github.com/berkaygediz/SolidSheets"
+          target="_blank"
+          class="promo-card"
+        >
+          <div class="promo-title">SolidSheets</div>
+          <div class="promo-desc">
+            Spreadsheets & data tools with advanced formulas.
+          </div>
+        </a>
+
+        <a
+          href="https://github.com/berkaygediz/PASPAS"
+          target="_blank"
+          class="promo-card"
+        >
+          <div class="promo-title">PASPAS</div>
+          <div class="promo-desc">Blazing-fast system optimizer.</div>
+        </a>
+
+        <a
+          href="https://github.com/berkaygediz/uKick"
+          target="_blank"
+          class="promo-card"
+        >
+          <div class="promo-title">uKick</div>
+          <div class="promo-desc">Filtering & enhancement tools for Kick.</div>
+        </a>
+
+        <a
+          href="https://github.com/berkaygediz/uDittor"
+          target="_blank"
+          class="promo-card"
+        >
+          <div class="promo-title">uDittor</div>
+          <div class="promo-desc">
+            Fast subreddit & user blocking for Reddit.
+          </div>
+        </a>
+
+        <a
+          href="https://github.com/berkaygediz/uSozluk"
+          target="_blank"
+          class="promo-card"
+        >
+          <div class="promo-title">uSozluk</div>
+          <div class="promo-desc">Lightning-fast blocking for Ekşi Sözlük.</div>
+        </a>
+
+        <a
+          href="https://github.com/berkaygediz/financeMONO"
+          target="_blank"
+          class="promo-card"
+        >
+          <div class="promo-title">financeMONO</div>
+          <div class="promo-desc">Banks, EMI & markets API wrapper.</div>
+        </a>
+
+        <a
+          href="https://github.com/berkaygediz/Universal-Blocklist"
+          target="_blank"
+          class="promo-card"
+        >
+          <div class="promo-title">Universal Blocklist</div>
+          <div class="promo-desc">
+            Global blocklist for YouTube, Reddit & more.
+          </div>
+        </a>
+
+        <div class="promo-card">
+          <div class="promo-desc">
+            And many more exciting projects in the pipeline!
+          </div>
+        </div>
+      </div>
     </div>
 
     <script src="popup.js"></script>
