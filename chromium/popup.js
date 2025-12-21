@@ -111,14 +111,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   const promo = document.getElementById("bgEcosystemPromo");
   const btn = document.getElementById("bgPromoClose");
 
-  // Storage'dan oku → gizle
   chrome.storage.local.get("hideBgPromo", ({ hideBgPromo }) => {
     if (hideBgPromo === true) {
       if (promo) promo.style.display = "none";
     }
   });
 
-  // Butona tıklayınca kapat + kaydet
   if (btn && promo) {
     btn.addEventListener("click", () => {
       promo.style.display = "none";
