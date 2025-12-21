@@ -3,8 +3,8 @@ document.getElementById("openOptionsBtn").addEventListener("click", () => {
 });
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const { blockedChannels, blockedCategories } = await chrome.storage.local.get(
-    ["blockedChannels", "blockedCategories"]
+  const { blockedChannels, blockedCategories, blockedTags } = await chrome.storage.local.get(
+    ["blockedChannels", "blockedCategories", "blockedTags"]
   );
 
   const translations = {
@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     statusTitle: chrome.i18n.getMessage("popup_status"),
     channelsLabel: chrome.i18n.getMessage("popup_channels"),
     categoriesLabel: chrome.i18n.getMessage("popup_categories"),
+    tagsLabel: chrome.i18n.getMessage("popup_tags"),
     adaptiveLabel: chrome.i18n.getMessage("popup_adaptive_stream"),
     qualityLabel: chrome.i18n.getMessage("popup_quality"),
     volumeBoostLabel: chrome.i18n.getMessage("popup_volume_boost"),
@@ -29,10 +30,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const channels = JSON.parse(blockedChannels || "[]");
   const categories = JSON.parse(blockedCategories || "[]");
+  const tags = JSON.parse(blockedTags || "[]");
 
   document.getElementById("channelCount").textContent = channels.length;
   document.getElementById("categoryCount").textContent = categories.length;
+  document.getElementById("tagsCount").textContent = tags.length;
 
+  // Enable toggle
   const enabled = (await chrome.storage.local.get("enabled")).enabled ?? true;
   const switchInput = document.getElementById("enableSwitch");
   switchInput.checked = enabled;
@@ -41,15 +45,36 @@ document.addEventListener("DOMContentLoaded", async () => {
     await chrome.storage.local.set({ enabled: switchInput.checked });
   });
 
+
+  const qualityToggle = document.getElementById("qualityToggle");
+  const qualitySelect = document.getElementById("qualitySelect");
+  const volumeBoostSelect = document.getElementById("volumeBoostSelect");
+
+  const DEFAULT_QUALITIES = ["160", "360", "480", "720", "1080", "1440", "2160"];
+
   const { autoQuality = false, preferredQuality = "1080" } =
     await chrome.storage.local.get(["autoQuality", "preferredQuality"]);
 
   qualityToggle.checked = autoQuality;
-  qualitySelect.value = preferredQuality;
   qualitySelect.disabled = !autoQuality;
+  volumeBoostSelect.disabled = !autoQuality;
+
+  if (!qualitySelect.children.length) {
+    for (const q of DEFAULT_QUALITIES) {
+      const opt = document.createElement("option");
+      opt.value = q;
+      opt.textContent = q + "p";
+      qualitySelect.appendChild(opt);
+    }
+  }
+
+  if (DEFAULT_QUALITIES.includes(preferredQuality)) {
+    qualitySelect.value = preferredQuality;
+  }
 
   qualityToggle.addEventListener("change", async () => {
     const isEnabled = qualityToggle.checked;
+
     qualitySelect.disabled = !isEnabled;
     volumeBoostSelect.disabled = !isEnabled;
 
@@ -65,8 +90,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     notifyContentScript({ action: "setQuality", quality: selectedQuality });
   });
-
-  const volumeBoostSelect = document.getElementById("volumeBoostSelect");
 
   const { volumeBoost = 1 } = await chrome.storage.local.get("volumeBoost");
   volumeBoostSelect.value = volumeBoost.toString();
@@ -85,17 +108,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  const quettaPromo = document.getElementById("quettaPromo");
-  const hideQuettaBtn = document.getElementById("hideQuettaBtn");
+  const promo = document.getElementById("bgEcosystemPromo");
+  const btn = document.getElementById("bgPromoClose");
 
-  chrome.storage.local.get("hideQuettaPromo", ({ hideQuettaPromo = false }) => {
-    if (hideQuettaPromo && quettaPromo) quettaPromo.style.display = "none";
+  // Storage'dan oku → gizle
+  chrome.storage.local.get("hideBgPromo", ({ hideBgPromo }) => {
+    if (hideBgPromo === true) {
+      if (promo) promo.style.display = "none";
+    }
   });
 
-  if (hideQuettaBtn) {
-    hideQuettaBtn.addEventListener("click", async () => {
-      if (quettaPromo) quettaPromo.style.display = "none";
-      await chrome.storage.local.set({ hideQuettaPromo: true });
+  // Butona tıklayınca kapat + kaydet
+  if (btn && promo) {
+    btn.addEventListener("click", () => {
+      promo.style.display = "none";
+      chrome.storage.local.set({ hideBgPromo: true });
     });
   }
 

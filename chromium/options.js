@@ -7,7 +7,7 @@ function createListItem(name, onRemove) {
   li.textContent = name;
 
   const btn = document.createElement("button");
-  btn.textContent = "❌";
+  btn.textContent = "X";
   btn.className = "delete-btn";
   btn.onclick = () => onRemove(name);
 
@@ -65,6 +65,32 @@ async function loadBlockedCategories() {
   categoryList.appendChild(fragment);
 }
 
+async function loadBlockedTags() {
+  const data = await chrome.storage.local.get(["blockedTags"]);
+  const tags = JSON.parse(data.blockedTags || "[]");
+
+  const tagList = document.getElementById("tagList");
+  const tagTitle = document.getElementById("tagTitle");
+
+  const titleBase = chrome.i18n.getMessage("options_blocked_tags") || "Blocked Tags";
+  tagTitle.textContent = `${titleBase} (${tags.length})`;
+
+  tagList.innerHTML = "";
+
+  const fragment = document.createDocumentFragment();
+  tags.forEach((name) => {
+    const li = createListItem(name, async (toRemove) => {
+      const filtered = tags.filter((t) => t !== toRemove);
+      await chrome.storage.local.set({
+        blockedTags: JSON.stringify(filtered),
+      });
+      loadBlockedTags();
+    });
+    fragment.appendChild(li);
+  });
+  tagList.appendChild(fragment);
+}
+
 async function addItem(storageKey, inputId) {
   const input = document.getElementById(inputId);
   const newItem = input.value.trim();
@@ -83,10 +109,16 @@ async function addItem(storageKey, inputId) {
   await chrome.storage.local.set({ [storageKey]: JSON.stringify(list) });
   input.value = "";
 
-  if (storageKey === "blockedChannels") {
-    loadBlockedChannels();
-  } else {
-    loadBlockedCategories();
+  switch (storageKey) {
+    case "blockedChannels":
+      loadBlockedChannels();
+      break;
+    case "blockedCategories":
+      loadBlockedCategories();
+      break;
+    case "blockedTags":
+      loadBlockedTags();
+      break;
   }
 }
 
@@ -148,47 +180,67 @@ async function clearList(storageKey) {
 }
 
 function toggleChannelsSection(show) {
-  document.getElementById("channelsControls").style.display = show
-    ? "block"
-    : "none";
-  document.getElementById("channelList").style.display = show
-    ? "block"
-    : "none";
-  document.getElementById("showChannelsBtn").style.display = show
-    ? "none"
-    : "inline-block";
+  const display = show ? "block" : "none";
+  document.getElementById("channelsControls").style.display = display;
+  document.getElementById("channelList").style.display = display;
+  document.getElementById("channelInput").style.display = display;
+  document.getElementById("addChannelBtn").style.display = display;
+  document.getElementById("showChannelsBtn").style.display = show ? "none" : "inline-block";
   if (show) loadBlockedChannels();
 }
 
 function toggleCategoriesSection(show) {
-  document.getElementById("categoriesControls").style.display = show
-    ? "block"
-    : "none";
-  document.getElementById("categoryList").style.display = show
-    ? "block"
-    : "none";
-  document.getElementById("showCategoriesBtn").style.display = show
-    ? "none"
-    : "inline-block";
+  const display = show ? "block" : "none";
+  document.getElementById("categoriesControls").style.display = display;
+  document.getElementById("categoryList").style.display = display;
+  document.getElementById("categoryInput").style.display = display;
+  document.getElementById("addCategoryBtn").style.display = display;
+  document.getElementById("showCategoriesBtn").style.display = show ? "none" : "inline-block";
   if (show) loadBlockedCategories();
+}
+
+function toggleTagsSection(show) {
+  const display = show ? "block" : "none";
+  document.getElementById("tagsControls").style.display = display;
+  document.getElementById("tagList").style.display = display;
+  document.getElementById("tagInput").style.display = display;
+  document.getElementById("addTagBtn").style.display = display;
+  document.getElementById("showTagsBtn").style.display = show ? "none" : "inline-block";
+  if (show) loadBlockedTags();
 }
 
 function setupEventListeners() {
   const translations = {
     channelTitle: chrome.i18n.getMessage("options_blocked_channels"),
     categoryTitle: chrome.i18n.getMessage("options_blocked_categories"),
+    tagTitle: chrome.i18n.getMessage("options_blocked_tags"),
+
     showChannelsBtn: chrome.i18n.getMessage("options_show"),
     showCategoriesBtn: chrome.i18n.getMessage("options_show"),
+    showTagsBtn: chrome.i18n.getMessage("options_show"),
+
     exportChannelsBtn: chrome.i18n.getMessage("options_export"),
     importChannelsBtn: chrome.i18n.getMessage("options_import"),
     clearChannelsBtn: chrome.i18n.getMessage("options_clear_all"),
     refreshChannelsBtn: chrome.i18n.getMessage("options_refresh"),
     addChannelBtn: chrome.i18n.getMessage("options_add_channel"),
+
     exportCategoriesBtn: chrome.i18n.getMessage("options_export"),
     importCategoriesBtn: chrome.i18n.getMessage("options_import"),
     clearCategoriesBtn: chrome.i18n.getMessage("options_clear_all"),
     refreshCategoriesBtn: chrome.i18n.getMessage("options_refresh"),
-    addCategoryBtn: chrome.i18n.getMessage("options_add_category")
+    addCategoryBtn: chrome.i18n.getMessage("options_add_category"),
+
+    exportTagsBtn: chrome.i18n.getMessage("options_export"),
+    importTagsBtn: chrome.i18n.getMessage("options_import"),
+    clearTagsBtn: chrome.i18n.getMessage("options_clear_all"),
+    refreshTagsBtn: chrome.i18n.getMessage("options_refresh"),
+    addTagBtn: chrome.i18n.getMessage("options_add_tags"),
+
+    customizationTitle: chrome.i18n.getMessage("options_customization"),
+    disableSearchHistoryLabel: chrome.i18n.getMessage("options_disable_search_history"),
+    disableChatBlockingLabel: chrome.i18n.getMessage("options_disable_chat_blocking"),
+    disableBlockButtonsLabel: chrome.i18n.getMessage("options_hide_block_buttons")
   };
 
   for (const [id, text] of Object.entries(translations)) {
@@ -199,6 +251,7 @@ function setupEventListeners() {
       else el.textContent = text;
     }
   }
+
   document
     .getElementById("showChannelsBtn")
     .addEventListener("click", () => toggleChannelsSection(true));
@@ -244,8 +297,87 @@ function setupEventListeners() {
   document
     .getElementById("refreshCategoriesBtn")
     .addEventListener("click", () => loadBlockedCategories());
+
+  document.getElementById("showTagsBtn").addEventListener("click", () => toggleTagsSection(true));
+
+  document.getElementById("addTagBtn").addEventListener("click", () =>
+    addItem("blockedTags", "tagInput")
+  );
+
+  document.getElementById("exportTagsBtn").addEventListener("click", () =>
+    exportList("blockedTags")
+  );
+
+  document.getElementById("importTagsBtn").addEventListener("click", () =>
+    importList("blockedTags")
+  );
+
+  document.getElementById("clearTagsBtn").addEventListener("click", () =>
+    clearList("blockedTags")
+  );
+
+  document.getElementById("refreshTagsBtn").addEventListener("click", () =>
+    loadBlockedTags()
+  );
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   setupEventListeners();
+
+  const disableSearchHistoryToggle = document.getElementById(
+    "disableSearchHistoryToggle"
+  );
+
+  if (disableSearchHistoryToggle) {
+    chrome.storage.local.get(
+      ["disableSearchHistory"],
+      ({ disableSearchHistory = false }) => {
+        disableSearchHistoryToggle.checked = disableSearchHistory;
+      }
+    );
+
+    disableSearchHistoryToggle.addEventListener("change", async () => {
+      await chrome.storage.local.set({
+        disableSearchHistory: disableSearchHistoryToggle.checked,
+      });
+    });
+  }
+
+  const disableChatBlockingToggle = document.getElementById(
+    "disableChatBlockingToggle"
+  );
+
+  if (disableChatBlockingToggle) {
+    chrome.storage.local.get(
+      ["disableChatBlocking"],
+      ({ disableChatBlocking = false }) => {
+        disableChatBlockingToggle.checked = disableChatBlocking;
+      }
+    );
+
+    disableChatBlockingToggle.addEventListener("change", async () => {
+      await chrome.storage.local.set({
+        disableChatBlocking: disableChatBlockingToggle.checked,
+      });
+    });
+  }
+
+  const disableBlockButtonsToggle = document.getElementById(
+    "disableBlockButtonsToggle"
+  );
+
+  if (disableBlockButtonsToggle) {
+    chrome.storage.local.get(
+      ["disableBlockButtons"],
+      ({ disableBlockButtons = false }) => {
+        disableBlockButtonsToggle.checked = disableBlockButtons;
+      }
+    );
+
+    disableBlockButtonsToggle.addEventListener("change", async () => {
+      await chrome.storage.local.set({
+        disableBlockButtons: disableBlockButtonsToggle.checked,
+      });
+    });
+  }
 });
