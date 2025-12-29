@@ -3,19 +3,20 @@ document.getElementById("openOptionsBtn").addEventListener("click", () => {
 });
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const { blockedChannels, blockedCategories } = await browser.storage.local.get(
-    ["blockedChannels", "blockedCategories"]
+  const { blockedChannels, blockedCategories, blockedTags } = await browser.storage.local.get(
+    ["blockedChannels", "blockedCategories", "blockedTags"]
   );
 
   const translations = {
-    filteringLabel: chrome.i18n.getMessage("popup_filtering"),
-    statusTitle: chrome.i18n.getMessage("popup_status"),
-    channelsLabel: chrome.i18n.getMessage("popup_channels"),
-    categoriesLabel: chrome.i18n.getMessage("popup_categories"),
-    adaptiveLabel: chrome.i18n.getMessage("popup_adaptive_stream"),
-    qualityLabel: chrome.i18n.getMessage("popup_quality"),
-    volumeBoostLabel: chrome.i18n.getMessage("popup_volume_boost"),
-    openOptionsBtn: chrome.i18n.getMessage("popup_open_options"),
+    filteringLabel: browser.i18n.getMessage("popup_filtering"),
+    statusTitle: browser.i18n.getMessage("popup_status"),
+    channelsLabel: browser.i18n.getMessage("popup_channels"),
+    categoriesLabel: browser.i18n.getMessage("popup_categories"),
+    tagsLabel: browser.i18n.getMessage("popup_tags"),
+    adaptiveLabel: browser.i18n.getMessage("popup_adaptive_stream"),
+    qualityLabel: browser.i18n.getMessage("popup_quality"),
+    volumeBoostLabel: browser.i18n.getMessage("popup_volume_boost"),
+    openOptionsBtn: browser.i18n.getMessage("popup_open_options"),
   };
 
   for (const [id, text] of Object.entries(translations)) {
@@ -29,10 +30,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const channels = JSON.parse(blockedChannels || "[]");
   const categories = JSON.parse(blockedCategories || "[]");
+  const tags = JSON.parse(blockedTags || "[]");
 
   document.getElementById("channelCount").textContent = channels.length;
   document.getElementById("categoryCount").textContent = categories.length;
+  document.getElementById("tagsCount").textContent = tags.length;
 
+  // Enable toggle
   const enabled = (await browser.storage.local.get("enabled")).enabled ?? true;
   const switchInput = document.getElementById("enableSwitch");
   switchInput.checked = enabled;
@@ -41,15 +45,36 @@ document.addEventListener("DOMContentLoaded", async () => {
     await browser.storage.local.set({ enabled: switchInput.checked });
   });
 
+
+  const qualityToggle = document.getElementById("qualityToggle");
+  const qualitySelect = document.getElementById("qualitySelect");
+  const volumeBoostSelect = document.getElementById("volumeBoostSelect");
+
+  const DEFAULT_QUALITIES = ["160", "360", "480", "720", "1080", "1440", "2160"];
+
   const { autoQuality = false, preferredQuality = "1080" } =
     await browser.storage.local.get(["autoQuality", "preferredQuality"]);
 
   qualityToggle.checked = autoQuality;
-  qualitySelect.value = preferredQuality;
   qualitySelect.disabled = !autoQuality;
+  volumeBoostSelect.disabled = !autoQuality;
+
+  if (!qualitySelect.children.length) {
+    for (const q of DEFAULT_QUALITIES) {
+      const opt = document.createElement("option");
+      opt.value = q;
+      opt.textContent = q + "p";
+      qualitySelect.appendChild(opt);
+    }
+  }
+
+  if (DEFAULT_QUALITIES.includes(preferredQuality)) {
+    qualitySelect.value = preferredQuality;
+  }
 
   qualityToggle.addEventListener("change", async () => {
     const isEnabled = qualityToggle.checked;
+
     qualitySelect.disabled = !isEnabled;
     volumeBoostSelect.disabled = !isEnabled;
 
@@ -66,8 +91,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     notifyContentScript({ action: "setQuality", quality: selectedQuality });
   });
 
-  const volumeBoostSelect = document.getElementById("volumeBoostSelect");
-
   const { volumeBoost = 1 } = await browser.storage.local.get("volumeBoost");
   volumeBoostSelect.value = volumeBoost.toString();
 
@@ -77,11 +100,28 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   function notifyContentScript(message) {
-    browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
+    browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const tab = tabs[0];
       if (tab?.id && tab.url?.includes("kick.com")) {
         browser.tabs.sendMessage(tab.id, message);
       }
     });
   }
+
+  const promo = document.getElementById("bgEcosystemPromo");
+  const btn = document.getElementById("bgPromoClose");
+
+  browser.storage.local.get("hideBgPromo", ({ hideBgPromo }) => {
+    if (hideBgPromo === true) {
+      if (promo) promo.style.display = "none";
+    }
+  });
+
+  if (btn && promo) {
+    btn.addEventListener("click", () => {
+      promo.style.display = "none";
+      browser.storage.local.set({ hideBgPromo: true });
+    });
+  }
+
 });

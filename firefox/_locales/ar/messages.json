@@ -31,6 +31,9 @@
     "popup_categories": {
         "message": "الفئات"
     },
+    "popup_tags": {
+        "message": "العلامات"
+    },
     "popup_adaptive_stream": {
         "message": "البث التكيفي"
     },
@@ -48,6 +51,9 @@
     },
     "options_blocked_categories": {
         "message": "الفئات المحظورة"
+    },
+    "options_blocked_tags": {
+        "message": "الوسوم المحظورة"
     },
     "options_show": {
         "message": "▶️ عرض"
@@ -69,5 +75,20 @@
     },
     "options_add_category": {
         "message": "➕ إضافة فئة"
+    },
+    "options_add_tags": {
+        "message": "➕ إضافة وسوم"
+    },
+    "options_disable_search_history": {
+        "message": "تعطيل سجل البحث"
+    },
+    "options_disable_chat_blocking": {
+        "message": "تعطيل حظر الدردشة"
+    },
+    "options_hide_block_buttons": {
+        "message": "إخفاء أزرار الحظر"
+    },
+    "options_customization": {
+        "message": "التخصيص"
     }
 }

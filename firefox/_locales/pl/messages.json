@@ -31,6 +31,9 @@
     "popup_categories": {
         "message": "Kategorie"
     },
+    "popup_tags": {
+        "message": "Tagi"
+    },
     "popup_adaptive_stream": {
         "message": "Strumień adaptacyjny"
     },
@@ -48,6 +51,9 @@
     },
     "options_blocked_categories": {
         "message": "Zablokowane kategorie"
+    },
+    "options_blocked_tags": {
+        "message": "Zablokowane tagi"
     },
     "options_show": {
         "message": "▶️ Pokaż"
@@ -69,5 +75,20 @@
     },
     "options_add_category": {
         "message": "➕ Dodaj kategorię"
+    },
+    "options_add_tags": {
+        "message": "➕ Dodaj tagi"
+    },
+    "options_disable_search_history": {
+        "message": "Wyłącz historię wyszukiwania"
+    },
+    "options_disable_chat_blocking": {
+        "message": "Wyłącz blokowanie czatu"
+    },
+    "options_hide_block_buttons": {
+        "message": "Ukryj przyciski blokowania"
+    },
+    "options_customization": {
+        "message": "Personalizacja"
     }
 }

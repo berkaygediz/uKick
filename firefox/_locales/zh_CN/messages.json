@@ -31,6 +31,9 @@
     "popup_categories": {
         "message": "类别"
     },
+    "popup_tags": {
+        "message": "标签"
+    },
     "popup_adaptive_stream": {
         "message": "自适应流"
     },
@@ -48,6 +51,9 @@
     },
     "options_blocked_categories": {
         "message": "已屏蔽类别"
+    },
+    "options_blocked_tags": {
+        "message": "已屏蔽的标签"
     },
     "options_show": {
         "message": "▶️ 显示"
@@ -69,5 +75,20 @@
     },
     "options_add_category": {
         "message": "➕ 添加类别"
+    },
+    "options_add_tags": {
+        "message": "➕ 添加标签"
+    },
+    "options_disable_search_history": {
+        "message": "禁用搜索记录"
+    },
+    "options_disable_chat_blocking": {
+        "message": "禁用聊天屏蔽"
+    },
+    "options_hide_block_buttons": {
+        "message": "隐藏屏蔽按钮"
+    },
+    "options_customization": {
+        "message": "自定义"
     }
 }
