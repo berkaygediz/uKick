@@ -156,8 +156,12 @@ async function importList(storageKey) {
 
       if (storageKey === "blockedChannels") {
         loadBlockedChannels();
-      } else {
+      }
+      else if (storageKey === "blockedCategories") {
         loadBlockedCategories();
+      }
+      else {
+        loadBlockedTags();
       }
 
       alert("Import successful!");
@@ -173,8 +177,12 @@ async function clearList(storageKey) {
     await chrome.storage.local.set({ [storageKey]: "[]" });
     if (storageKey === "blockedChannels") {
       loadBlockedChannels();
-    } else {
+    }
+    else if (storageKey === "blockedCategories") {
       loadBlockedCategories();
+    }
+    else {
+      loadBlockedTags();
     }
   }
 }

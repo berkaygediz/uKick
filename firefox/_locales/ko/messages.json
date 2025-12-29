@@ -31,6 +31,9 @@
     "popup_categories": {
         "message": "카테고리"
     },
+    "popup_tags": {
+        "message": "태그"
+    },
     "popup_adaptive_stream": {
         "message": "적응형 스트림"
     },
@@ -48,6 +51,9 @@
     },
     "options_blocked_categories": {
         "message": "차단된 카테고리"
+    },
+    "options_blocked_tags": {
+        "message": "차단된 태그"
     },
     "options_show": {
         "message": "▶️ 표시"
@@ -69,5 +75,20 @@
     },
     "options_add_category": {
         "message": "➕ 카테고리 추가"
+    },
+    "options_add_tags": {
+        "message": "➕ 태그 추가"
+    },
+    "options_disable_search_history": {
+        "message": "검색 기록 비활성화"
+    },
+    "options_disable_chat_blocking": {
+        "message": "채팅 차단 비활성화"
+    },
+    "options_hide_block_buttons": {
+        "message": "차단 버튼 숨기기"
+    },
+    "options_customization": {
+        "message": "사용자 설정"
     }
 }

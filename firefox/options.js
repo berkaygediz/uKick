@@ -7,7 +7,7 @@ function createListItem(name, onRemove) {
   li.textContent = name;
 
   const btn = document.createElement("button");
-  btn.textContent = "❌";
+  btn.textContent = "X";
   btn.className = "delete-btn";
   btn.onclick = () => onRemove(name);
 
@@ -16,13 +16,13 @@ function createListItem(name, onRemove) {
 }
 
 async function loadBlockedChannels() {
-  const data = await chrome.storage.local.get(["blockedChannels"]);
+  const data = await browser.storage.local.get(["blockedChannels"]);
   const channels = JSON.parse(data.blockedChannels || "[]");
 
   const channelList = document.getElementById("channelList");
   const channelTitle = document.getElementById("channelTitle");
 
-  const titleBase = chrome.i18n.getMessage("options_blocked_channels");
+  const titleBase = browser.i18n.getMessage("options_blocked_channels");
   channelTitle.textContent = `${titleBase} (${channels.length})`;
   channelList.innerHTML = "";
 
@@ -30,7 +30,7 @@ async function loadBlockedChannels() {
   channels.forEach((name) => {
     const li = createListItem(name, async (toRemove) => {
       const filtered = channels.filter((c) => c !== toRemove);
-      await chrome.storage.local.set({
+      await browser.storage.local.set({
         blockedChannels: JSON.stringify(filtered),
       });
       loadBlockedChannels();
@@ -41,13 +41,13 @@ async function loadBlockedChannels() {
 }
 
 async function loadBlockedCategories() {
-  const data = await chrome.storage.local.get(["blockedCategories"]);
+  const data = await browser.storage.local.get(["blockedCategories"]);
   const categories = JSON.parse(data.blockedCategories || "[]");
 
   const categoryList = document.getElementById("categoryList");
   const categoryTitle = document.getElementById("categoryTitle");
 
-  const titleBase = chrome.i18n.getMessage("options_blocked_categories");
+  const titleBase = browser.i18n.getMessage("options_blocked_categories");
   categoryTitle.textContent = `${titleBase} (${categories.length})`;
   categoryList.innerHTML = "";
 
@@ -55,7 +55,7 @@ async function loadBlockedCategories() {
   categories.forEach((name) => {
     const li = createListItem(name, async (toRemove) => {
       const filtered = categories.filter((c) => c !== toRemove);
-      await chrome.storage.local.set({
+      await browser.storage.local.set({
         blockedCategories: JSON.stringify(filtered),
       });
       loadBlockedCategories();
@@ -65,12 +65,38 @@ async function loadBlockedCategories() {
   categoryList.appendChild(fragment);
 }
 
+async function loadBlockedTags() {
+  const data = await browser.storage.local.get(["blockedTags"]);
+  const tags = JSON.parse(data.blockedTags || "[]");
+
+  const tagList = document.getElementById("tagList");
+  const tagTitle = document.getElementById("tagTitle");
+
+  const titleBase = browser.i18n.getMessage("options_blocked_tags") || "Blocked Tags";
+  tagTitle.textContent = `${titleBase} (${tags.length})`;
+
+  tagList.innerHTML = "";
+
+  const fragment = document.createDocumentFragment();
+  tags.forEach((name) => {
+    const li = createListItem(name, async (toRemove) => {
+      const filtered = tags.filter((t) => t !== toRemove);
+      await browser.storage.local.set({
+        blockedTags: JSON.stringify(filtered),
+      });
+      loadBlockedTags();
+    });
+    fragment.appendChild(li);
+  });
+  tagList.appendChild(fragment);
+}
+
 async function addItem(storageKey, inputId) {
   const input = document.getElementById(inputId);
   const newItem = input.value.trim();
   if (!newItem) return;
 
-  const data = await chrome.storage.local.get([storageKey]);
+  const data = await browser.storage.local.get([storageKey]);
   const list = JSON.parse(data[storageKey] || "[]");
 
   if (list.some((item) => normalize(item) === normalize(newItem))) {
@@ -80,18 +106,24 @@ async function addItem(storageKey, inputId) {
   }
 
   list.push(newItem);
-  await chrome.storage.local.set({ [storageKey]: JSON.stringify(list) });
+  await browser.storage.local.set({ [storageKey]: JSON.stringify(list) });
   input.value = "";
 
-  if (storageKey === "blockedChannels") {
-    loadBlockedChannels();
-  } else {
-    loadBlockedCategories();
+  switch (storageKey) {
+    case "blockedChannels":
+      loadBlockedChannels();
+      break;
+    case "blockedCategories":
+      loadBlockedCategories();
+      break;
+    case "blockedTags":
+      loadBlockedTags();
+      break;
   }
 }
 
 async function exportList(storageKey) {
-  const data = await chrome.storage.local.get([storageKey]);
+  const data = await browser.storage.local.get([storageKey]);
   const list = JSON.parse(data[storageKey] || "[]");
 
   const blob = new Blob([JSON.stringify(list, null, 2)], {
@@ -117,15 +149,19 @@ async function importList(storageKey) {
       const importedList = JSON.parse(text);
       if (!Array.isArray(importedList)) throw new Error("Invalid format");
 
-      const data = await chrome.storage.local.get([storageKey]);
+      const data = await browser.storage.local.get([storageKey]);
       const currentList = JSON.parse(data[storageKey] || "[]");
       const merged = [...new Set([...currentList, ...importedList])];
-      await chrome.storage.local.set({ [storageKey]: JSON.stringify(merged) });
+      await browser.storage.local.set({ [storageKey]: JSON.stringify(merged) });
 
       if (storageKey === "blockedChannels") {
         loadBlockedChannels();
-      } else {
+      }
+      else if (storageKey === "blockedCategories") {
         loadBlockedCategories();
+      }
+      else {
+        loadBlockedTags();
       }
 
       alert("Import successful!");
@@ -138,57 +174,81 @@ async function importList(storageKey) {
 
 async function clearList(storageKey) {
   if (confirm(`Are you sure you want to clear all items in ${storageKey}?`)) {
-    await chrome.storage.local.set({ [storageKey]: "[]" });
+    await browser.storage.local.set({ [storageKey]: "[]" });
     if (storageKey === "blockedChannels") {
       loadBlockedChannels();
-    } else {
+    }
+    else if (storageKey === "blockedCategories") {
       loadBlockedCategories();
+    }
+    else {
+      loadBlockedTags();
     }
   }
 }
 
 function toggleChannelsSection(show) {
-  document.getElementById("channelsControls").style.display = show
-    ? "block"
-    : "none";
-  document.getElementById("channelList").style.display = show
-    ? "block"
-    : "none";
-  document.getElementById("showChannelsBtn").style.display = show
-    ? "none"
-    : "inline-block";
+  const display = show ? "block" : "none";
+  document.getElementById("channelsControls").style.display = display;
+  document.getElementById("channelList").style.display = display;
+  document.getElementById("channelInput").style.display = display;
+  document.getElementById("addChannelBtn").style.display = display;
+  document.getElementById("showChannelsBtn").style.display = show ? "none" : "inline-block";
   if (show) loadBlockedChannels();
 }
 
 function toggleCategoriesSection(show) {
-  document.getElementById("categoriesControls").style.display = show
-    ? "block"
-    : "none";
-  document.getElementById("categoryList").style.display = show
-    ? "block"
-    : "none";
-  document.getElementById("showCategoriesBtn").style.display = show
-    ? "none"
-    : "inline-block";
+  const display = show ? "block" : "none";
+  document.getElementById("categoriesControls").style.display = display;
+  document.getElementById("categoryList").style.display = display;
+  document.getElementById("categoryInput").style.display = display;
+  document.getElementById("addCategoryBtn").style.display = display;
+  document.getElementById("showCategoriesBtn").style.display = show ? "none" : "inline-block";
   if (show) loadBlockedCategories();
+}
+
+function toggleTagsSection(show) {
+  const display = show ? "block" : "none";
+  document.getElementById("tagsControls").style.display = display;
+  document.getElementById("tagList").style.display = display;
+  document.getElementById("tagInput").style.display = display;
+  document.getElementById("addTagBtn").style.display = display;
+  document.getElementById("showTagsBtn").style.display = show ? "none" : "inline-block";
+  if (show) loadBlockedTags();
 }
 
 function setupEventListeners() {
   const translations = {
-    channelTitle: chrome.i18n.getMessage("options_blocked_channels"),
-    categoryTitle: chrome.i18n.getMessage("options_blocked_categories"),
-    showChannelsBtn: chrome.i18n.getMessage("options_show"),
-    showCategoriesBtn: chrome.i18n.getMessage("options_show"),
-    exportChannelsBtn: chrome.i18n.getMessage("options_export"),
-    importChannelsBtn: chrome.i18n.getMessage("options_import"),
-    clearChannelsBtn: chrome.i18n.getMessage("options_clear_all"),
-    refreshChannelsBtn: chrome.i18n.getMessage("options_refresh"),
-    addChannelBtn: chrome.i18n.getMessage("options_add_channel"),
-    exportCategoriesBtn: chrome.i18n.getMessage("options_export"),
-    importCategoriesBtn: chrome.i18n.getMessage("options_import"),
-    clearCategoriesBtn: chrome.i18n.getMessage("options_clear_all"),
-    refreshCategoriesBtn: chrome.i18n.getMessage("options_refresh"),
-    addCategoryBtn: chrome.i18n.getMessage("options_add_category")
+    channelTitle: browser.i18n.getMessage("options_blocked_channels"),
+    categoryTitle: browser.i18n.getMessage("options_blocked_categories"),
+    tagTitle: browser.i18n.getMessage("options_blocked_tags"),
+
+    showChannelsBtn: browser.i18n.getMessage("options_show"),
+    showCategoriesBtn: browser.i18n.getMessage("options_show"),
+    showTagsBtn: browser.i18n.getMessage("options_show"),
+
+    exportChannelsBtn: browser.i18n.getMessage("options_export"),
+    importChannelsBtn: browser.i18n.getMessage("options_import"),
+    clearChannelsBtn: browser.i18n.getMessage("options_clear_all"),
+    refreshChannelsBtn: browser.i18n.getMessage("options_refresh"),
+    addChannelBtn: browser.i18n.getMessage("options_add_channel"),
+
+    exportCategoriesBtn: browser.i18n.getMessage("options_export"),
+    importCategoriesBtn: browser.i18n.getMessage("options_import"),
+    clearCategoriesBtn: browser.i18n.getMessage("options_clear_all"),
+    refreshCategoriesBtn: browser.i18n.getMessage("options_refresh"),
+    addCategoryBtn: browser.i18n.getMessage("options_add_category"),
+
+    exportTagsBtn: browser.i18n.getMessage("options_export"),
+    importTagsBtn: browser.i18n.getMessage("options_import"),
+    clearTagsBtn: browser.i18n.getMessage("options_clear_all"),
+    refreshTagsBtn: browser.i18n.getMessage("options_refresh"),
+    addTagBtn: browser.i18n.getMessage("options_add_tags"),
+
+    customizationTitle: browser.i18n.getMessage("options_customization"),
+    disableSearchHistoryLabel: browser.i18n.getMessage("options_disable_search_history"),
+    disableChatBlockingLabel: browser.i18n.getMessage("options_disable_chat_blocking"),
+    disableBlockButtonsLabel: browser.i18n.getMessage("options_hide_block_buttons")
   };
 
   for (const [id, text] of Object.entries(translations)) {
@@ -245,8 +305,87 @@ function setupEventListeners() {
   document
     .getElementById("refreshCategoriesBtn")
     .addEventListener("click", () => loadBlockedCategories());
+
+  document.getElementById("showTagsBtn").addEventListener("click", () => toggleTagsSection(true));
+
+  document.getElementById("addTagBtn").addEventListener("click", () =>
+    addItem("blockedTags", "tagInput")
+  );
+
+  document.getElementById("exportTagsBtn").addEventListener("click", () =>
+    exportList("blockedTags")
+  );
+
+  document.getElementById("importTagsBtn").addEventListener("click", () =>
+    importList("blockedTags")
+  );
+
+  document.getElementById("clearTagsBtn").addEventListener("click", () =>
+    clearList("blockedTags")
+  );
+
+  document.getElementById("refreshTagsBtn").addEventListener("click", () =>
+    loadBlockedTags()
+  );
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   setupEventListeners();
+
+  const disableSearchHistoryToggle = document.getElementById(
+    "disableSearchHistoryToggle"
+  );
+
+  if (disableSearchHistoryToggle) {
+    browser.storage.local.get(
+      ["disableSearchHistory"],
+      ({ disableSearchHistory = false }) => {
+        disableSearchHistoryToggle.checked = disableSearchHistory;
+      }
+    );
+
+    disableSearchHistoryToggle.addEventListener("change", async () => {
+      await browser.storage.local.set({
+        disableSearchHistory: disableSearchHistoryToggle.checked,
+      });
+    });
+  }
+
+  const disableChatBlockingToggle = document.getElementById(
+    "disableChatBlockingToggle"
+  );
+
+  if (disableChatBlockingToggle) {
+    browser.storage.local.get(
+      ["disableChatBlocking"],
+      ({ disableChatBlocking = false }) => {
+        disableChatBlockingToggle.checked = disableChatBlocking;
+      }
+    );
+
+    disableChatBlockingToggle.addEventListener("change", async () => {
+      await browser.storage.local.set({
+        disableChatBlocking: disableChatBlockingToggle.checked,
+      });
+    });
+  }
+
+  const disableBlockButtonsToggle = document.getElementById(
+    "disableBlockButtonsToggle"
+  );
+
+  if (disableBlockButtonsToggle) {
+    browser.storage.local.get(
+      ["disableBlockButtons"],
+      ({ disableBlockButtons = false }) => {
+        disableBlockButtonsToggle.checked = disableBlockButtons;
+      }
+    );
+
+    disableBlockButtonsToggle.addEventListener("change", async () => {
+      await browser.storage.local.set({
+        disableBlockButtons: disableBlockButtonsToggle.checked,
+      });
+    });
+  }
 });

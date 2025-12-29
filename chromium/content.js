@@ -17,6 +17,7 @@
   function normalizeData(str) {
     return str?.toLowerCase().trim() || "";
   }
+
   // ===== Chrome Extension (callback) =====
 
   async function getBlockedChannels() {
@@ -225,7 +226,6 @@
     });
   }
 
-
   // ==== Chrome Extension ====
 
   async function blockCategory(categoryName) {
@@ -278,19 +278,19 @@
       btn.title = chrome.i18n.getMessage("btn_block_category") + ": " + nameEl.textContent;
       btn.className = "category-block-btn";
       btn.style.cssText = `
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      background: rgba(0, 0, 0, 0.7);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      font-size: 14px;
-      cursor: pointer;
-      z-index: 9999;
-    `;
+          position: absolute;
+          top: 6px;
+          right: 6px;
+          background: rgba(0, 0, 0, 0.7);
+          color: white;
+          border: none;
+          border-radius: 50%;
+          width: 20px;
+          height: 20px;
+          font-size: 14px;
+          cursor: pointer;
+          z-index: 9999;
+        `;
 
       btn.addEventListener("click", async (e) => {
         e.preventDefault();
@@ -355,13 +355,9 @@
       }
 
       if (!shouldHide && blockedTags.length > 0) {
-
         const tagsContainer = card.querySelector('div.flex.mt-1');
-
         if (tagsContainer) {
-
           const tagElements = tagsContainer.querySelectorAll('button, a');
-
           for (const tag of tagElements) {
             let tagName = "";
 
@@ -383,8 +379,6 @@
           }
         }
       }
-
-
       card.style.display = shouldHide ? "none" : "";
     });
 
@@ -571,20 +565,20 @@
         btn.className = "sidebar-block-btn";
         btn.title = chrome.i18n.getMessage("btn_block_channel");
         btn.style.cssText = `
-          position: absolute;
-          top: 6px;
-          right: 6px;
-          background: rgba(255, 0, 0, 0.7);
-          color: white;
-          border: none;
-          border-radius: 25%;
-          width: 25px;
-          height: 25px;
-          font-size: 14px;
-          display: none;
-          cursor: pointer;
-          z-index: 9999;
-        `;
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: rgba(255, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 25%;
+            width: 25px;
+            height: 25px;
+            font-size: 14px;
+            display: none;
+            cursor: pointer;
+            z-index: 9999;
+          `;
 
         btn.addEventListener("click", async (e) => {
           e.preventDefault();
@@ -1155,7 +1149,6 @@
     } catch (e) { }
   }
 
-
   function debounce(fn, delay = 25) {
     let timer;
     return () => {
@@ -1165,6 +1158,7 @@
   }
 
   // ==== Chrome Extension ====
+
   (async () => {
     if (typeof chrome === "undefined" || !chrome.storage) return;
 

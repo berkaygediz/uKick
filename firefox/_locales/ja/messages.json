@@ -31,6 +31,9 @@
     "popup_categories": {
         "message": "カテゴリー"
     },
+    "popup_tags": {
+        "message": "タグ"
+    },
     "popup_adaptive_stream": {
         "message": "アダプティブストリーム"
     },
@@ -48,6 +51,9 @@
     },
     "options_blocked_categories": {
         "message": "ブロックされたカテゴリー"
+    },
+    "options_blocked_tags": {
+        "message": "ブロック済みタグ"
     },
     "options_show": {
         "message": "▶️ 表示"
@@ -69,5 +75,20 @@
     },
     "options_add_category": {
         "message": "➕ カテゴリー追加"
+    },
+    "options_add_tags": {
+        "message": "➕ タグを追加"
+    },
+    "options_disable_search_history": {
+        "message": "検索履歴を無効にする"
+    },
+    "options_disable_chat_blocking": {
+        "message": "チャットブロックを無効にする"
+    },
+    "options_hide_block_buttons": {
+        "message": "ブロックボタンを非表示"
+    },
+    "options_customization": {
+        "message": "カスタマイズ"
     }
 }
