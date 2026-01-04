@@ -1149,6 +1149,70 @@
     } catch (e) { }
   }
 
+  let swapChatDirection = false;
+
+  function processChatLayout() {
+    addChatToggleButton();
+    moveChatLogic(swapChatDirection);
+  }
+
+  function moveChatLogic(isSwapChatDirection) {
+    const chatroom = document.getElementById("channel-chatroom");
+    const main = document.querySelector("main");
+
+    if (!chatroom || !main || !main.parentElement || main.contains(chatroom)) return;
+
+    const parent = main.parentElement;
+    const mainIndex = Array.prototype.indexOf.call(parent.children, main);
+    const chatIndex = Array.prototype.indexOf.call(parent.children, chatroom);
+    const isCurrentlySwaped = chatIndex < mainIndex;
+
+    if (isSwapChatDirection === isCurrentlySwaped) return;
+
+    if (isSwapChatDirection) {
+      main.before(chatroom);
+      flipIcons(true);
+    } else {
+      main.after(chatroom);
+      flipIcons(false);
+    }
+  }
+
+  function flipIcons(flip) {
+    const scale = flip ? "scale(-1, 1)" : "scale(1, 1)";
+    const btnExpandIcon = document.querySelector("main button svg");
+    if (btnExpandIcon) btnExpandIcon.style.transform = scale;
+    const btnCollapseIcon = document.querySelector("#channel-chatroom div svg");
+    if (btnCollapseIcon) btnCollapseIcon.style.transform = scale;
+  }
+
+  function addChatToggleButton() {
+    if (document.getElementById("mtc-toggle-btn")) return;
+
+    const chatroom = document.getElementById("channel-chatroom");
+    if (!chatroom) return;
+    const header = chatroom.firstElementChild;
+    if (!header) return;
+
+    const btn = document.createElement("button");
+    btn.id = "mtc-toggle-btn";
+    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>`;
+
+    btn.style.cssText = `background:transparent;border:none;color:inherit;cursor:pointer;padding:8px;opacity:0.7;transition:opacity 0.2s,transform 0.2s;display:flex;align-items:center;justify-content:center;`;
+
+    btn.onmouseenter = function () { this.style.opacity = "1"; this.style.transform = "scale(1.1)"; };
+    btn.onmouseleave = function () { this.style.opacity = "0.7"; this.style.transform = "scale(1)"; };
+
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      swapChatDirection = !swapChatDirection;
+
+      moveChatLogic(swapChatDirection);
+    };
+
+    header.insertBefore(btn, header.firstChild);
+  }
+
   function debounce(fn, delay = 25) {
     let timer;
     return () => {
@@ -1200,6 +1264,7 @@
       await addBlockButtonOnChannelPage();
       await observeBlockedChatMessages();
       await observeChatUsernames();
+      processChatLayout();
       if (await isSearchHistoryDisabled()) {
         clearSearchHistory();
       }
