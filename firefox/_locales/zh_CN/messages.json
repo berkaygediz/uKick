@@ -1,18 +1,18 @@
 {
     "app_name": {
-        "message": "uKick — Block & Stream Tweaks for Kick"
+        "message": "uKick — Kick屏蔽与直播调整工具"
     },
     "app_description": {
-        "message": "一款全能扩展，可在 Kick 上屏蔽、增强和调整所有功能，为您提供更好的直播体验。"
+        "message": "一体化扩展，用于在 Kick 上屏蔽、增强和调整所有内容，以获得更好的直播体验。"
     },
     "btn_block_channel": {
         "message": "屏蔽此频道"
     },
     "btn_block_category": {
-        "message": "隐藏类别"
+        "message": "隐藏分类"
     },
     "alert_channel_blocked": {
-        "message": "$CHANNEL$ 已屏蔽！",
+        "message": "已屏蔽 $CHANNEL$！",
         "placeholders": {
             "channel": {
                 "content": "$1"
@@ -29,7 +29,7 @@
         "message": "频道"
     },
     "popup_categories": {
-        "message": "类别"
+        "message": "分类"
     },
     "popup_tags": {
         "message": "标签"
@@ -38,7 +38,7 @@
         "message": "自适应流"
     },
     "popup_quality": {
-        "message": "清晰度"
+        "message": "画质"
     },
     "popup_volume_boost": {
         "message": "音量增强"
@@ -50,10 +50,10 @@
         "message": "已屏蔽频道"
     },
     "options_blocked_categories": {
-        "message": "已屏蔽类别"
+        "message": "已屏蔽分类"
     },
     "options_blocked_tags": {
-        "message": "已屏蔽的标签"
+        "message": "已屏蔽标签"
     },
     "options_show": {
         "message": "▶️ 显示"
@@ -65,7 +65,7 @@
         "message": "📥 导入"
     },
     "options_clear_all": {
-        "message": "🧹 清空"
+        "message": "🧹 清除全部"
     },
     "options_refresh": {
         "message": "🔄 刷新"
@@ -74,19 +74,25 @@
         "message": "➕ 添加频道"
     },
     "options_add_category": {
-        "message": "➕ 添加类别"
+        "message": "➕ 添加分类"
     },
     "options_add_tags": {
         "message": "➕ 添加标签"
     },
     "options_disable_search_history": {
-        "message": "禁用搜索记录"
+        "message": "禁用搜索历史"
     },
     "options_disable_chat_blocking": {
         "message": "禁用聊天屏蔽"
     },
     "options_hide_block_buttons": {
         "message": "隐藏屏蔽按钮"
+    },
+    "options_enable_danmaku_chat": {
+        "message": "启用弹幕聊天"
+    },
+    "options_disable_active_users": {
+        "message": "禁用活跃用户统计"
     },
     "options_customization": {
         "message": "自定义"

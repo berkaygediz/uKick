@@ -1,0 +1,100 @@
+{
+    "app_name": {
+        "message": "uKick — Blocco e Modifiche Stream per Kick"
+    },
+    "app_description": {
+        "message": "Estensione tutto in uno per bloccare, potenziare e modificare tutto su Kick per una migliore esperienza di streaming."
+    },
+    "btn_block_channel": {
+        "message": "Blocca questo canale"
+    },
+    "btn_block_category": {
+        "message": "Nascondi categoria"
+    },
+    "alert_channel_blocked": {
+        "message": "$CHANNEL$ bloccato!",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_filtering": {
+        "message": "Filtraggio"
+    },
+    "popup_status": {
+        "message": "Stato"
+    },
+    "popup_channels": {
+        "message": "Canali"
+    },
+    "popup_categories": {
+        "message": "Categorie"
+    },
+    "popup_tags": {
+        "message": "Tag"
+    },
+    "popup_adaptive_stream": {
+        "message": "Stream Adattivo"
+    },
+    "popup_quality": {
+        "message": "Qualità"
+    },
+    "popup_volume_boost": {
+        "message": "Aumento Volume"
+    },
+    "popup_open_options": {
+        "message": "Opzioni"
+    },
+    "options_blocked_channels": {
+        "message": "Canali Bloccati"
+    },
+    "options_blocked_categories": {
+        "message": "Categorie Bloccate"
+    },
+    "options_blocked_tags": {
+        "message": "Tag Bloccati"
+    },
+    "options_show": {
+        "message": "▶️ Mostra"
+    },
+    "options_export": {
+        "message": "📤 Esporta"
+    },
+    "options_import": {
+        "message": "📥 Importa"
+    },
+    "options_clear_all": {
+        "message": "🧹 Cancella Tutto"
+    },
+    "options_refresh": {
+        "message": "🔄 Aggiorna"
+    },
+    "options_add_channel": {
+        "message": "➕ Aggiungi Canale"
+    },
+    "options_add_category": {
+        "message": "➕ Aggiungi Categoria"
+    },
+    "options_add_tags": {
+        "message": "➕ Aggiungi Tag"
+    },
+    "options_disable_search_history": {
+        "message": "Disabilita Cronologia Ricerca"
+    },
+    "options_disable_chat_blocking": {
+        "message": "Disabilita Blocco Chat"
+    },
+    "options_hide_block_buttons": {
+        "message": "Nascondi Pulsanti di Blocco"
+    },
+    "options_enable_danmaku_chat": {
+        "message": "Abilita Chat Danmaku"
+    },
+    "options_disable_active_users": {
+        "message": "Disabilita Statistiche Utenti Attivi"
+    },
+    "options_customization": {
+        "message": "Personalizzazione"
+    }
+}

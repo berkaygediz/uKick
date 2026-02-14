@@ -248,7 +248,9 @@ function setupEventListeners() {
     customizationTitle: chrome.i18n.getMessage("options_customization"),
     disableSearchHistoryLabel: chrome.i18n.getMessage("options_disable_search_history"),
     disableChatBlockingLabel: chrome.i18n.getMessage("options_disable_chat_blocking"),
-    disableBlockButtonsLabel: chrome.i18n.getMessage("options_hide_block_buttons")
+    disableBlockButtonsLabel: chrome.i18n.getMessage("options_hide_block_buttons"),
+    enableDanmakuLabel: chrome.i18n.getMessage("options_enable_danmaku_chat"),
+    disableActiveUsersLabel: chrome.i18n.getMessage("options_disable_active_users")
   };
 
   for (const [id, text] of Object.entries(translations)) {
@@ -386,6 +388,36 @@ document.addEventListener("DOMContentLoaded", () => {
       await chrome.storage.local.set({
         disableBlockButtons: disableBlockButtonsToggle.checked,
       });
+    });
+  }
+
+  const enableDanmakuToggle = document.getElementById(
+    "enableDanmakuToggle"
+  );
+
+  if (enableDanmakuToggle) {
+    chrome.storage.local.get(
+      ["enableDanmaku"],
+      ({ enableDanmaku = false }) => {
+        enableDanmakuToggle.checked = enableDanmaku;
+      }
+    );
+
+    enableDanmakuToggle.addEventListener("change", async () => {
+      await chrome.storage.local.set({
+        enableDanmaku: enableDanmakuToggle.checked,
+      });
+    });
+  }
+
+  const disableActiveUsersToggle = document.getElementById("disableActiveUsersToggle");
+
+  if (disableActiveUsersToggle) {
+    chrome.storage.local.get(["disableActiveUsers"], ({ disableActiveUsers = false }) => {
+      disableActiveUsersToggle.checked = disableActiveUsers;
+    });
+    disableActiveUsersToggle.addEventListener("change", async () => {
+      await chrome.storage.local.set({ disableActiveUsers: disableActiveUsersToggle.checked });
     });
   }
 });

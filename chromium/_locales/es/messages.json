@@ -1,9 +1,9 @@
 {
     "app_name": {
-        "message": "uKick — Block & Stream Tweaks for Kick"
+        "message": "uKick — Bloqueo y Ajustes Stream para Kick"
     },
     "app_description": {
-        "message": "Extensión todo en uno para bloquear, mejorar y ajustar todo en Kick para una mejor experiencia de transmisión."
+        "message": "Extensión todo en uno para bloquear, potenciar y ajustar todo en Kick para una mejor experiencia de streaming."
     },
     "btn_block_channel": {
         "message": "Bloquear este canal"
@@ -35,7 +35,7 @@
         "message": "Etiquetas"
     },
     "popup_adaptive_stream": {
-        "message": "Transmisión Adaptativa"
+        "message": "Stream Adaptativo"
     },
     "popup_quality": {
         "message": "Calidad"
@@ -71,22 +71,28 @@
         "message": "🔄 Actualizar"
     },
     "options_add_channel": {
-        "message": "➕ Agregar Canal"
+        "message": "➕ Añadir Canal"
     },
     "options_add_category": {
-        "message": "➕ Agregar Categoría"
+        "message": "➕ Añadir Categoría"
     },
     "options_add_tags": {
-        "message": "➕ Añadir etiquetas"
+        "message": "➕ Añadir Etiquetas"
     },
     "options_disable_search_history": {
-        "message": "Desactivar historial de búsqueda"
+        "message": "Desactivar Historial de Búsqueda"
     },
     "options_disable_chat_blocking": {
-        "message": "Desactivar bloqueo de chat"
+        "message": "Desactivar Bloqueo del Chat"
     },
     "options_hide_block_buttons": {
-        "message": "Ocultar botones de bloqueo"
+        "message": "Ocultar Botones de Bloqueo"
+    },
+    "options_enable_danmaku_chat": {
+        "message": "Habilitar Chat Danmaku"
+    },
+    "options_disable_active_users": {
+        "message": "Desactivar Estadísticas de Usuarios Activos"
     },
     "options_customization": {
         "message": "Personalización"

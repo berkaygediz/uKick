@@ -1,9 +1,9 @@
 {
     "app_name": {
-        "message": "uKick — Block & Stream Tweaks for Kick"
+        "message": "uKick — Kick için Engelleme ve Yayın Ayarı"
     },
     "app_description": {
-        "message": "Kick üzerinde her şeyi engellemek, güçlendirmek ve özelleştirmek için hepsi bir arada eklenti."
+        "message": "Daha iyi bir yayın deneyimi için Kick'teki her şeyi engellemenizi, güçlendirmenizi ve ayarlamanızı sağlayan her şey dahil uzantı."
     },
     "btn_block_channel": {
         "message": "Bu kanalı engelle"
@@ -35,7 +35,7 @@
         "message": "Etiketler"
     },
     "popup_adaptive_stream": {
-        "message": "Uyarlanabilir Yayın"
+        "message": "Uyarlanabilir Akış"
     },
     "popup_quality": {
         "message": "Kalite"
@@ -44,7 +44,7 @@
         "message": "Ses Güçlendirme"
     },
     "popup_open_options": {
-        "message": "Ayarlar"
+        "message": "Seçenekler"
     },
     "options_blocked_channels": {
         "message": "Engellenen Kanallar"
@@ -80,13 +80,19 @@
         "message": "➕ Etiket Ekle"
     },
     "options_disable_search_history": {
-        "message": "Arama geçmişini devre dışı bırak"
+        "message": "Arama Geçmişini Devre Dışı Bırak"
     },
     "options_disable_chat_blocking": {
-        "message": "Sohbet engellemeyi devre dışı bırak"
+        "message": "Sohbet Engellemeyi Devre Dışı Bırak"
     },
     "options_hide_block_buttons": {
-        "message": "Engelleme butonlarını gizle"
+        "message": "Engelleme Düğmelerini Gizle"
+    },
+    "options_enable_danmaku_chat": {
+        "message": "Danmaku Sohbetini Etkinleştir"
+    },
+    "options_disable_active_users": {
+        "message": "Aktif Kullanıcı İstatistiklerini Devre Dışı Bırak"
     },
     "options_customization": {
         "message": "Özelleştirme"

@@ -1,0 +1,100 @@
+{
+    "app_name": {
+        "message": "uKick — Blokir & Pengaturan Stream untuk Kick"
+    },
+    "app_description": {
+        "message": "Ekstensi serbaguna untuk memblokir, meningkatkan, dan mengatur segalanya di Kick untuk pengalaman streaming yang lebih baik."
+    },
+    "btn_block_channel": {
+        "message": "Blokir saluran ini"
+    },
+    "btn_block_category": {
+        "message": "Sembunyikan kategori"
+    },
+    "alert_channel_blocked": {
+        "message": "$CHANNEL$ diblokir!",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_filtering": {
+        "message": "Penyaringan"
+    },
+    "popup_status": {
+        "message": "Status"
+    },
+    "popup_channels": {
+        "message": "Saluran"
+    },
+    "popup_categories": {
+        "message": "Kategori"
+    },
+    "popup_tags": {
+        "message": "Tag"
+    },
+    "popup_adaptive_stream": {
+        "message": "Stream Adaptif"
+    },
+    "popup_quality": {
+        "message": "Kualitas"
+    },
+    "popup_volume_boost": {
+        "message": "Peningkatan Volume"
+    },
+    "popup_open_options": {
+        "message": "Opsi"
+    },
+    "options_blocked_channels": {
+        "message": "Saluran Diblokir"
+    },
+    "options_blocked_categories": {
+        "message": "Kategori Diblokir"
+    },
+    "options_blocked_tags": {
+        "message": "Tag Diblokir"
+    },
+    "options_show": {
+        "message": "▶️ Tampilkan"
+    },
+    "options_export": {
+        "message": "📤 Ekspor"
+    },
+    "options_import": {
+        "message": "📥 Impor"
+    },
+    "options_clear_all": {
+        "message": "🧹 Hapus Semua"
+    },
+    "options_refresh": {
+        "message": "🔄 Segarkan"
+    },
+    "options_add_channel": {
+        "message": "➕ Tambah Saluran"
+    },
+    "options_add_category": {
+        "message": "➕ Tambah Kategori"
+    },
+    "options_add_tags": {
+        "message": "➕ Tambah Tag"
+    },
+    "options_disable_search_history": {
+        "message": "Nonaktifkan Riwayat Pencarian"
+    },
+    "options_disable_chat_blocking": {
+        "message": "Nonaktifkan Pemblokiran Obrolan"
+    },
+    "options_hide_block_buttons": {
+        "message": "Sembunyikan Tombol Blokir"
+    },
+    "options_enable_danmaku_chat": {
+        "message": "Aktifkan Obrolan Danmaku"
+    },
+    "options_disable_active_users": {
+        "message": "Nonaktifkan Statistik Pengguna Aktif"
+    },
+    "options_customization": {
+        "message": "Kustomisasi"
+    }
+}

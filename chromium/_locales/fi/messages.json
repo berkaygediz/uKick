@@ -1,0 +1,100 @@
+{
+    "app_name": {
+        "message": "uKick — Esto ja Suoratoiston Säädöt Kickille"
+    },
+    "app_description": {
+        "message": "Kaiken kattava laajennus Kickin kaiken estämiseen, tehostamiseen ja säätämiseen parempaa suoratoistokokemusta varten."
+    },
+    "btn_block_channel": {
+        "message": "Estä tämä kanava"
+    },
+    "btn_block_category": {
+        "message": "Piilota kategoria"
+    },
+    "alert_channel_blocked": {
+        "message": "$CHANNEL$ estetty!",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_filtering": {
+        "message": "Suodatus"
+    },
+    "popup_status": {
+        "message": "Tila"
+    },
+    "popup_channels": {
+        "message": "Kanavat"
+    },
+    "popup_categories": {
+        "message": "Kategoriat"
+    },
+    "popup_tags": {
+        "message": "Tunnisteet"
+    },
+    "popup_adaptive_stream": {
+        "message": "Mukautuva suoratoisto"
+    },
+    "popup_quality": {
+        "message": "Laatu"
+    },
+    "popup_volume_boost": {
+        "message": "Äänen tehostus"
+    },
+    "popup_open_options": {
+        "message": "Asetukset"
+    },
+    "options_blocked_channels": {
+        "message": "Estetyt kanavat"
+    },
+    "options_blocked_categories": {
+        "message": "Estetyt kategoriat"
+    },
+    "options_blocked_tags": {
+        "message": "Estetyt tunnisteet"
+    },
+    "options_show": {
+        "message": "▶️ Näytä"
+    },
+    "options_export": {
+        "message": "📤 Vie"
+    },
+    "options_import": {
+        "message": "📥 Tuo"
+    },
+    "options_clear_all": {
+        "message": "🧹 Tyhjennä kaikki"
+    },
+    "options_refresh": {
+        "message": "🔄 Päivitä"
+    },
+    "options_add_channel": {
+        "message": "➕ Lisää kanava"
+    },
+    "options_add_category": {
+        "message": "➕ Lisää kategoria"
+    },
+    "options_add_tags": {
+        "message": "➕ Lisää tunnisteita"
+    },
+    "options_disable_search_history": {
+        "message": "Poista hakuhistoria käytöstä"
+    },
+    "options_disable_chat_blocking": {
+        "message": "Poista keskustelun esto käytöstä"
+    },
+    "options_hide_block_buttons": {
+        "message": "Piilota estopainikkeet"
+    },
+    "options_enable_danmaku_chat": {
+        "message": "Ota Danmaku-keskustelu käyttöön"
+    },
+    "options_disable_active_users": {
+        "message": "Poista aktiivisten käyttäjien tilastot käytöstä"
+    },
+    "options_customization": {
+        "message": "Mukautus"
+    }
+}

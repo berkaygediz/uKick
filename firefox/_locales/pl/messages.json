@@ -1,9 +1,9 @@
 {
     "app_name": {
-        "message": "uKick — Block & Stream Tweaks for Kick"
+        "message": "uKick — Blokowanie i Ustawienia dla Kick"
     },
     "app_description": {
-        "message": "Wielofunkcyjne rozszerzenie do blokowania, wzmacniania i dostosowywania wszystkiego na Kick dla lepszego doświadczenia streamingu."
+        "message": "Rozszerzenie typu wszystko w jednym do blokowania, wzmacniania i dostosowywania wszystkiego na Kick dla lepszych wrażeń z przesyłania."
     },
     "btn_block_channel": {
         "message": "Zablokuj ten kanał"
@@ -12,7 +12,7 @@
         "message": "Ukryj kategorię"
     },
     "alert_channel_blocked": {
-        "message": "$CHANNEL$ zablokowany!",
+        "message": "Zablokowano $CHANNEL$!",
         "placeholders": {
             "channel": {
                 "content": "$1"
@@ -35,25 +35,25 @@
         "message": "Tagi"
     },
     "popup_adaptive_stream": {
-        "message": "Strumień adaptacyjny"
+        "message": "Strumień Adaptacyjny"
     },
     "popup_quality": {
         "message": "Jakość"
     },
     "popup_volume_boost": {
-        "message": "Wzmocnienie głośności"
+        "message": "Wzmocnienie Głośności"
     },
     "popup_open_options": {
         "message": "Opcje"
     },
     "options_blocked_channels": {
-        "message": "Zablokowane kanały"
+        "message": "Zablokowane Kanały"
     },
     "options_blocked_categories": {
-        "message": "Zablokowane kategorie"
+        "message": "Zablokowane Kategorie"
     },
     "options_blocked_tags": {
-        "message": "Zablokowane tagi"
+        "message": "Zablokowane Tagi"
     },
     "options_show": {
         "message": "▶️ Pokaż"
@@ -88,7 +88,13 @@
     "options_hide_block_buttons": {
         "message": "Ukryj przyciski blokowania"
     },
+    "options_enable_danmaku_chat": {
+        "message": "Włącz czat Danmaku"
+    },
+    "options_disable_active_users": {
+        "message": "Wyłącz statystyki aktywnych użytkowników"
+    },
     "options_customization": {
-        "message": "Personalizacja"
+        "message": "Dostosowywanie"
     }
 }

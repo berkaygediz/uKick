@@ -1,0 +1,100 @@
+{
+    "app_name": {
+        "message": "uKick — Chặn & Tinh chỉnh Stream cho Kick"
+    },
+    "app_description": {
+        "message": "Tiện ích mở rộng tất cả trong một để chặn, tăng cường và tinh chỉnh mọi thứ trên Kick để có trải nghiệm phát trực tuyến tốt hơn."
+    },
+    "btn_block_channel": {
+        "message": "Chặn kênh này"
+    },
+    "btn_block_category": {
+        "message": "Ẩn danh mục"
+    },
+    "alert_channel_blocked": {
+        "message": "Đã chặn $CHANNEL$!",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_filtering": {
+        "message": "Lọc"
+    },
+    "popup_status": {
+        "message": "Trạng thái"
+    },
+    "popup_channels": {
+        "message": "Kênh"
+    },
+    "popup_categories": {
+        "message": "Danh mục"
+    },
+    "popup_tags": {
+        "message": "Thẻ"
+    },
+    "popup_adaptive_stream": {
+        "message": "Luồng Thích ứng"
+    },
+    "popup_quality": {
+        "message": "Chất lượng"
+    },
+    "popup_volume_boost": {
+        "message": "Tăng Âm lượng"
+    },
+    "popup_open_options": {
+        "message": "Tùy chọn"
+    },
+    "options_blocked_channels": {
+        "message": "Kênh đã chặn"
+    },
+    "options_blocked_categories": {
+        "message": "Danh mục đã chặn"
+    },
+    "options_blocked_tags": {
+        "message": "Thẻ đã chặn"
+    },
+    "options_show": {
+        "message": "▶️ Hiện"
+    },
+    "options_export": {
+        "message": "📤 Xuất"
+    },
+    "options_import": {
+        "message": "📥 Nhập"
+    },
+    "options_clear_all": {
+        "message": "🧹 Xóa tất cả"
+    },
+    "options_refresh": {
+        "message": "🔄 Làm mới"
+    },
+    "options_add_channel": {
+        "message": "➕ Thêm kênh"
+    },
+    "options_add_category": {
+        "message": "➕ Thêm danh mục"
+    },
+    "options_add_tags": {
+        "message": "➕ Thêm thẻ"
+    },
+    "options_disable_search_history": {
+        "message": "Tắt Lịch sử Tìm kiếm"
+    },
+    "options_disable_chat_blocking": {
+        "message": "Tắt Chặn Trò chuyện"
+    },
+    "options_hide_block_buttons": {
+        "message": "Ẩn Nút Chặn"
+    },
+    "options_enable_danmaku_chat": {
+        "message": "Bật Trò chuyện Danmaku"
+    },
+    "options_disable_active_users": {
+        "message": "Tắt Thống kê Người dùng Hoạt động"
+    },
+    "options_customization": {
+        "message": "Tùy biến"
+    }
+}

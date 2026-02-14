@@ -1,0 +1,100 @@
+{
+    "app_name": {
+        "message": "uKick — Блокировка и Настройки Стрима для Kick"
+    },
+    "app_description": {
+        "message": "Универсальное расширение для блокировки, усиления и настройки всего на Kick для лучшего опыта стриминга."
+    },
+    "btn_block_channel": {
+        "message": "Заблокировать канал"
+    },
+    "btn_block_category": {
+        "message": "Скрыть категорию"
+    },
+    "alert_channel_blocked": {
+        "message": "$CHANNEL$ заблокирован!",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_filtering": {
+        "message": "Фильтрация"
+    },
+    "popup_status": {
+        "message": "Статус"
+    },
+    "popup_channels": {
+        "message": "Каналы"
+    },
+    "popup_categories": {
+        "message": "Категории"
+    },
+    "popup_tags": {
+        "message": "Теги"
+    },
+    "popup_adaptive_stream": {
+        "message": "Адаптивный стрим"
+    },
+    "popup_quality": {
+        "message": "Качество"
+    },
+    "popup_volume_boost": {
+        "message": "Усиление громкости"
+    },
+    "popup_open_options": {
+        "message": "Настройки"
+    },
+    "options_blocked_channels": {
+        "message": "Заблокированные каналы"
+    },
+    "options_blocked_categories": {
+        "message": "Заблокированные категории"
+    },
+    "options_blocked_tags": {
+        "message": "Заблокированные теги"
+    },
+    "options_show": {
+        "message": "▶️ Показать"
+    },
+    "options_export": {
+        "message": "📤 Экспорт"
+    },
+    "options_import": {
+        "message": "📥 Импорт"
+    },
+    "options_clear_all": {
+        "message": "🧹 Очистить всё"
+    },
+    "options_refresh": {
+        "message": "🔄 Обновить"
+    },
+    "options_add_channel": {
+        "message": "➕ Добавить канал"
+    },
+    "options_add_category": {
+        "message": "➕ Добавить категорию"
+    },
+    "options_add_tags": {
+        "message": "➕ Добавить теги"
+    },
+    "options_disable_search_history": {
+        "message": "Отключить историю поиска"
+    },
+    "options_disable_chat_blocking": {
+        "message": "Отключить блокировку чата"
+    },
+    "options_hide_block_buttons": {
+        "message": "Скрыть кнопки блокировки"
+    },
+    "options_enable_danmaku_chat": {
+        "message": "Включить чат Данмаку"
+    },
+    "options_disable_active_users": {
+        "message": "Отключить статистику активных пользователей"
+    },
+    "options_customization": {
+        "message": "Настройка"
+    }
+}

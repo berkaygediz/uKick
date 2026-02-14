@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -156,7 +156,9 @@
         height: 40px;
         border-radius: 6px;
         text-decoration: none;
-        transition: background 0.3s ease, transform 0.2s ease;
+        transition:
+          background 0.3s ease,
+          transform 0.2s ease;
         cursor: pointer;
       }
 
@@ -262,6 +264,7 @@
       <div class="toggle-container">
         <span class="toggle-label count-label" id="qualityLabel">Quality</span>
         <select id="qualitySelect">
+          <option value="0">Auto</option>
           <option value="2160">2160p (!)</option>
           <option value="1440">1440p (!)</option>
           <option value="1080">1080p</option>
@@ -395,8 +398,8 @@
           justify-content: center;
           transition: 0.15s;
         "
-        onmouseover="this.style.background='#2a2a2a'"
-        onmouseout="this.style.background='#1e1e1e'"
+        onmouseover="this.style.background = '#2a2a2a'"
+        onmouseout="this.style.background = '#1e1e1e'"
       >
         ✕
       </button>
@@ -455,7 +458,6 @@
           }
         </style>
 
-        <!-- Kartlar - A ETİKETİ HALİ -->
         <a
           href="https://github.com/berkaygediz/SolidWriting"
           target="_blank"
@@ -463,7 +465,7 @@
         >
           <div class="promo-title">SolidWriting</div>
           <div class="promo-desc">
-            Modern word processor with AI integration.
+            A modern word processor with AI integration.
           </div>
         </a>
 
@@ -474,7 +476,7 @@
         >
           <div class="promo-title">SolidSheets</div>
           <div class="promo-desc">
-            Spreadsheets & data tools with advanced formulas.
+            A modern spreadsheet editor with ML integration.
           </div>
         </a>
 
@@ -484,7 +486,9 @@
           class="promo-card"
         >
           <div class="promo-title">PASPAS</div>
-          <div class="promo-desc">Blazing-fast system optimizer.</div>
+          <div class="promo-desc">
+            Blazing-fast, all-in-one system optimizer.
+          </div>
         </a>
 
         <a
@@ -493,7 +497,7 @@
           class="promo-card"
         >
           <div class="promo-title">uKick</div>
-          <div class="promo-desc">Filtering & enhancement tools for Kick.</div>
+          <div class="promo-desc">All-in-one extension for Kick.</div>
         </a>
 
         <a
@@ -502,9 +506,7 @@
           class="promo-card"
         >
           <div class="promo-title">uDittor</div>
-          <div class="promo-desc">
-            Fast subreddit & user blocking for Reddit.
-          </div>
+          <div class="promo-desc">All-in-one extension for Reddit.</div>
         </a>
 
         <a
@@ -513,7 +515,7 @@
           class="promo-card"
         >
           <div class="promo-title">uSozluk</div>
-          <div class="promo-desc">Lightning-fast blocking for Ekşi Sözlük.</div>
+          <div class="promo-desc">All-in-one extension for Ekşi Sözlük.</div>
         </a>
 
         <a
