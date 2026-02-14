@@ -1,0 +1,100 @@
+{
+    "app_name": {
+        "message": "uKick — Blokování a Úpravy Streamu pro Kick"
+    },
+    "app_description": {
+        "message": "Komplexní rozšíření pro blokování, posílení a úpravu všeho na Kick pro lepší zážitek ze streamování."
+    },
+    "btn_block_channel": {
+        "message": "Blokovat tento kanál"
+    },
+    "btn_block_category": {
+        "message": "Skrýt kategorii"
+    },
+    "alert_channel_blocked": {
+        "message": "$CHANNEL$ zablokován!",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_filtering": {
+        "message": "Filtrování"
+    },
+    "popup_status": {
+        "message": "Stav"
+    },
+    "popup_channels": {
+        "message": "Kanály"
+    },
+    "popup_categories": {
+        "message": "Kategorie"
+    },
+    "popup_tags": {
+        "message": "Štítky"
+    },
+    "popup_adaptive_stream": {
+        "message": "Adaptivní Stream"
+    },
+    "popup_quality": {
+        "message": "Kvalita"
+    },
+    "popup_volume_boost": {
+        "message": "Posílení Hlasitosti"
+    },
+    "popup_open_options": {
+        "message": "Možnosti"
+    },
+    "options_blocked_channels": {
+        "message": "Zablokované Kanály"
+    },
+    "options_blocked_categories": {
+        "message": "Zablokované Kategorie"
+    },
+    "options_blocked_tags": {
+        "message": "Zablokované Štítky"
+    },
+    "options_show": {
+        "message": "▶️ Zobrazit"
+    },
+    "options_export": {
+        "message": "📤 Exportovat"
+    },
+    "options_import": {
+        "message": "📥 Importovat"
+    },
+    "options_clear_all": {
+        "message": "🧹 Vymazat vše"
+    },
+    "options_refresh": {
+        "message": "🔄 Obnovit"
+    },
+    "options_add_channel": {
+        "message": "➕ Přidat kanál"
+    },
+    "options_add_category": {
+        "message": "➕ Přidat kategorii"
+    },
+    "options_add_tags": {
+        "message": "➕ Přidat štítky"
+    },
+    "options_disable_search_history": {
+        "message": "Zakázat Historii Vyhledávání"
+    },
+    "options_disable_chat_blocking": {
+        "message": "Zakázat Blokování Chatu"
+    },
+    "options_hide_block_buttons": {
+        "message": "Skrýt Tlačítka Blokování"
+    },
+    "options_enable_danmaku_chat": {
+        "message": "Povolit Danmaku Chat"
+    },
+    "options_disable_active_users": {
+        "message": "Zakázat Statistiky Aktivních Uživatelů"
+    },
+    "options_customization": {
+        "message": "Přizpůsobení"
+    }
+}

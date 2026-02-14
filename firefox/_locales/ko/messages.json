@@ -1,9 +1,9 @@
 {
     "app_name": {
-        "message": "uKick — Block & Stream Tweaks for Kick"
+        "message": "uKick — Kick 차단 및 스트림 조정"
     },
     "app_description": {
-        "message": "Kick에서 모든 것을 차단, 강화 및 조정하여 더 나은 스트리밍 경험을 제공하는 올인원 확장 프로그램입니다."
+        "message": "더 나은 스트리밍 경험을 위해 Kick의 모든 것을 차단, 부스트 및 조정하는 올인원 확장 프로그램."
     },
     "btn_block_channel": {
         "message": "이 채널 차단"
@@ -38,10 +38,10 @@
         "message": "적응형 스트림"
     },
     "popup_quality": {
-        "message": "화질"
+        "message": "품질"
     },
     "popup_volume_boost": {
-        "message": "볼륨 증폭"
+        "message": "볼륨 부스트"
     },
     "popup_open_options": {
         "message": "옵션"
@@ -65,7 +65,7 @@
         "message": "📥 가져오기"
     },
     "options_clear_all": {
-        "message": "🧹 모두 지우기"
+        "message": "🧹 전체 지우기"
     },
     "options_refresh": {
         "message": "🔄 새로고침"
@@ -88,7 +88,13 @@
     "options_hide_block_buttons": {
         "message": "차단 버튼 숨기기"
     },
+    "options_enable_danmaku_chat": {
+        "message": "탄막 채팅 활성화"
+    },
+    "options_disable_active_users": {
+        "message": "활성 사용자 통계 비활성화"
+    },
     "options_customization": {
-        "message": "사용자 설정"
+        "message": "사용자 정의"
     }
 }

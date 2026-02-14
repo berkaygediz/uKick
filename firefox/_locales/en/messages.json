@@ -88,6 +88,12 @@
     "options_hide_block_buttons": {
         "message": "Hide Block Buttons"
     },
+    "options_enable_danmaku_chat": {
+        "message": "Enable Danmaku Chat"
+    },
+    "options_disable_active_users": {
+        "message": "Disable Active Users Stats"
+    },
     "options_customization": {
         "message": "Customization"
     }

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -201,7 +201,9 @@
           height: 40px;
           border-radius: 6px;
           text-decoration: none;
-          transition: background 0.3s ease, transform 0.2s ease;
+          transition:
+            background 0.3s ease,
+            transform 0.2s ease;
           cursor: pointer;
         }
 
@@ -393,6 +395,47 @@
             <span class="slider"></span>
           </label>
         </div>
+
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2a2a2a;
+            padding: 12px 14px;
+            border-radius: 6px;
+            margin-top: 10px;
+          "
+        >
+          <div style="font-size: 14px; user-select: none; font-weight: bold">
+            <span id="enableDanmakuLabel"></span>
+          </div>
+
+          <label class="switch">
+            <input type="checkbox" id="enableDanmakuToggle" />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2a2a2a;
+            padding: 12px 14px;
+            border-radius: 6px;
+            margin-top: 10px;
+          "
+        >
+          <div style="font-size: 14px; user-select: none; font-weight: bold">
+            <span id="disableActiveUsersLabel"></span>
+          </div>
+
+          <label class="switch">
+            <input type="checkbox" id="disableActiveUsersToggle" />
+            <span class="slider"></span>
+          </label>
+        </div>
       </div>
 
       <div
@@ -500,8 +543,7 @@
           >
             <div class="eco-title">uKick</div>
             <div class="eco-desc">
-              All-in-one extension to block, boost, and tweak everything on Kick
-              for a better streaming experience.
+              All-in-one extension to block, boost and tweak everything on Kick.
             </div>
           </a>
 
@@ -512,7 +554,7 @@
           >
             <div class="eco-title">uDittor</div>
             <div class="eco-desc">
-              Lightning-fast subreddit & user blocking for Reddit.
+              All-in-one extension to block and tweak everything on Reddit.
             </div>
           </a>
 
@@ -522,7 +564,9 @@
             class="eco-card"
           >
             <div class="eco-title">uSozluk</div>
-            <div class="eco-desc">Lightning-fast blocking for Ekşi Sözlük.</div>
+            <div class="eco-desc">
+              All-in-one extension to block and tweak everything on Ekşi Sözlük.
+            </div>
           </a>
 
           <a
@@ -580,7 +624,9 @@
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            transition: background 0.3s ease, transform 0.2s ease;
+            transition:
+              background 0.3s ease,
+              transform 0.2s ease;
           "
         >
           <svg
@@ -612,7 +658,9 @@
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            transition: background 0.3s ease, transform 0.2s ease;
+            transition:
+              background 0.3s ease,
+              transform 0.2s ease;
           "
         >
           <svg

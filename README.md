@@ -9,49 +9,27 @@ Take full control of your Kick experience with **uKick** — block unwanted cont
 
 ## Install
 
-<p align="center">
-  <a href="https://chromewebstore.google.com/detail/ukick-%E2%80%94-block-everything/ifndlnhdiommaehhmeomdggeknpikjek">
-    <img src="https://img.shields.io/badge/Chrome-Web%20Store-4285F4?style=for-the-badge&logo=google-chrome&logoColor=white" alt="Chrome Web Store">
-  </a>
-  <a href="https://microsoftedge.microsoft.com/addons/detail/ukick-%E2%80%94-block-everything-/dpkahlbhnkllhalhggfogkppbnlajfle">
-    <img src="https://img.shields.io/badge/Edge-Add--ons-0078D7?style=for-the-badge&logo=microsoft-edge&logoColor=white" alt="Edge Add-ons">
-  </a>
-  <a href="https://addons.mozilla.org/en-US/firefox/addon/ukick/">
-    <img src="https://img.shields.io/badge/Firefox-Add--ons-FF7139?style=for-the-badge&logo=firefox-browser&logoColor=white" alt="Firefox Add-on">
-  </a>
-  <a href="https://greasyfork.org/en/scripts/548672-ukick-block-everything-stream-tweaks">
-    <img src="https://img.shields.io/badge/GreasyFork-Userscript-5A5A5A?style=for-the-badge&logo=greasyfork&logoColor=white" alt="GreasyFork">
-  </a>
-</p>
-
-<p align="center"><strong>Also available on Quetta Browser</strong></p>
-
-<p align="center">
-  <a href="https://www.quetta.net/">
-    <img src="https://img.shields.io/badge/Official%20Site-Quetta-5A5A5A?style=for-the-badge&logo=internet-explorer&logoColor=white" alt="Quetta Official Site">
-  </a>
-  <a href="https://play.google.com/store/apps/details?id=net.quetta.browser">
-    <img src="https://img.shields.io/badge/Google%20Play-Quetta-3DDC84?style=for-the-badge&logo=google-play&logoColor=white" alt="Quetta on Google Play">
-  </a>
-  <a href="https://apps.apple.com/us/app/quetta-your-adblock-browser/id6504077999">
-    <img src="https://img.shields.io/badge/App%20Store-Quetta-0D96F6?style=for-the-badge&logo=apple&logoColor=white" alt="Quetta on App Store">
-  </a>
-</p>
+- [Chrome Web Store](https://chromewebstore.google.com/detail/ukick-%E2%80%94-block-everything/ifndlnhdiommaehhmeomdggeknpikjek)
+- [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/ukick-%E2%80%94-block-everything-/dpkahlbhnkllhalhggfogkppbnlajfle)
+- [Firefox Add-on](https://addons.mozilla.org/en-US/firefox/addon/ukick/)
+- [GreasyFork Userscript](https://greasyfork.org/en/scripts/548672-ukick-block-everything-stream-tweaks)
 
 ## Features
 
-- **Block Channels, Categories & Tags** — instantly hide streams and content you don’t want to see
-- **Filter Chat Users** — automatically remove messages from blocked users in Kick.com chat
-- **Quick Block Buttons** — add one-click block next to usernames and stream cards
-- **Real-Time Updates** — changes are applied instantly across Kick.com
-- **Manage Your Lists** — import, export, view, or clear your block lists anytime
-- **Adaptive Stream Tweaks** — set your preferred resolution (160p -> 4K) and let uKick auto-adjust quality
-- **Volume Boost (1x -> 10x)** — go beyond Kick’s default volume limit for a better audio experience
-- **Search History Control** — optionally disable Kick.com search history tracking
-- **Customizable Interface** — toggle chat filtering and block buttons on/off
-- **Mobile Support** — works on all Chromium-based browsers (via Quetta Browser)
-- **Privacy Friendly** — runs only on Kick.com, no tracking, no external connections
-- **Multi-language** — supports English, Spanish (es), Portuguese (pt_BR, pt_PT), Chinese (Simplified zh_CN), Polish (pl), German (de), Korean (ko), Japanese (ja), Arabic (ar), Turkish (tr)
+- **Block Channels, Categories & Tags** — instantly hide streams and content you don’t want to see.
+- **Filter Chat Users** — automatically remove messages from blocked users in Kick.com chat.
+- **Quick Block Buttons** — add one-click block next to usernames and stream cards.
+- **Danmaku Chat** — enable on-screen bullet comments for an immersive streaming experience.
+- **Swap Chat Direction** — move the chat panel to the left or right side of the screen.
+- **Active Users Stats** — displays the number of active viewers and messages processed in the stream.
+- **Real-Time Updates** — changes are applied instantly across Kick.com.
+- **Manage Your Lists** — import, export, view, or clear your block lists anytime.
+- **Adaptive Stream Tweaks** — set your preferred resolution (160p -> 4K) and let uKick auto-adjust quality.
+- **Volume Boost (1x -> 10x)** — go beyond Kick’s default volume limit for a better audio experience.
+- **Search History Control** — optionally disable Kick.com search history tracking.
+- **Mobile Support** — works on all Chromium-based/Firefox-based browsers (via Quetta Browser/Firefox Mobile).
+- **Privacy Friendly** — runs only on Kick.com, no tracking, no external connections.
+- **Multi-language** — supports Arabic (ar), Czech (cs), German (de), English (en), Spanish (es), Finnish (fi), French (fr), Indonesian (id), Italian (it), Japanese (ja), Korean (ko), Polish (pl), Portuguese (pt_BR, pt_PT), Russian (ru), Turkish (tr), Vietnamese (vi), and Chinese Simplified (zh_CN).
 
 ## Disclaimer
 

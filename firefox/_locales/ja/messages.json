@@ -1,15 +1,15 @@
 {
     "app_name": {
-        "message": "uKick — Block & Stream Tweaks for Kick"
+        "message": "uKick — Kick用ブロック＆ストリーム調整"
     },
     "app_description": {
-        "message": "Kick 上のすべてをブロック、強化、調整して、より良いストリーミング体験を提供するオールインワン拡張機能です。"
+        "message": "より良いストリーミング体験のために、Kick上のすべてをブロック、ブースト、調整するオールインワン拡張機能。"
     },
     "btn_block_channel": {
         "message": "このチャンネルをブロック"
     },
     "btn_block_category": {
-        "message": "カテゴリーを非表示"
+        "message": "カテゴリを非表示"
     },
     "alert_channel_blocked": {
         "message": "$CHANNEL$ をブロックしました！",
@@ -29,7 +29,7 @@
         "message": "チャンネル"
     },
     "popup_categories": {
-        "message": "カテゴリー"
+        "message": "カテゴリ"
     },
     "popup_tags": {
         "message": "タグ"
@@ -38,7 +38,7 @@
         "message": "アダプティブストリーム"
     },
     "popup_quality": {
-        "message": "画質"
+        "message": "品質"
     },
     "popup_volume_boost": {
         "message": "音量ブースト"
@@ -47,10 +47,10 @@
         "message": "オプション"
     },
     "options_blocked_channels": {
-        "message": "ブロックされたチャンネル"
+        "message": "ブロック済みチャンネル"
     },
     "options_blocked_categories": {
-        "message": "ブロックされたカテゴリー"
+        "message": "ブロック済みカテゴリ"
     },
     "options_blocked_tags": {
         "message": "ブロック済みタグ"
@@ -74,19 +74,25 @@
         "message": "➕ チャンネル追加"
     },
     "options_add_category": {
-        "message": "➕ カテゴリー追加"
+        "message": "➕ カテゴリ追加"
     },
     "options_add_tags": {
-        "message": "➕ タグを追加"
+        "message": "➕ タグ追加"
     },
     "options_disable_search_history": {
-        "message": "検索履歴を無効にする"
+        "message": "検索履歴を無効化"
     },
     "options_disable_chat_blocking": {
-        "message": "チャットブロックを無効にする"
+        "message": "チャットブロックを無効化"
     },
     "options_hide_block_buttons": {
         "message": "ブロックボタンを非表示"
+    },
+    "options_enable_danmaku_chat": {
+        "message": "弾幕チャットを有効化"
+    },
+    "options_disable_active_users": {
+        "message": "アクティブユーザー統計を無効化"
     },
     "options_customization": {
         "message": "カスタマイズ"

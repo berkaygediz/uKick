@@ -1,9 +1,9 @@
 {
     "app_name": {
-        "message": "uKick — Block & Stream Tweaks for Kick"
+        "message": "uKick — Block & Stream Anpassungen für Kick"
     },
     "app_description": {
-        "message": "All-in-One-Erweiterung zum Blockieren, Verstärken und Anpassen von allem auf Kick für ein besseres Streaming-Erlebnis."
+        "message": "Alles-in-einem-Erweiterung zum Blockieren, Verstärken und Anpassen von allem auf Kick für ein besseres Streaming-Erlebnis."
     },
     "btn_block_channel": {
         "message": "Diesen Kanal blockieren"
@@ -20,7 +20,7 @@
         }
     },
     "popup_filtering": {
-        "message": "Filter"
+        "message": "Filterung"
     },
     "popup_status": {
         "message": "Status"
@@ -35,13 +35,13 @@
         "message": "Tags"
     },
     "popup_adaptive_stream": {
-        "message": "Adaptive Übertragung"
+        "message": "Adaptiver Stream"
     },
     "popup_quality": {
         "message": "Qualität"
     },
     "popup_volume_boost": {
-        "message": "Lautstärkeverstärkung"
+        "message": "Lautstärke-Boost"
     },
     "popup_open_options": {
         "message": "Optionen"
@@ -65,7 +65,7 @@
         "message": "📥 Importieren"
     },
     "options_clear_all": {
-        "message": "🧹 Alle löschen"
+        "message": "🧹 Alles löschen"
     },
     "options_refresh": {
         "message": "🔄 Aktualisieren"
@@ -83,10 +83,16 @@
         "message": "Suchverlauf deaktivieren"
     },
     "options_disable_chat_blocking": {
-        "message": "Chat-Blockierung deaktivieren"
+        "message": "Chat-Sperrung deaktivieren"
     },
     "options_hide_block_buttons": {
-        "message": "Blockier-Schaltflächen ausblenden"
+        "message": "Blockiertasten ausblenden"
+    },
+    "options_enable_danmaku_chat": {
+        "message": "Danmaku-Chat aktivieren"
+    },
+    "options_disable_active_users": {
+        "message": "Aktive Benutzer-Statistiken deaktivieren"
     },
     "options_customization": {
         "message": "Anpassung"
