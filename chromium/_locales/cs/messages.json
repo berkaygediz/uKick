@@ -94,6 +94,9 @@
     "options_disable_active_users": {
         "message": "Zakázat Statistiky Aktivních Uživatelů"
     },
+    "options_suggestions": {
+        "message": "NÁVRHY:"
+    },
     "options_customization": {
         "message": "Přizpůsobení"
     }

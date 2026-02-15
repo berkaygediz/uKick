@@ -94,6 +94,9 @@
     "options_disable_active_users": {
         "message": "Отключить статистику активных пользователей"
     },
+    "options_suggestions": {
+        "message": "ПРЕДЛОЖЕНИЯ:"
+    },
     "options_customization": {
         "message": "Настройка"
     }

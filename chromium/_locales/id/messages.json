@@ -94,6 +94,9 @@
     "options_disable_active_users": {
         "message": "Nonaktifkan Statistik Pengguna Aktif"
     },
+    "options_suggestions": {
+        "message": "SARAN:"
+    },
     "options_customization": {
         "message": "Kustomisasi"
     }

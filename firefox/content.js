@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uKick — Block & Stream Tweaks for Kick
 // @namespace    https://github.com/berkaygediz/uKick
-// @version      2.5.0.0
+// @version      2.5.0.2
 // @description  All-in-one extension to block, boost, and tweak everything on Kick for a better streaming experience.
 // @author       berkaygediz
 // @match        https://kick.com/*

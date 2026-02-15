@@ -94,6 +94,9 @@
     "options_disable_active_users": {
         "message": "Tắt Thống kê Người dùng Hoạt động"
     },
+    "options_suggestions": {
+        "message": "GỢI Ý:"
+    },
     "options_customization": {
         "message": "Tùy biến"
     }

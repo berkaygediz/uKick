@@ -94,6 +94,9 @@
     "options_disable_active_users": {
         "message": "تعطيل إحصائيات المستخدمين النشطين"
     },
+    "options_suggestions": {
+        "message": "اقتراحات:"
+    },
     "options_customization": {
         "message": "التخصيص"
     }
