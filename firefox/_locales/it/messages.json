@@ -94,6 +94,9 @@
     "options_disable_active_users": {
         "message": "Disabilita Statistiche Utenti Attivi"
     },
+    "options_suggestions": {
+        "message": "SUGGERIMENTI:"
+    },
     "options_customization": {
         "message": "Personalizzazione"
     }

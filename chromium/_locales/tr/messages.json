@@ -94,6 +94,9 @@
     "options_disable_active_users": {
         "message": "Aktif Kullanıcı İstatistiklerini Devre Dışı Bırak"
     },
+    "options_suggestions": {
+        "message": "ÖNERİLER:"
+    },
     "options_customization": {
         "message": "Özelleştirme"
     }

@@ -94,6 +94,9 @@
     "options_disable_active_users": {
         "message": "활성 사용자 통계 비활성화"
     },
+    "options_suggestions": {
+        "message": "제안:"
+    },
     "options_customization": {
         "message": "사용자 정의"
     }

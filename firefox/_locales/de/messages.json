@@ -94,6 +94,9 @@
     "options_disable_active_users": {
         "message": "Aktive Benutzer-Statistiken deaktivieren"
     },
+    "options_suggestions": {
+        "message": "VORSCHLÄGE:"
+    },
     "options_customization": {
         "message": "Anpassung"
     }

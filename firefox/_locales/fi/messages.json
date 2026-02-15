@@ -94,6 +94,9 @@
     "options_disable_active_users": {
         "message": "Poista aktiivisten käyttäjien tilastot käytöstä"
     },
+    "options_suggestions": {
+        "message": "EHDOTUKSET:"
+    },
     "options_customization": {
         "message": "Mukautus"
     }

@@ -59,7 +59,10 @@ function renderSuggestions(containerId, storageKey, currentList) {
 
   container.style.display = "block";
 
-  let html = `<div style="font-size: 13px; color: #b2ff59; margin-bottom: 5px; margin-top: 10px; font-weight: bold;">SUGGESTIONS:</div>`;
+  const suggestionsText =
+    chrome.i18n.getMessage("options_suggestions") || "SUGGESTIONS:";
+
+  let html = `<div style="font-size: 13px; color: #b2ff59; margin-bottom: 5px; margin-top: 10px; font-weight: bold;">${suggestionsText}</div>`;
   html += `<div class="btn-group" style="flex-wrap: wrap;">`;
 
   itemsToRender.forEach((item) => {

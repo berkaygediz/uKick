@@ -94,6 +94,9 @@
     "options_disable_active_users": {
         "message": "禁用活跃用户统计"
     },
+    "options_suggestions": {
+        "message": "建议:"
+    },
     "options_customization": {
         "message": "自定义"
     }
