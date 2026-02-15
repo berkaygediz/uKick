@@ -15,6 +15,67 @@ function createListItem(name, onRemove) {
   return li;
 }
 
+const SUGGESTIONS_DATA = {
+  blockedCategories: [
+    "slots & casino",
+    "knight online",
+    "celebrity slot machine",
+    "the four kings casino and slots",
+    "tasty slot machine",
+  ],
+  blockedTags: ["slot", "knight", "knightonline"],
+};
+
+async function addSuggestedItem(storageKey, item) {
+  const data = await browser.storage.local.get([storageKey]);
+  const list = JSON.parse(data[storageKey] || "[]");
+
+  if (list.some((i) => normalize(i) === normalize(item))) {
+    return;
+  }
+
+  list.push(item);
+  await browser.storage.local.set({ [storageKey]: JSON.stringify(list) });
+
+  if (storageKey === "blockedCategories") loadBlockedCategories();
+  if (storageKey === "blockedTags") loadBlockedTags();
+}
+
+function renderSuggestions(containerId, storageKey, currentList) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  const suggestedItems = SUGGESTIONS_DATA[storageKey] || [];
+
+  const itemsToRender = suggestedItems.filter(
+    (s) => !currentList.some((c) => normalize(c) === normalize(s)),
+  );
+
+  if (itemsToRender.length === 0) {
+    container.style.display = "none";
+    container.innerHTML = "";
+    return;
+  }
+
+  container.style.display = "block";
+
+  let html = `<div style="font-size: 13px; color: #b2ff59; margin-bottom: 5px; margin-top: 10px; font-weight: bold;">SUGGESTIONS:</div>`;
+  html += `<div class="btn-group" style="flex-wrap: wrap;">`;
+
+  itemsToRender.forEach((item) => {
+    html += `<button class="suggestion-btn" data-key="${storageKey}" data-value="${item}">${item}</button>`;
+  });
+
+  html += `</div>`;
+  container.innerHTML = html;
+
+  container.querySelectorAll(".suggestion-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      addSuggestedItem(btn.dataset.key, btn.dataset.value);
+    });
+  });
+}
+
 async function loadBlockedChannels() {
   const data = await browser.storage.local.get(["blockedChannels"]);
   const channels = JSON.parse(data.blockedChannels || "[]");
@@ -63,6 +124,7 @@ async function loadBlockedCategories() {
     fragment.appendChild(li);
   });
   categoryList.appendChild(fragment);
+  renderSuggestions("categorySuggestions", "blockedCategories", categories);
 }
 
 async function loadBlockedTags() {
@@ -72,7 +134,8 @@ async function loadBlockedTags() {
   const tagList = document.getElementById("tagList");
   const tagTitle = document.getElementById("tagTitle");
 
-  const titleBase = browser.i18n.getMessage("options_blocked_tags") || "Blocked Tags";
+  const titleBase =
+    browser.i18n.getMessage("options_blocked_tags") || "Blocked Tags";
   tagTitle.textContent = `${titleBase} (${tags.length})`;
 
   tagList.innerHTML = "";
@@ -89,6 +152,7 @@ async function loadBlockedTags() {
     fragment.appendChild(li);
   });
   tagList.appendChild(fragment);
+  renderSuggestions("tagSuggestions", "blockedTags", tags);
 }
 
 async function addItem(storageKey, inputId) {
@@ -156,11 +220,9 @@ async function importList(storageKey) {
 
       if (storageKey === "blockedChannels") {
         loadBlockedChannels();
-      }
-      else if (storageKey === "blockedCategories") {
+      } else if (storageKey === "blockedCategories") {
         loadBlockedCategories();
-      }
-      else {
+      } else {
         loadBlockedTags();
       }
 
@@ -177,11 +239,9 @@ async function clearList(storageKey) {
     await browser.storage.local.set({ [storageKey]: "[]" });
     if (storageKey === "blockedChannels") {
       loadBlockedChannels();
-    }
-    else if (storageKey === "blockedCategories") {
+    } else if (storageKey === "blockedCategories") {
       loadBlockedCategories();
-    }
-    else {
+    } else {
       loadBlockedTags();
     }
   }
@@ -193,7 +253,9 @@ function toggleChannelsSection(show) {
   document.getElementById("channelList").style.display = display;
   document.getElementById("channelInput").style.display = display;
   document.getElementById("addChannelBtn").style.display = display;
-  document.getElementById("showChannelsBtn").style.display = show ? "none" : "inline-block";
+  document.getElementById("showChannelsBtn").style.display = show
+    ? "none"
+    : "inline-block";
   if (show) loadBlockedChannels();
 }
 
@@ -203,7 +265,13 @@ function toggleCategoriesSection(show) {
   document.getElementById("categoryList").style.display = display;
   document.getElementById("categoryInput").style.display = display;
   document.getElementById("addCategoryBtn").style.display = display;
-  document.getElementById("showCategoriesBtn").style.display = show ? "none" : "inline-block";
+  document.getElementById("showCategoriesBtn").style.display = show
+    ? "none"
+    : "inline-block";
+
+  const suggestionsDiv = document.getElementById("categorySuggestions");
+  if (suggestionsDiv) suggestionsDiv.style.display = show ? "block" : "none";
+
   if (show) loadBlockedCategories();
 }
 
@@ -213,7 +281,13 @@ function toggleTagsSection(show) {
   document.getElementById("tagList").style.display = display;
   document.getElementById("tagInput").style.display = display;
   document.getElementById("addTagBtn").style.display = display;
-  document.getElementById("showTagsBtn").style.display = show ? "none" : "inline-block";
+  document.getElementById("showTagsBtn").style.display = show
+    ? "none"
+    : "inline-block";
+
+  const suggestionsDiv = document.getElementById("tagSuggestions");
+  if (suggestionsDiv) suggestionsDiv.style.display = show ? "block" : "none";
+
   if (show) loadBlockedTags();
 }
 
@@ -246,11 +320,19 @@ function setupEventListeners() {
     addTagBtn: browser.i18n.getMessage("options_add_tags"),
 
     customizationTitle: browser.i18n.getMessage("options_customization"),
-    disableSearchHistoryLabel: browser.i18n.getMessage("options_disable_search_history"),
-    disableChatBlockingLabel: browser.i18n.getMessage("options_disable_chat_blocking"),
-    disableBlockButtonsLabel: browser.i18n.getMessage("options_hide_block_buttons"),
+    disableSearchHistoryLabel: browser.i18n.getMessage(
+      "options_disable_search_history",
+    ),
+    disableChatBlockingLabel: browser.i18n.getMessage(
+      "options_disable_chat_blocking",
+    ),
+    disableBlockButtonsLabel: browser.i18n.getMessage(
+      "options_hide_block_buttons",
+    ),
     enableDanmakuLabel: browser.i18n.getMessage("options_enable_danmaku_chat"),
-    disableActiveUsersLabel: browser.i18n.getMessage("options_disable_active_users")
+    disableActiveUsersLabel: browser.i18n.getMessage(
+      "options_disable_active_users",
+    ),
   };
 
   for (const [id, text] of Object.entries(translations)) {
@@ -272,12 +354,12 @@ function setupEventListeners() {
   document
     .getElementById("addChannelBtn")
     .addEventListener("click", () =>
-      addItem("blockedChannels", "channelInput")
+      addItem("blockedChannels", "channelInput"),
     );
   document
     .getElementById("addCategoryBtn")
     .addEventListener("click", () =>
-      addItem("blockedCategories", "categoryInput")
+      addItem("blockedCategories", "categoryInput"),
     );
 
   document
@@ -308,34 +390,36 @@ function setupEventListeners() {
     .getElementById("refreshCategoriesBtn")
     .addEventListener("click", () => loadBlockedCategories());
 
-  document.getElementById("showTagsBtn").addEventListener("click", () => toggleTagsSection(true));
+  document
+    .getElementById("showTagsBtn")
+    .addEventListener("click", () => toggleTagsSection(true));
 
-  document.getElementById("addTagBtn").addEventListener("click", () =>
-    addItem("blockedTags", "tagInput")
-  );
+  document
+    .getElementById("addTagBtn")
+    .addEventListener("click", () => addItem("blockedTags", "tagInput"));
 
-  document.getElementById("exportTagsBtn").addEventListener("click", () =>
-    exportList("blockedTags")
-  );
+  document
+    .getElementById("exportTagsBtn")
+    .addEventListener("click", () => exportList("blockedTags"));
 
-  document.getElementById("importTagsBtn").addEventListener("click", () =>
-    importList("blockedTags")
-  );
+  document
+    .getElementById("importTagsBtn")
+    .addEventListener("click", () => importList("blockedTags"));
 
-  document.getElementById("clearTagsBtn").addEventListener("click", () =>
-    clearList("blockedTags")
-  );
+  document
+    .getElementById("clearTagsBtn")
+    .addEventListener("click", () => clearList("blockedTags"));
 
-  document.getElementById("refreshTagsBtn").addEventListener("click", () =>
-    loadBlockedTags()
-  );
+  document
+    .getElementById("refreshTagsBtn")
+    .addEventListener("click", () => loadBlockedTags());
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   setupEventListeners();
 
   const disableSearchHistoryToggle = document.getElementById(
-    "disableSearchHistoryToggle"
+    "disableSearchHistoryToggle",
   );
 
   if (disableSearchHistoryToggle) {
@@ -343,7 +427,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ["disableSearchHistory"],
       ({ disableSearchHistory = false }) => {
         disableSearchHistoryToggle.checked = disableSearchHistory;
-      }
+      },
     );
 
     disableSearchHistoryToggle.addEventListener("change", async () => {
@@ -354,7 +438,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const disableChatBlockingToggle = document.getElementById(
-    "disableChatBlockingToggle"
+    "disableChatBlockingToggle",
   );
 
   if (disableChatBlockingToggle) {
@@ -362,7 +446,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ["disableChatBlocking"],
       ({ disableChatBlocking = false }) => {
         disableChatBlockingToggle.checked = disableChatBlocking;
-      }
+      },
     );
 
     disableChatBlockingToggle.addEventListener("change", async () => {
@@ -373,7 +457,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const disableBlockButtonsToggle = document.getElementById(
-    "disableBlockButtonsToggle"
+    "disableBlockButtonsToggle",
   );
 
   if (disableBlockButtonsToggle) {
@@ -381,7 +465,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ["disableBlockButtons"],
       ({ disableBlockButtons = false }) => {
         disableBlockButtonsToggle.checked = disableBlockButtons;
-      }
+      },
     );
 
     disableBlockButtonsToggle.addEventListener("change", async () => {
@@ -391,16 +475,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  const enableDanmakuToggle = document.getElementById(
-    "enableDanmakuToggle"
-  );
+  const enableDanmakuToggle = document.getElementById("enableDanmakuToggle");
 
   if (enableDanmakuToggle) {
     browser.storage.local.get(
       ["enableDanmaku"],
       ({ enableDanmaku = false }) => {
         enableDanmakuToggle.checked = enableDanmaku;
-      }
+      },
     );
 
     enableDanmakuToggle.addEventListener("change", async () => {
@@ -410,14 +492,21 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  const disableActiveUsersToggle = document.getElementById("disableActiveUsersToggle");
+  const disableActiveUsersToggle = document.getElementById(
+    "disableActiveUsersToggle",
+  );
 
   if (disableActiveUsersToggle) {
-    browser.storage.local.get(["disableActiveUsers"], ({ disableActiveUsers = false }) => {
-      disableActiveUsersToggle.checked = disableActiveUsers;
-    });
+    browser.storage.local.get(
+      ["disableActiveUsers"],
+      ({ disableActiveUsers = false }) => {
+        disableActiveUsersToggle.checked = disableActiveUsers;
+      },
+    );
     disableActiveUsersToggle.addEventListener("change", async () => {
-      await browser.storage.local.set({ disableActiveUsers: disableActiveUsersToggle.checked });
+      await browser.storage.local.set({
+        disableActiveUsers: disableActiveUsersToggle.checked,
+      });
     });
   }
 });
