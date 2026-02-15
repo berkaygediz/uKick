@@ -3,9 +3,12 @@ document.getElementById("openOptionsBtn").addEventListener("click", () => {
 });
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const { blockedChannels, blockedCategories, blockedTags } = await browser.storage.local.get(
-    ["blockedChannels", "blockedCategories", "blockedTags"]
-  );
+  const { blockedChannels, blockedCategories, blockedTags } =
+    await browser.storage.local.get([
+      "blockedChannels",
+      "blockedCategories",
+      "blockedTags",
+    ]);
 
   const translations = {
     filteringLabel: browser.i18n.getMessage("popup_filtering"),
@@ -45,12 +48,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     await browser.storage.local.set({ enabled: switchInput.checked });
   });
 
-
   const qualityToggle = document.getElementById("qualityToggle");
   const qualitySelect = document.getElementById("qualitySelect");
   const volumeBoostSelect = document.getElementById("volumeBoostSelect");
 
-  const DEFAULT_QUALITIES = ["160", "360", "480", "720", "1080", "1440", "2160"];
+  const DEFAULT_QUALITIES = [
+    "160",
+    "360",
+    "480",
+    "720",
+    "1080",
+    "1440",
+    "2160",
+  ];
 
   const { autoQuality = false, preferredQuality = "1080" } =
     await browser.storage.local.get(["autoQuality", "preferredQuality"]);
@@ -123,5 +133,4 @@ document.addEventListener("DOMContentLoaded", async () => {
       browser.storage.local.set({ hideBgPromo: true });
     });
   }
-
 });

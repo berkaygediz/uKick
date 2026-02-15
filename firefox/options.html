@@ -165,6 +165,22 @@
         background-color: #000;
       }
 
+      .suggestions-container {
+        margin-top: 10px;
+        display: none;
+      }
+      .suggestions-container .btn-group {
+        margin-bottom: 0;
+      }
+      .suggestion-btn {
+        background: #444;
+        font-size: 12px;
+        flex: 0 1 auto;
+      }
+      .suggestion-btn:hover {
+        background: #666;
+      }
+
       @media (max-width: 480px) {
         body {
           padding: 10px;
@@ -297,6 +313,7 @@
           <b style="color: #000000"> ➕ Add Category </b>
         </button>
         <ul id="categoryList" style="display: none"></ul>
+        <div id="categorySuggestions" class="suggestions-container"></div>
       </div>
 
       <div class="section" id="tagsSection">
@@ -328,6 +345,7 @@
           <b style="color: #000000"> ➕ Add Tag</b>
         </button>
         <ul id="tagList" style="display: none"></ul>
+        <div id="tagSuggestions" class="suggestions-container"></div>
       </div>
 
       <div class="section" id="customizationSection">
