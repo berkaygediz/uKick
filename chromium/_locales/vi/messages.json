@@ -1,9 +1,9 @@
 {
     "app_name": {
-        "message": "uKick — Chặn & Tinh chỉnh Stream cho Kick"
+        "message": "uKick - Mọi thứ cho Kick"
     },
     "app_description": {
-        "message": "Tiện ích mở rộng tất cả trong một để chặn, tăng cường và tinh chỉnh mọi thứ trên Kick để có trải nghiệm phát trực tuyến tốt hơn."
+        "message": "Tất-cả-trong-một Kick chặn kênh, danh mục, thẻ & chat. Đồng bộ danh sách từ xa. Tăng âm lượng, đặt chất lượng, danmaku & chủ đề."
     },
     "btn_block_channel": {
         "message": "Chặn kênh này"
@@ -12,7 +12,7 @@
         "message": "Ẩn danh mục"
     },
     "alert_channel_blocked": {
-        "message": "Đã chặn $CHANNEL$!",
+        "message": "$CHANNEL$ đã bị chặn!",
         "placeholders": {
             "channel": {
                 "content": "$1"
@@ -56,34 +56,34 @@
         "message": "Thẻ đã chặn"
     },
     "options_show": {
-        "message": "▶️ Hiện"
+        "message": "Hiện"
     },
     "options_export": {
-        "message": "📤 Xuất"
+        "message": "Xuất"
     },
     "options_import": {
-        "message": "📥 Nhập"
+        "message": "Nhập"
     },
     "options_clear_all": {
-        "message": "🧹 Xóa tất cả"
+        "message": "Xóa tất cả"
     },
     "options_refresh": {
-        "message": "🔄 Làm mới"
+        "message": "Làm mới"
     },
     "options_add_channel": {
-        "message": "➕ Thêm kênh"
+        "message": "Thêm Kênh"
     },
     "options_add_category": {
-        "message": "➕ Thêm danh mục"
+        "message": "Thêm Danh mục"
     },
     "options_add_tags": {
-        "message": "➕ Thêm thẻ"
+        "message": "Thêm Thẻ"
     },
     "options_disable_search_history": {
-        "message": "Tắt Lịch sử Tìm kiếm"
+        "message": "Vô hiệu hóa Lịch sử Tìm kiếm"
     },
-    "options_disable_chat_blocking": {
-        "message": "Tắt Chặn Trò chuyện"
+    "options_enable_chat_blocking": {
+        "message": "Bật Chặn Trò chuyện"
     },
     "options_hide_block_buttons": {
         "message": "Ẩn Nút Chặn"
@@ -92,12 +92,183 @@
         "message": "Bật Trò chuyện Danmaku"
     },
     "options_disable_active_users": {
-        "message": "Tắt Thống kê Người dùng Hoạt động"
+        "message": "Vô hiệu hóa Thống kê Người dùng Hoạt động"
+    },
+    "options_enable_keyboard_volume": {
+        "message": "Bật Điều khiển Âm lượng Bàn phím"
     },
     "options_suggestions": {
         "message": "GỢI Ý:"
     },
     "options_customization": {
-        "message": "Tùy biến"
+        "message": "Tùy chỉnh"
+    },
+    "options_themes": {
+        "message": "Chủ đề"
+    },
+    "options_subscriptions": {
+        "message": "Đăng ký"
+    },
+    "placeholder_remote_url": {
+        "message": "URL danh sách từ xa (JSON)"
+    },
+    "options_sub_add": {
+        "message": "Thêm"
+    },
+    "options_sub_interval": {
+        "message": "Khoảng Đồng bộ hóa:"
+    },
+    "options_sub_type_channels": {
+        "message": "Kênh"
+    },
+    "options_sub_type_categories": {
+        "message": "Danh mục"
+    },
+    "options_sub_type_tags": {
+        "message": "Thẻ"
+    },
+    "options_sub_6h": {
+        "message": "6 Giờ"
+    },
+    "options_sub_12h": {
+        "message": "12 Giờ"
+    },
+    "options_sub_1d": {
+        "message": "1 Ngày"
+    },
+    "options_sub_2d": {
+        "message": "2 Ngày"
+    },
+    "options_sub_1w": {
+        "message": "1 Tuần"
+    },
+    "options_sub_1m": {
+        "message": "1 Tháng"
+    },
+    "options_sub_update_all": {
+        "message": "Cập nhật Tất cả"
+    },
+    "options_sub_updating": {
+        "message": "Đang đồng bộ hóa..."
+    },
+    "options_sub_updated": {
+        "message": "Xong!"
+    },
+    "options_sub_update_error": {
+        "message": "Lỗi!"
+    },
+    "alert_duplicate_url": {
+        "message": "URL này đã tồn tại."
+    },
+    "alert_permission_denied": {
+        "message": "Quyền truy cập vào URL này bị từ chối."
+    },
+    "alert_invalid_url": {
+        "message": "Định dạng URL không hợp lệ."
+    },
+    "time_never": {
+        "message": "Chưa bao giờ"
+    },
+    "time_just_now": {
+        "message": "Vừa xong"
+    },
+    "time_minutes_ago": {
+        "message": "$1 phút trước",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_hours_ago": {
+        "message": "$1 giờ trước",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_days_ago": {
+        "message": "$1 ngày trước",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "meta_updated": {
+        "message": "Đã cập nhật:"
+    },
+    "meta_items": {
+        "message": "Mục:"
+    },
+    "btn_open_url": {
+        "message": "Mở URL"
+    },
+    "btn_update_now": {
+        "message": "Cập nhật ngay"
+    },
+    "btn_remove": {
+        "message": "Xóa"
+    },
+    "options_add_all": {
+        "message": "Thêm tất cả"
+    },
+    "suggestion_missing_items": {
+        "message": " mục còn thiếu trong danh sách được tải trước."
+    },
+    "suggestion_items_count": {
+        "message": " mục."
+    },
+    "error_loading_suggestions": {
+        "message": "Lỗi khi tải gợi ý:"
+    },
+    "options_integrations": {
+        "message": "Tích hợp"
+    },
+    "int_openlapis_exp": {
+        "message": "OpenLapis"
+    },
+    "int_action_documentize": {
+        "message": "Tài liệu hóa"
+    },
+    "int_action_send_details": {
+        "message": "Gửi Chi tiết"
+    },
+    "int_action_summarize_llm": {
+        "message": "Tóm tắt (LLM)"
+    },
+    "int_action_import_table": {
+        "message": "Nhập Bảng"
+    },
+    "int_action_extract_authors": {
+        "message": "Trích xuất Tác giả"
+    },
+    "int_action_export_blocked_items": {
+        "message": "Xuất Mục đã Chặn"
+    },
+    "int_btn_push": {
+        "message": "Đẩy"
+    },
+    "int_config_title": {
+        "message": "Cấu hình"
+    },
+    "int_config_desktop": {
+        "message": "Máy tính để bàn"
+    },
+    "int_config_desktop_li1": {
+        "message": "Đã cài đặt ứng dụng phiên bản mới nhất"
+    },
+    "int_config_desktop_li2": {
+        "message": "Đã đăng ký máy chủ nhắn tin gốc"
+    },
+    "int_config_mobile": {
+        "message": "Di động"
+    },
+    "int_config_mobile_p": {
+        "message": "Ứng dụng OpenLapis Connect sắp ra mắt."
+    },
+    "overlay_users": {
+        "message": "Người dùng"
     }
 }

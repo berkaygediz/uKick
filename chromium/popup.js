@@ -3,16 +3,8 @@ document.getElementById("openOptionsBtn").addEventListener("click", () => {
 });
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const { blockedChannels, blockedCategories, blockedTags } =
-    await chrome.storage.local.get([
-      "blockedChannels",
-      "blockedCategories",
-      "blockedTags",
-    ]);
-
   const translations = {
     filteringLabel: chrome.i18n.getMessage("popup_filtering"),
-    statusTitle: chrome.i18n.getMessage("popup_status"),
     channelsLabel: chrome.i18n.getMessage("popup_channels"),
     categoriesLabel: chrome.i18n.getMessage("popup_categories"),
     tagsLabel: chrome.i18n.getMessage("popup_tags"),
@@ -31,15 +23,51 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  const channels = JSON.parse(blockedChannels || "[]");
-  const categories = JSON.parse(blockedCategories || "[]");
-  const tags = JSON.parse(blockedTags || "[]");
+  const data = await chrome.storage.local.get([
+    "blockedChannels",
+    "blockedCategories",
+    "blockedTags",
+    "remoteSubscriptions",
+  ]);
 
-  document.getElementById("channelCount").textContent = channels.length;
-  document.getElementById("categoryCount").textContent = categories.length;
-  document.getElementById("tagsCount").textContent = tags.length;
+  const localChannels = JSON.parse(data.blockedChannels || "[]");
+  const localCategories = JSON.parse(data.blockedCategories || "[]");
+  const localTags = JSON.parse(data.blockedTags || "[]");
+  const subs = data.remoteSubscriptions || [];
 
-  // Enable toggle
+  let remoteChannels = [],
+    remoteCategories = [],
+    remoteTags = [];
+
+  try {
+    remoteChannels = subs
+      .filter((s) => s.type === "channels" && Array.isArray(s.data))
+      .flatMap((s) => s.data);
+    remoteCategories = subs
+      .filter((s) => s.type === "categories" && Array.isArray(s.data))
+      .flatMap((s) => s.data);
+    remoteTags = subs
+      .filter((s) => s.type === "tags" && Array.isArray(s.data))
+      .flatMap((s) => s.data);
+  } catch (e) {
+    console.error("Popup remote list parse error:", e);
+  }
+
+  document.getElementById("channelCount").textContent = new Set([
+    ...localChannels,
+    ...remoteChannels,
+  ]).size;
+
+  document.getElementById("categoryCount").textContent = new Set([
+    ...localCategories,
+    ...remoteCategories,
+  ]).size;
+
+  document.getElementById("tagsCount").textContent = new Set([
+    ...localTags,
+    ...remoteTags,
+  ]).size;
+
   const enabled = (await chrome.storage.local.get("enabled")).enabled ?? true;
   const switchInput = document.getElementById("enableSwitch");
   switchInput.checked = enabled;

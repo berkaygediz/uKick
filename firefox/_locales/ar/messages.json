@@ -1,9 +1,9 @@
 {
     "app_name": {
-        "message": "uKick — حظر وتعديلات البث لـ Kick"
+        "message": "uKick - كل شيء لـ Kick"
     },
     "app_description": {
-        "message": "إضافة شاملة لحظر وتعزيز وتعديل كل شيء على Kick لتجربة بث أفضل."
+        "message": "أداة Kick الشاملة لحظر القنوات والفئات والوسوم والدردشة. مزامنة قوائم بعيدة. رفع الصوت، ضبط الجودة، دانماكو والسمات."
     },
     "btn_block_channel": {
         "message": "حظر هذه القناة"
@@ -32,10 +32,10 @@
         "message": "الفئات"
     },
     "popup_tags": {
-        "message": "العلامات"
+        "message": "الوسوم"
     },
     "popup_adaptive_stream": {
-        "message": "بث تكيفي"
+        "message": "البث التكيفي"
     },
     "popup_quality": {
         "message": "الجودة"
@@ -53,37 +53,37 @@
         "message": "الفئات المحظورة"
     },
     "options_blocked_tags": {
-        "message": "العلامات المحظورة"
+        "message": "الوسوم المحظورة"
     },
     "options_show": {
-        "message": "▶️ إظهار"
+        "message": "إظهار"
     },
     "options_export": {
-        "message": "📤 تصدير"
+        "message": "تصدير"
     },
     "options_import": {
-        "message": "📥 استيراد"
+        "message": "استيراد"
     },
     "options_clear_all": {
-        "message": "🧹 مسح الكل"
+        "message": "مسح الكل"
     },
     "options_refresh": {
-        "message": "🔄 تحديث"
+        "message": "تحديث"
     },
     "options_add_channel": {
-        "message": "➕ إضافة قناة"
+        "message": "إضافة قناة"
     },
     "options_add_category": {
-        "message": "➕ إضافة فئة"
+        "message": "إضافة فئة"
     },
     "options_add_tags": {
-        "message": "➕ إضافة علامات"
+        "message": "إضافة وسم"
     },
     "options_disable_search_history": {
         "message": "تعطيل سجل البحث"
     },
-    "options_disable_chat_blocking": {
-        "message": "تعطيل حظر الدردشة"
+    "options_enable_chat_blocking": {
+        "message": "تمكين حظر الدردشة"
     },
     "options_hide_block_buttons": {
         "message": "إخفاء أزرار الحظر"
@@ -94,10 +94,181 @@
     "options_disable_active_users": {
         "message": "تعطيل إحصائيات المستخدمين النشطين"
     },
+    "options_enable_keyboard_volume": {
+        "message": "تمكين التحكم في الصوت بلوحة المفاتيح"
+    },
     "options_suggestions": {
         "message": "اقتراحات:"
     },
     "options_customization": {
         "message": "التخصيص"
+    },
+    "options_themes": {
+        "message": "السمات"
+    },
+    "options_subscriptions": {
+        "message": "الاشتراكات"
+    },
+    "placeholder_remote_url": {
+        "message": "عنوان URL للقائمة البعيدة (JSON)"
+    },
+    "options_sub_add": {
+        "message": "إضافة"
+    },
+    "options_sub_interval": {
+        "message": "فترة المزامنة:"
+    },
+    "options_sub_type_channels": {
+        "message": "القنوات"
+    },
+    "options_sub_type_categories": {
+        "message": "الفئات"
+    },
+    "options_sub_type_tags": {
+        "message": "الوسوم"
+    },
+    "options_sub_6h": {
+        "message": "6 ساعات"
+    },
+    "options_sub_12h": {
+        "message": "12 ساعة"
+    },
+    "options_sub_1d": {
+        "message": "يوم واحد"
+    },
+    "options_sub_2d": {
+        "message": "يومان"
+    },
+    "options_sub_1w": {
+        "message": "أسبوع واحد"
+    },
+    "options_sub_1m": {
+        "message": "شهر واحد"
+    },
+    "options_sub_update_all": {
+        "message": "تحديث الكل"
+    },
+    "options_sub_updating": {
+        "message": "جارٍ المزامنة..."
+    },
+    "options_sub_updated": {
+        "message": "تم!"
+    },
+    "options_sub_update_error": {
+        "message": "خطأ!"
+    },
+    "alert_duplicate_url": {
+        "message": "عنوان URL هذا موجود بالفعل."
+    },
+    "alert_permission_denied": {
+        "message": "تم رفض الإذن لعنوان URL هذا."
+    },
+    "alert_invalid_url": {
+        "message": "تنسيق عنوان URL غير صالح."
+    },
+    "time_never": {
+        "message": "أبداً"
+    },
+    "time_just_now": {
+        "message": "الآن"
+    },
+    "time_minutes_ago": {
+        "message": "منذ $1 دقيقة",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_hours_ago": {
+        "message": "منذ $1 ساعة",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_days_ago": {
+        "message": "منذ $1 يوم",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "meta_updated": {
+        "message": "تم التحديث:"
+    },
+    "meta_items": {
+        "message": "العناصر:"
+    },
+    "btn_open_url": {
+        "message": "فتح عنوان URL"
+    },
+    "btn_update_now": {
+        "message": "تحديث الآن"
+    },
+    "btn_remove": {
+        "message": "إزالة"
+    },
+    "options_add_all": {
+        "message": "إضافة الكل"
+    },
+    "suggestion_missing_items": {
+        "message": " عناصر مفقودة في القائمة المحملة مسبقًا."
+    },
+    "suggestion_items_count": {
+        "message": " عناصر."
+    },
+    "error_loading_suggestions": {
+        "message": "خطأ في تحميل الاقتراحات:"
+    },
+    "options_integrations": {
+        "message": "التكاملات"
+    },
+    "int_openlapis_exp": {
+        "message": "OpenLapis"
+    },
+    "int_action_documentize": {
+        "message": "توثيق"
+    },
+    "int_action_send_details": {
+        "message": "إرسال التفاصيل"
+    },
+    "int_action_summarize_llm": {
+        "message": "تلخيص (LLM)"
+    },
+    "int_action_import_table": {
+        "message": "استيراد الجدول"
+    },
+    "int_action_extract_authors": {
+        "message": "استخراج المؤلفين"
+    },
+    "int_action_export_blocked_items": {
+        "message": "تصدير العناصر المحظورة"
+    },
+    "int_btn_push": {
+        "message": "دفع"
+    },
+    "int_config_title": {
+        "message": "تكوين"
+    },
+    "int_config_desktop": {
+        "message": "سطح المكتب"
+    },
+    "int_config_desktop_li1": {
+        "message": "أحدث إصدار من التطبيقات مثبت"
+    },
+    "int_config_desktop_li2": {
+        "message": "مضيف المراسلة الأصلي مسجل"
+    },
+    "int_config_mobile": {
+        "message": "الهاتف المحمول"
+    },
+    "int_config_mobile_p": {
+        "message": "تطبيق OpenLapis Connect قريبًا."
+    },
+    "overlay_users": {
+        "message": "المستخدمون"
     }
 }

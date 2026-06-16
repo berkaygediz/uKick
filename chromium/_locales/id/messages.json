@@ -1,12 +1,12 @@
 {
     "app_name": {
-        "message": "uKick — Blokir & Pengaturan Stream untuk Kick"
+        "message": "uKick - Segalanya untuk Kick"
     },
     "app_description": {
-        "message": "Ekstensi serbaguna untuk memblokir, meningkatkan, dan mengatur segalanya di Kick untuk pengalaman streaming yang lebih baik."
+        "message": "Serba-bisa Kick blokir saluran, kategori, tag & obrolan. Sinkronkan daftar jarak jauh. Tingkatkan volume, kualitas, danmaku & tema."
     },
     "btn_block_channel": {
-        "message": "Blokir saluran ini"
+        "message": "Blokir kanal ini"
     },
     "btn_block_category": {
         "message": "Sembunyikan kategori"
@@ -26,7 +26,7 @@
         "message": "Status"
     },
     "popup_channels": {
-        "message": "Saluran"
+        "message": "Kanal"
     },
     "popup_categories": {
         "message": "Kategori"
@@ -35,19 +35,19 @@
         "message": "Tag"
     },
     "popup_adaptive_stream": {
-        "message": "Stream Adaptif"
+        "message": "Sungai Adaptif"
     },
     "popup_quality": {
         "message": "Kualitas"
     },
     "popup_volume_boost": {
-        "message": "Peningkatan Volume"
+        "message": "Penguat Volume"
     },
     "popup_open_options": {
         "message": "Opsi"
     },
     "options_blocked_channels": {
-        "message": "Saluran Diblokir"
+        "message": "Kanal Diblokir"
     },
     "options_blocked_categories": {
         "message": "Kategori Diblokir"
@@ -56,34 +56,34 @@
         "message": "Tag Diblokir"
     },
     "options_show": {
-        "message": "▶️ Tampilkan"
+        "message": "Tampilkan"
     },
     "options_export": {
-        "message": "📤 Ekspor"
+        "message": "Ekspor"
     },
     "options_import": {
-        "message": "📥 Impor"
+        "message": "Impor"
     },
     "options_clear_all": {
-        "message": "🧹 Hapus Semua"
+        "message": "Hapus Semua"
     },
     "options_refresh": {
-        "message": "🔄 Segarkan"
+        "message": "Segarkan"
     },
     "options_add_channel": {
-        "message": "➕ Tambah Saluran"
+        "message": "Tambah Kanal"
     },
     "options_add_category": {
-        "message": "➕ Tambah Kategori"
+        "message": "Tambah Kategori"
     },
     "options_add_tags": {
-        "message": "➕ Tambah Tag"
+        "message": "Tambah Tag"
     },
     "options_disable_search_history": {
         "message": "Nonaktifkan Riwayat Pencarian"
     },
-    "options_disable_chat_blocking": {
-        "message": "Nonaktifkan Pemblokiran Obrolan"
+    "options_enable_chat_blocking": {
+        "message": "Aktifkan Pemblokiran Obrolan"
     },
     "options_hide_block_buttons": {
         "message": "Sembunyikan Tombol Blokir"
@@ -94,10 +94,181 @@
     "options_disable_active_users": {
         "message": "Nonaktifkan Statistik Pengguna Aktif"
     },
+    "options_enable_keyboard_volume": {
+        "message": "Aktifkan Kontrol Volume Keyboard"
+    },
     "options_suggestions": {
         "message": "SARAN:"
     },
     "options_customization": {
         "message": "Kustomisasi"
+    },
+    "options_themes": {
+        "message": "Tema"
+    },
+    "options_subscriptions": {
+        "message": "Langganan"
+    },
+    "placeholder_remote_url": {
+        "message": "URL daftar jarak jauh (JSON)"
+    },
+    "options_sub_add": {
+        "message": "Tambah"
+    },
+    "options_sub_interval": {
+        "message": "Interval Sinkronisasi:"
+    },
+    "options_sub_type_channels": {
+        "message": "Kanal"
+    },
+    "options_sub_type_categories": {
+        "message": "Kategori"
+    },
+    "options_sub_type_tags": {
+        "message": "Tag"
+    },
+    "options_sub_6h": {
+        "message": "6 Jam"
+    },
+    "options_sub_12h": {
+        "message": "12 Jam"
+    },
+    "options_sub_1d": {
+        "message": "1 Hari"
+    },
+    "options_sub_2d": {
+        "message": "2 Hari"
+    },
+    "options_sub_1w": {
+        "message": "1 Minggu"
+    },
+    "options_sub_1m": {
+        "message": "1 Bulan"
+    },
+    "options_sub_update_all": {
+        "message": "Perbarui Semua"
+    },
+    "options_sub_updating": {
+        "message": "Menyinkronkan..."
+    },
+    "options_sub_updated": {
+        "message": "Selesai!"
+    },
+    "options_sub_update_error": {
+        "message": "Kesalahan!"
+    },
+    "alert_duplicate_url": {
+        "message": "URL ini sudah ada."
+    },
+    "alert_permission_denied": {
+        "message": "Izin ditolak untuk URL ini."
+    },
+    "alert_invalid_url": {
+        "message": "Format URL tidak valid."
+    },
+    "time_never": {
+        "message": "Tidak pernah"
+    },
+    "time_just_now": {
+        "message": "Baru saja"
+    },
+    "time_minutes_ago": {
+        "message": "$1 menit yang lalu",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_hours_ago": {
+        "message": "$1 jam yang lalu",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_days_ago": {
+        "message": "$1 hari yang lalu",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "meta_updated": {
+        "message": "Diperbarui:"
+    },
+    "meta_items": {
+        "message": "Item:"
+    },
+    "btn_open_url": {
+        "message": "Buka URL"
+    },
+    "btn_update_now": {
+        "message": "Perbarui sekarang"
+    },
+    "btn_remove": {
+        "message": "Hapus"
+    },
+    "options_add_all": {
+        "message": "Tambah semua"
+    },
+    "suggestion_missing_items": {
+        "message": " item yang hilang dalam daftar yang dimuat sebelumnya."
+    },
+    "suggestion_items_count": {
+        "message": " item."
+    },
+    "error_loading_suggestions": {
+        "message": "Kesalahan memuat saran:"
+    },
+    "options_integrations": {
+        "message": "Integrasi"
+    },
+    "int_openlapis_exp": {
+        "message": "OpenLapis"
+    },
+    "int_action_documentize": {
+        "message": "Dokumentasikan"
+    },
+    "int_action_send_details": {
+        "message": "Kirim Detail"
+    },
+    "int_action_summarize_llm": {
+        "message": "Ringkas (LLM)"
+    },
+    "int_action_import_table": {
+        "message": "Impor Tabel"
+    },
+    "int_action_extract_authors": {
+        "message": "Ekstrak Penulis"
+    },
+    "int_action_export_blocked_items": {
+        "message": "Ekspor Item yang Diblokir"
+    },
+    "int_btn_push": {
+        "message": "Dorong"
+    },
+    "int_config_title": {
+        "message": "Konfigurasi"
+    },
+    "int_config_desktop": {
+        "message": "Desktop"
+    },
+    "int_config_desktop_li1": {
+        "message": "Aplikasi versi terbaru diinstal"
+    },
+    "int_config_desktop_li2": {
+        "message": "Host perpesanan native terdaftar"
+    },
+    "int_config_mobile": {
+        "message": "Seluler"
+    },
+    "int_config_mobile_p": {
+        "message": "Aplikasi OpenLapis Connect segera hadir."
+    },
+    "overlay_users": {
+        "message": "Pengguna"
     }
 }

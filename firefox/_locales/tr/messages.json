@@ -1,9 +1,9 @@
 {
     "app_name": {
-        "message": "uKick — Kick için Engelleme ve Yayın Ayarı"
+        "message": "uKick - Kick İçin Her Şey"
     },
     "app_description": {
-        "message": "Daha iyi bir yayın deneyimi için Kick'teki her şeyi engellemenizi, güçlendirmenizi ve ayarlamanızı sağlayan her şey dahil uzantı."
+        "message": "Hepsi bir arada Kick ile kanal, kategori, etiket ve sohbet engelle. Uzak senkronizasyon. Ses artır, kalite ayarla, danmaku, tema."
     },
     "btn_block_channel": {
         "message": "Bu kanalı engelle"
@@ -56,34 +56,34 @@
         "message": "Engellenen Etiketler"
     },
     "options_show": {
-        "message": "▶️ Göster"
+        "message": "Göster"
     },
     "options_export": {
-        "message": "📤 Dışa Aktar"
+        "message": "Dışa Aktar"
     },
     "options_import": {
-        "message": "📥 İçe Aktar"
+        "message": "İçe Aktar"
     },
     "options_clear_all": {
-        "message": "🧹 Tümünü Temizle"
+        "message": "Tümünü Temizle"
     },
     "options_refresh": {
-        "message": "🔄 Yenile"
+        "message": "Yenile"
     },
     "options_add_channel": {
-        "message": "➕ Kanal Ekle"
+        "message": "Kanal Ekle"
     },
     "options_add_category": {
-        "message": "➕ Kategori Ekle"
+        "message": "Kategori Ekle"
     },
     "options_add_tags": {
-        "message": "➕ Etiket Ekle"
+        "message": "Etiket Ekle"
     },
     "options_disable_search_history": {
         "message": "Arama Geçmişini Devre Dışı Bırak"
     },
-    "options_disable_chat_blocking": {
-        "message": "Sohbet Engellemeyi Devre Dışı Bırak"
+    "options_enable_chat_blocking": {
+        "message": "Sohbet Engellemeyi Etkinleştir"
     },
     "options_hide_block_buttons": {
         "message": "Engelleme Düğmelerini Gizle"
@@ -94,10 +94,181 @@
     "options_disable_active_users": {
         "message": "Aktif Kullanıcı İstatistiklerini Devre Dışı Bırak"
     },
+    "options_enable_keyboard_volume": {
+        "message": "Klavye Ses Kontrolünü Etkinleştir"
+    },
     "options_suggestions": {
         "message": "ÖNERİLER:"
     },
     "options_customization": {
         "message": "Özelleştirme"
+    },
+    "options_themes": {
+        "message": "Temalar"
+    },
+    "options_subscriptions": {
+        "message": "Abonelikler"
+    },
+    "placeholder_remote_url": {
+        "message": "Uzak liste URL'si (JSON)"
+    },
+    "options_sub_add": {
+        "message": "Ekle"
+    },
+    "options_sub_interval": {
+        "message": "Güncelleme Sıklığı:"
+    },
+    "options_sub_type_channels": {
+        "message": "Kanallar"
+    },
+    "options_sub_type_categories": {
+        "message": "Kategoriler"
+    },
+    "options_sub_type_tags": {
+        "message": "Etiketler"
+    },
+    "options_sub_6h": {
+        "message": "6 Saat"
+    },
+    "options_sub_12h": {
+        "message": "12 Saat"
+    },
+    "options_sub_1d": {
+        "message": "1 Gün"
+    },
+    "options_sub_2d": {
+        "message": "2 Gün"
+    },
+    "options_sub_1w": {
+        "message": "1 Hafta"
+    },
+    "options_sub_1m": {
+        "message": "1 Ay"
+    },
+    "options_sub_update_all": {
+        "message": "Şimdi Güncelle"
+    },
+    "options_sub_updating": {
+        "message": "Güncelleniyor..."
+    },
+    "options_sub_updated": {
+        "message": "Tamamlandı!"
+    },
+    "options_sub_update_error": {
+        "message": "Hata!"
+    },
+    "alert_duplicate_url": {
+        "message": "Bu URL zaten ekli."
+    },
+    "alert_permission_denied": {
+        "message": "URL'ye erişim izni verilmedi."
+    },
+    "alert_invalid_url": {
+        "message": "Geçersiz URL formatı."
+    },
+    "time_never": {
+        "message": "Hiç"
+    },
+    "time_just_now": {
+        "message": "Az önce"
+    },
+    "time_minutes_ago": {
+        "message": "$1 dakika önce",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_hours_ago": {
+        "message": "$1 saat önce",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_days_ago": {
+        "message": "$1 gün önce",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "meta_updated": {
+        "message": "Güncelleme:"
+    },
+    "meta_items": {
+        "message": "Öğe:"
+    },
+    "btn_open_url": {
+        "message": "URL'yi aç"
+    },
+    "btn_update_now": {
+        "message": "Şimdi güncelle"
+    },
+    "btn_remove": {
+        "message": "Kaldır"
+    },
+    "options_add_all": {
+        "message": "Tümünü ekle"
+    },
+    "suggestion_missing_items": {
+        "message": "Önyüklü listede eklenmemiş "
+    },
+    "suggestion_items_count": {
+        "message": " öğe var."
+    },
+    "error_loading_suggestions": {
+        "message": "Öneriler yüklenirken hata:"
+    },
+    "options_integrations": {
+        "message": "Entegrasyonlar"
+    },
+    "int_openlapis_exp": {
+        "message": "OpenLapis"
+    },
+    "int_action_documentize": {
+        "message": "Belgele"
+    },
+    "int_action_send_details": {
+        "message": "Detayları gönder"
+    },
+    "int_action_summarize_llm": {
+        "message": "Özetle (LLM)"
+    },
+    "int_action_import_table": {
+        "message": "Tabloyu içe aktar"
+    },
+    "int_action_extract_authors": {
+        "message": "Yazarları listele"
+    },
+    "int_action_export_blocked_items": {
+        "message": "Engellenen öğeleri dışa aktar"
+    },
+    "int_btn_push": {
+        "message": "Gönder"
+    },
+    "int_config_title": {
+        "message": "Yapılandırma"
+    },
+    "int_config_desktop": {
+        "message": "Masaüstü"
+    },
+    "int_config_desktop_li1": {
+        "message": "En son sürüm uygulamalar yüklü olmalı"
+    },
+    "int_config_desktop_li2": {
+        "message": "Native messaging host kayıtlı olmalı"
+    },
+    "int_config_mobile": {
+        "message": "Mobil"
+    },
+    "int_config_mobile_p": {
+        "message": "OpenLapis Connect uygulaması yakında."
+    },
+    "overlay_users": {
+        "message": "Kullanıcılar"
     }
 }

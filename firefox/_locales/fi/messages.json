@@ -1,9 +1,9 @@
 {
     "app_name": {
-        "message": "uKick — Esto ja Suoratoiston Säädöt Kickille"
+        "message": "uKick - Kaikki Kickille"
     },
     "app_description": {
-        "message": "Kaiken kattava laajennus Kickin kaiken estämiseen, tehostamiseen ja säätämiseen parempaa suoratoistokokemusta varten."
+        "message": "Kaikki-yhdessä Kick estää kanavat, kategoriat, tagit ja chatin. Synkronoi listat. Nosta ääntä, laatu, danmaku ja teemat."
     },
     "btn_block_channel": {
         "message": "Estä tämä kanava"
@@ -41,7 +41,7 @@
         "message": "Laatu"
     },
     "popup_volume_boost": {
-        "message": "Äänen tehostus"
+        "message": "Äänenvoimakkuuden tehostus"
     },
     "popup_open_options": {
         "message": "Asetukset"
@@ -56,48 +56,219 @@
         "message": "Estetyt tunnisteet"
     },
     "options_show": {
-        "message": "▶️ Näytä"
+        "message": "Näytä"
     },
     "options_export": {
-        "message": "📤 Vie"
+        "message": "Vie"
     },
     "options_import": {
-        "message": "📥 Tuo"
+        "message": "Tuo"
     },
     "options_clear_all": {
-        "message": "🧹 Tyhjennä kaikki"
+        "message": "Tyhjennä kaikki"
     },
     "options_refresh": {
-        "message": "🔄 Päivitä"
+        "message": "Päivitä"
     },
     "options_add_channel": {
-        "message": "➕ Lisää kanava"
+        "message": "Lisää kanava"
     },
     "options_add_category": {
-        "message": "➕ Lisää kategoria"
+        "message": "Lisää kategoria"
     },
     "options_add_tags": {
-        "message": "➕ Lisää tunnisteita"
+        "message": "Lisää tunniste"
     },
     "options_disable_search_history": {
         "message": "Poista hakuhistoria käytöstä"
     },
-    "options_disable_chat_blocking": {
-        "message": "Poista keskustelun esto käytöstä"
+    "options_enable_chat_blocking": {
+        "message": "Ota chatin esto käyttöön"
     },
     "options_hide_block_buttons": {
         "message": "Piilota estopainikkeet"
     },
     "options_enable_danmaku_chat": {
-        "message": "Ota Danmaku-keskustelu käyttöön"
+        "message": "Ota Danmaku-chat käyttöön"
     },
     "options_disable_active_users": {
         "message": "Poista aktiivisten käyttäjien tilastot käytöstä"
+    },
+    "options_enable_keyboard_volume": {
+        "message": "Ota äänenvoimakkuuden näppäimistöohjaus käyttöön"
     },
     "options_suggestions": {
         "message": "EHDOTUKSET:"
     },
     "options_customization": {
-        "message": "Mukautus"
+        "message": "Mukauttaminen"
+    },
+    "options_themes": {
+        "message": "Teemat"
+    },
+    "options_subscriptions": {
+        "message": "Tilaukset"
+    },
+    "placeholder_remote_url": {
+        "message": "Etäluettelon URL-osoite (JSON)"
+    },
+    "options_sub_add": {
+        "message": "Lisää"
+    },
+    "options_sub_interval": {
+        "message": "Synkronointiväli:"
+    },
+    "options_sub_type_channels": {
+        "message": "Kanavat"
+    },
+    "options_sub_type_categories": {
+        "message": "Kategoriat"
+    },
+    "options_sub_type_tags": {
+        "message": "Tunnisteet"
+    },
+    "options_sub_6h": {
+        "message": "6 tuntia"
+    },
+    "options_sub_12h": {
+        "message": "12 tuntia"
+    },
+    "options_sub_1d": {
+        "message": "1 päivä"
+    },
+    "options_sub_2d": {
+        "message": "2 päivää"
+    },
+    "options_sub_1w": {
+        "message": "1 viikko"
+    },
+    "options_sub_1m": {
+        "message": "1 kuukausi"
+    },
+    "options_sub_update_all": {
+        "message": "Päivitä kaikki"
+    },
+    "options_sub_updating": {
+        "message": "Synkronoidaan..."
+    },
+    "options_sub_updated": {
+        "message": "Valmis!"
+    },
+    "options_sub_update_error": {
+        "message": "Virhe!"
+    },
+    "alert_duplicate_url": {
+        "message": "Tämä URL-osoite on jo olemassa."
+    },
+    "alert_permission_denied": {
+        "message": "Tämän URL-osoitteen käyttöoikeus evätty."
+    },
+    "alert_invalid_url": {
+        "message": "Virheellinen URL-muoto."
+    },
+    "time_never": {
+        "message": "Ei koskaan"
+    },
+    "time_just_now": {
+        "message": "Juuri nyt"
+    },
+    "time_minutes_ago": {
+        "message": "$1 minuuttia sitten",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_hours_ago": {
+        "message": "$1 tuntia sitten",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_days_ago": {
+        "message": "$1 päivää sitten",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "meta_updated": {
+        "message": "Päivitetty:"
+    },
+    "meta_items": {
+        "message": "Kohteet:"
+    },
+    "btn_open_url": {
+        "message": "Avaa URL"
+    },
+    "btn_update_now": {
+        "message": "Päivitä nyt"
+    },
+    "btn_remove": {
+        "message": "Poista"
+    },
+    "options_add_all": {
+        "message": "Lisää kaikki"
+    },
+    "suggestion_missing_items": {
+        "message": " puuttuvaa kohdetta esiladatussa luettelossa."
+    },
+    "suggestion_items_count": {
+        "message": " kohdetta."
+    },
+    "error_loading_suggestions": {
+        "message": "Virhe ehdotuksia ladattaessa:"
+    },
+    "options_integrations": {
+        "message": "Integraatiot"
+    },
+    "int_openlapis_exp": {
+        "message": "OpenLapis"
+    },
+    "int_action_documentize": {
+        "message": "Dokumentoi"
+    },
+    "int_action_send_details": {
+        "message": "Lähetä tiedot"
+    },
+    "int_action_summarize_llm": {
+        "message": "Tiivistä (LLM)"
+    },
+    "int_action_import_table": {
+        "message": "Tuo taulukko"
+    },
+    "int_action_extract_authors": {
+        "message": "Pura tekijät"
+    },
+    "int_action_export_blocked_items": {
+        "message": "Vie estetyt kohteet"
+    },
+    "int_btn_push": {
+        "message": "Työnnä"
+    },
+    "int_config_title": {
+        "message": "Määritä"
+    },
+    "int_config_desktop": {
+        "message": "Työpöytä"
+    },
+    "int_config_desktop_li1": {
+        "message": "Uusimman version sovellukset asennettu"
+    },
+    "int_config_desktop_li2": {
+        "message": "Natiivi viestintäisäntä rekisteröity"
+    },
+    "int_config_mobile": {
+        "message": "Mobiili"
+    },
+    "int_config_mobile_p": {
+        "message": "OpenLapis Connect -sovellus tulossa pian."
+    },
+    "overlay_users": {
+        "message": "Käyttäjät"
     }
 }

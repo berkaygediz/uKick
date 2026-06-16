@@ -1,0 +1,274 @@
+{
+    "app_name": {
+        "message": "uKick - הכל עבור Kick"
+    },
+    "app_description": {
+        "message": "כל-באחד ל-Kick חוסם ערוצים, קטגוריות, תגיות וצ'אט. סנכרן רשימות מרחוק. הגבר ווליום, קבע איכות, דנמאקו וערכות נושא."
+    },
+    "btn_block_channel": {
+        "message": "חסום ערוץ זה"
+    },
+    "btn_block_category": {
+        "message": "הסתר קטגוריה"
+    },
+    "alert_channel_blocked": {
+        "message": "$CHANNEL$ נחסם!",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "popup_filtering": {
+        "message": "סינון"
+    },
+    "popup_status": {
+        "message": "סטטוס"
+    },
+    "popup_channels": {
+        "message": "ערוצים"
+    },
+    "popup_categories": {
+        "message": "קטגוריות"
+    },
+    "popup_tags": {
+        "message": "תגיות"
+    },
+    "popup_adaptive_stream": {
+        "message": "סטרים אדפטיבי"
+    },
+    "popup_quality": {
+        "message": "איכות"
+    },
+    "popup_volume_boost": {
+        "message": "הגברת עוצמת שמע"
+    },
+    "popup_open_options": {
+        "message": "אפשרויות"
+    },
+    "options_blocked_channels": {
+        "message": "ערוצים חסומים"
+    },
+    "options_blocked_categories": {
+        "message": "קטגוריות חסומות"
+    },
+    "options_blocked_tags": {
+        "message": "תגיות חסומות"
+    },
+    "options_show": {
+        "message": "הצג"
+    },
+    "options_export": {
+        "message": "ייצוא"
+    },
+    "options_import": {
+        "message": "ייבוא"
+    },
+    "options_clear_all": {
+        "message": "נקה הכל"
+    },
+    "options_refresh": {
+        "message": "רענן"
+    },
+    "options_add_channel": {
+        "message": "הוסף ערוץ"
+    },
+    "options_add_category": {
+        "message": "הוסף קטגוריה"
+    },
+    "options_add_tags": {
+        "message": "הוסף תגית"
+    },
+    "options_disable_search_history": {
+        "message": "השבת היסטוריית חיפוש"
+    },
+    "options_enable_chat_blocking": {
+        "message": "אפשר חסימת צ'אט"
+    },
+    "options_hide_block_buttons": {
+        "message": "הסתר לחצני חסימה"
+    },
+    "options_enable_danmaku_chat": {
+        "message": "אפשר צ'אט דנמאקו"
+    },
+    "options_disable_active_users": {
+        "message": "השבת סטטיסטיקות משתמשים פעילים"
+    },
+    "options_enable_keyboard_volume": {
+        "message": "אפשר שליטה בעוצמת שמע במקלדת"
+    },
+    "options_suggestions": {
+        "message": "הצעות:"
+    },
+    "options_customization": {
+        "message": "התאמה אישית"
+    },
+    "options_themes": {
+        "message": "ערכות נושא"
+    },
+    "options_subscriptions": {
+        "message": "מנויים"
+    },
+    "placeholder_remote_url": {
+        "message": "כתובת URL של רשימה מרוחקת (JSON)"
+    },
+    "options_sub_add": {
+        "message": "הוסף"
+    },
+    "options_sub_interval": {
+        "message": "מרווח סנכרון:"
+    },
+    "options_sub_type_channels": {
+        "message": "ערוצים"
+    },
+    "options_sub_type_categories": {
+        "message": "קטגוריות"
+    },
+    "options_sub_type_tags": {
+        "message": "תגיות"
+    },
+    "options_sub_6h": {
+        "message": "6 שעות"
+    },
+    "options_sub_12h": {
+        "message": "12 שעות"
+    },
+    "options_sub_1d": {
+        "message": "יום אחד"
+    },
+    "options_sub_2d": {
+        "message": "יומיים"
+    },
+    "options_sub_1w": {
+        "message": "שבוע אחד"
+    },
+    "options_sub_1m": {
+        "message": "חודש אחד"
+    },
+    "options_sub_update_all": {
+        "message": "עדכן הכל"
+    },
+    "options_sub_updating": {
+        "message": "מסנכרן..."
+    },
+    "options_sub_updated": {
+        "message": "בוצע!"
+    },
+    "options_sub_update_error": {
+        "message": "שגיאה!"
+    },
+    "alert_duplicate_url": {
+        "message": "כתובת URL זו כבר קיימת."
+    },
+    "alert_permission_denied": {
+        "message": "הגישה לכתובת URL זו נדחתה."
+    },
+    "alert_invalid_url": {
+        "message": "תבנית URL לא תקינה."
+    },
+    "time_never": {
+        "message": "לעולם לא"
+    },
+    "time_just_now": {
+        "message": "ממש עכשיו"
+    },
+    "time_minutes_ago": {
+        "message": "לפני $1 דקות",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_hours_ago": {
+        "message": "לפני $1 שעות",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_days_ago": {
+        "message": "לפני $1 ימים",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "meta_updated": {
+        "message": "עודכן:"
+    },
+    "meta_items": {
+        "message": "פריטים:"
+    },
+    "btn_open_url": {
+        "message": "פתח URL"
+    },
+    "btn_update_now": {
+        "message": "עדכן עכשיו"
+    },
+    "btn_remove": {
+        "message": "הסר"
+    },
+    "options_add_all": {
+        "message": "הוסף הכל"
+    },
+    "suggestion_missing_items": {
+        "message": " פריטים חסרים ברשימה שנטענה מראש."
+    },
+    "suggestion_items_count": {
+        "message": " פריטים."
+    },
+    "error_loading_suggestions": {
+        "message": "שגיאה בטעינת הצעות:"
+    },
+    "options_integrations": {
+        "message": "אינטגרציות"
+    },
+    "int_openlapis_exp": {
+        "message": "OpenLapis"
+    },
+    "int_action_documentize": {
+        "message": "תעד"
+    },
+    "int_action_send_details": {
+        "message": "שלח פרטים"
+    },
+    "int_action_summarize_llm": {
+        "message": "סכם (LLM)"
+    },
+    "int_action_import_table": {
+        "message": "ייבוא טבלה"
+    },
+    "int_action_extract_authors": {
+        "message": "חלץ מחברים"
+    },
+    "int_action_export_blocked_items": {
+        "message": "ייצוא פריטים חסומים"
+    },
+    "int_btn_push": {
+        "message": "שלח"
+    },
+    "int_config_title": {
+        "message": "הגדר"
+    },
+    "int_config_desktop": {
+        "message": "שולחן עבודה"
+    },
+    "int_config_desktop_li1": {
+        "message": "אפליקציות הגרסה האחרונה מותקנות"
+    },
+    "int_config_desktop_li2": {
+        "message": "מארח העברת הודעות מקומי רשום"
+    },
+    "int_config_mobile": {
+        "message": "נייד"
+    },
+    "int_config_mobile_p": {
+        "message": "אפליקציית OpenLapis Connect מגיעה בקרוב."
+    },
+    "overlay_users": {
+        "message": "משתמשים"
+    }
+}

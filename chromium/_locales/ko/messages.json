@@ -1,9 +1,9 @@
 {
     "app_name": {
-        "message": "uKick — Kick 차단 및 스트림 조정"
+        "message": "uKick - Kick을 위한 모든 것"
     },
     "app_description": {
-        "message": "더 나은 스트리밍 경험을 위해 Kick의 모든 것을 차단, 부스트 및 조정하는 올인원 확장 프로그램."
+        "message": "채널, 카테고리, 태그 및 채팅을 차단하는 올인원 Kick 도구. 원격 차단 목록 동기화. 볼륨 부스트, 화질 설정, 탄막 및 테마."
     },
     "btn_block_channel": {
         "message": "이 채널 차단"
@@ -56,34 +56,34 @@
         "message": "차단된 태그"
     },
     "options_show": {
-        "message": "▶️ 표시"
+        "message": "표시"
     },
     "options_export": {
-        "message": "📤 내보내기"
+        "message": "내보내기"
     },
     "options_import": {
-        "message": "📥 가져오기"
+        "message": "가져오기"
     },
     "options_clear_all": {
-        "message": "🧹 전체 지우기"
+        "message": "모두 지우기"
     },
     "options_refresh": {
-        "message": "🔄 새로고침"
+        "message": "새로 고침"
     },
     "options_add_channel": {
-        "message": "➕ 채널 추가"
+        "message": "채널 추가"
     },
     "options_add_category": {
-        "message": "➕ 카테고리 추가"
+        "message": "카테고리 추가"
     },
     "options_add_tags": {
-        "message": "➕ 태그 추가"
+        "message": "태그 추가"
     },
     "options_disable_search_history": {
         "message": "검색 기록 비활성화"
     },
-    "options_disable_chat_blocking": {
-        "message": "채팅 차단 비활성화"
+    "options_enable_chat_blocking": {
+        "message": "채팅 차단 활성화"
     },
     "options_hide_block_buttons": {
         "message": "차단 버튼 숨기기"
@@ -94,10 +94,181 @@
     "options_disable_active_users": {
         "message": "활성 사용자 통계 비활성화"
     },
+    "options_enable_keyboard_volume": {
+        "message": "키보드 볼륨 제어 활성화"
+    },
     "options_suggestions": {
         "message": "제안:"
     },
     "options_customization": {
-        "message": "사용자 정의"
+        "message": "맞춤 설정"
+    },
+    "options_themes": {
+        "message": "테마"
+    },
+    "options_subscriptions": {
+        "message": "구독"
+    },
+    "placeholder_remote_url": {
+        "message": "원격 목록 URL (JSON)"
+    },
+    "options_sub_add": {
+        "message": "추가"
+    },
+    "options_sub_interval": {
+        "message": "동기화 간격:"
+    },
+    "options_sub_type_channels": {
+        "message": "채널"
+    },
+    "options_sub_type_categories": {
+        "message": "카테고리"
+    },
+    "options_sub_type_tags": {
+        "message": "태그"
+    },
+    "options_sub_6h": {
+        "message": "6시간"
+    },
+    "options_sub_12h": {
+        "message": "12시간"
+    },
+    "options_sub_1d": {
+        "message": "1일"
+    },
+    "options_sub_2d": {
+        "message": "2일"
+    },
+    "options_sub_1w": {
+        "message": "1주"
+    },
+    "options_sub_1m": {
+        "message": "1개월"
+    },
+    "options_sub_update_all": {
+        "message": "모두 업데이트"
+    },
+    "options_sub_updating": {
+        "message": "동기화 중..."
+    },
+    "options_sub_updated": {
+        "message": "완료!"
+    },
+    "options_sub_update_error": {
+        "message": "오류!"
+    },
+    "alert_duplicate_url": {
+        "message": "이 URL은 이미 존재합니다."
+    },
+    "alert_permission_denied": {
+        "message": "이 URL에 대한 액세스 권한이 거부되었습니다."
+    },
+    "alert_invalid_url": {
+        "message": "잘못된 URL 형식입니다."
+    },
+    "time_never": {
+        "message": "없음"
+    },
+    "time_just_now": {
+        "message": "방금"
+    },
+    "time_minutes_ago": {
+        "message": "$1분 전",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_hours_ago": {
+        "message": "$1시간 전",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_days_ago": {
+        "message": "$1일 전",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "meta_updated": {
+        "message": "업데이트됨:"
+    },
+    "meta_items": {
+        "message": "항목:"
+    },
+    "btn_open_url": {
+        "message": "URL 열기"
+    },
+    "btn_update_now": {
+        "message": "지금 업데이트"
+    },
+    "btn_remove": {
+        "message": "제거"
+    },
+    "options_add_all": {
+        "message": "모두 추가"
+    },
+    "suggestion_missing_items": {
+        "message": "개의 사전 로드된 목록에 누락된 항목이 있습니다."
+    },
+    "suggestion_items_count": {
+        "message": "개의 항목."
+    },
+    "error_loading_suggestions": {
+        "message": "제안을 로드하는 중 오류 발생:"
+    },
+    "options_integrations": {
+        "message": "통합"
+    },
+    "int_openlapis_exp": {
+        "message": "OpenLapis"
+    },
+    "int_action_documentize": {
+        "message": "문서화"
+    },
+    "int_action_send_details": {
+        "message": "세부 정보 보내기"
+    },
+    "int_action_summarize_llm": {
+        "message": "요약 (LLM)"
+    },
+    "int_action_import_table": {
+        "message": "테이블 가져오기"
+    },
+    "int_action_extract_authors": {
+        "message": "작성자 추출"
+    },
+    "int_action_export_blocked_items": {
+        "message": "차단된 항목 내보내기"
+    },
+    "int_btn_push": {
+        "message": "푸시"
+    },
+    "int_config_title": {
+        "message": "구성"
+    },
+    "int_config_desktop": {
+        "message": "데스크톱"
+    },
+    "int_config_desktop_li1": {
+        "message": "최신 버전 앱 설치됨"
+    },
+    "int_config_desktop_li2": {
+        "message": "네이티브 메시징 호스트 등록됨"
+    },
+    "int_config_mobile": {
+        "message": "모바일"
+    },
+    "int_config_mobile_p": {
+        "message": "OpenLapis Connect 앱이 곧 출시됩니다."
+    },
+    "overlay_users": {
+        "message": "사용자"
     }
 }

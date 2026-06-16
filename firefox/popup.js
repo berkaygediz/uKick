@@ -3,16 +3,8 @@ document.getElementById("openOptionsBtn").addEventListener("click", () => {
 });
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const { blockedChannels, blockedCategories, blockedTags } =
-    await browser.storage.local.get([
-      "blockedChannels",
-      "blockedCategories",
-      "blockedTags",
-    ]);
-
   const translations = {
     filteringLabel: browser.i18n.getMessage("popup_filtering"),
-    statusTitle: browser.i18n.getMessage("popup_status"),
     channelsLabel: browser.i18n.getMessage("popup_channels"),
     categoriesLabel: browser.i18n.getMessage("popup_categories"),
     tagsLabel: browser.i18n.getMessage("popup_tags"),
@@ -31,15 +23,51 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  const channels = JSON.parse(blockedChannels || "[]");
-  const categories = JSON.parse(blockedCategories || "[]");
-  const tags = JSON.parse(blockedTags || "[]");
+  const data = await browser.storage.local.get([
+    "blockedChannels",
+    "blockedCategories",
+    "blockedTags",
+    "remoteSubscriptions",
+  ]);
 
-  document.getElementById("channelCount").textContent = channels.length;
-  document.getElementById("categoryCount").textContent = categories.length;
-  document.getElementById("tagsCount").textContent = tags.length;
+  const localChannels = JSON.parse(data.blockedChannels || "[]");
+  const localCategories = JSON.parse(data.blockedCategories || "[]");
+  const localTags = JSON.parse(data.blockedTags || "[]");
+  const subs = data.remoteSubscriptions || [];
 
-  // Enable toggle
+  let remoteChannels = [],
+    remoteCategories = [],
+    remoteTags = [];
+
+  try {
+    remoteChannels = subs
+      .filter((s) => s.type === "channels" && Array.isArray(s.data))
+      .flatMap((s) => s.data);
+    remoteCategories = subs
+      .filter((s) => s.type === "categories" && Array.isArray(s.data))
+      .flatMap((s) => s.data);
+    remoteTags = subs
+      .filter((s) => s.type === "tags" && Array.isArray(s.data))
+      .flatMap((s) => s.data);
+  } catch (e) {
+    console.error("Popup remote list parse error:", e);
+  }
+
+  document.getElementById("channelCount").textContent = new Set([
+    ...localChannels,
+    ...remoteChannels,
+  ]).size;
+
+  document.getElementById("categoryCount").textContent = new Set([
+    ...localCategories,
+    ...remoteCategories,
+  ]).size;
+
+  document.getElementById("tagsCount").textContent = new Set([
+    ...localTags,
+    ...remoteTags,
+  ]).size;
+
   const enabled = (await browser.storage.local.get("enabled")).enabled ?? true;
   const switchInput = document.getElementById("enableSwitch");
   switchInput.checked = enabled;
@@ -109,28 +137,29 @@ document.addEventListener("DOMContentLoaded", async () => {
     await browser.storage.local.set({ volumeBoost: boostAmount });
   });
 
-  function notifyContentScript(message) {
-    browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const tab = tabs[0];
-      if (tab?.id && tab.url?.includes("kick.com")) {
-        browser.tabs.sendMessage(tab.id, message);
-      }
+  async function notifyContentScript(message) {
+    const tabs = await browser.tabs.query({
+      active: true,
+      currentWindow: true,
     });
+    const tab = tabs[0];
+    if (tab?.id && tab.url?.includes("kick.com")) {
+      browser.tabs.sendMessage(tab.id, message);
+    }
   }
 
   const promo = document.getElementById("bgEcosystemPromo");
   const btn = document.getElementById("bgPromoClose");
 
-  browser.storage.local.get("hideBgPromo", ({ hideBgPromo }) => {
-    if (hideBgPromo === true) {
-      if (promo) promo.style.display = "none";
-    }
-  });
+  const { hideBgPromo } = await browser.storage.local.get("hideBgPromo");
+  if (hideBgPromo === true) {
+    if (promo) promo.style.display = "none";
+  }
 
   if (btn && promo) {
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", async () => {
       promo.style.display = "none";
-      browser.storage.local.set({ hideBgPromo: true });
+      await browser.storage.local.set({ hideBgPromo: true });
     });
   }
 });

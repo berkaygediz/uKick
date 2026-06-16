@@ -1,9 +1,9 @@
 {
     "app_name": {
-        "message": "uKick — Block & Stream Tweaks for Kick"
+        "message": "uKick - Everything for Kick"
     },
     "app_description": {
-        "message": "All-in-one extension to block, boost, and tweak everything on Kick for a better streaming experience."
+        "message": "All-in-one Kick tool to block channels, categories, tags & chat. Sync remote lists. Boost volume, set quality, danmaku & themes."
     },
     "btn_block_channel": {
         "message": "Block this channel"
@@ -56,34 +56,34 @@
         "message": "Blocked Tags"
     },
     "options_show": {
-        "message": "▶️ Show"
+        "message": "Show"
     },
     "options_export": {
-        "message": "📤 Export"
+        "message": "Export"
     },
     "options_import": {
-        "message": "📥 Import"
+        "message": "Import"
     },
     "options_clear_all": {
-        "message": "🧹 Clear All"
+        "message": "Clear All"
     },
     "options_refresh": {
-        "message": "🔄 Refresh"
+        "message": "Refresh"
     },
     "options_add_channel": {
-        "message": "➕ Add Channel"
+        "message": "Add Channel"
     },
     "options_add_category": {
-        "message": "➕ Add Category"
+        "message": "Add Category"
     },
     "options_add_tags": {
-        "message": "➕ Add Tags"
+        "message": "Add Tag"
     },
     "options_disable_search_history": {
         "message": "Disable Search History"
     },
-    "options_disable_chat_blocking": {
-        "message": "Disable Chat Blocking"
+    "options_enable_chat_blocking": {
+        "message": "Enable Chat Blocking"
     },
     "options_hide_block_buttons": {
         "message": "Hide Block Buttons"
@@ -94,10 +94,181 @@
     "options_disable_active_users": {
         "message": "Disable Active Users Stats"
     },
+    "options_enable_keyboard_volume": {
+        "message": "Enable Keyboard Volume Control"
+    },
     "options_suggestions": {
         "message": "SUGGESTIONS:"
     },
     "options_customization": {
         "message": "Customization"
+    },
+    "options_themes": {
+        "message": "Themes"
+    },
+    "options_subscriptions": {
+        "message": "Subscriptions"
+    },
+    "placeholder_remote_url": {
+        "message": "Remote list URL (JSON)"
+    },
+    "options_sub_add": {
+        "message": "Add"
+    },
+    "options_sub_interval": {
+        "message": "Sync Interval:"
+    },
+    "options_sub_type_channels": {
+        "message": "Channels"
+    },
+    "options_sub_type_categories": {
+        "message": "Categories"
+    },
+    "options_sub_type_tags": {
+        "message": "Tags"
+    },
+    "options_sub_6h": {
+        "message": "6 Hours"
+    },
+    "options_sub_12h": {
+        "message": "12 Hours"
+    },
+    "options_sub_1d": {
+        "message": "1 Day"
+    },
+    "options_sub_2d": {
+        "message": "2 Days"
+    },
+    "options_sub_1w": {
+        "message": "1 Week"
+    },
+    "options_sub_1m": {
+        "message": "1 Month"
+    },
+    "options_sub_update_all": {
+        "message": "Update All"
+    },
+    "options_sub_updating": {
+        "message": "Syncing..."
+    },
+    "options_sub_updated": {
+        "message": "Done!"
+    },
+    "options_sub_update_error": {
+        "message": "Error!"
+    },
+    "alert_duplicate_url": {
+        "message": "This URL already exists."
+    },
+    "alert_permission_denied": {
+        "message": "Permission denied for this URL."
+    },
+    "alert_invalid_url": {
+        "message": "Invalid URL format."
+    },
+    "time_never": {
+        "message": "Never"
+    },
+    "time_just_now": {
+        "message": "Just now"
+    },
+    "time_minutes_ago": {
+        "message": "$1 minutes ago",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_hours_ago": {
+        "message": "$1 hours ago",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_days_ago": {
+        "message": "$1 days ago",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "meta_updated": {
+        "message": "Updated:"
+    },
+    "meta_items": {
+        "message": "Items:"
+    },
+    "btn_open_url": {
+        "message": "Open URL"
+    },
+    "btn_update_now": {
+        "message": "Update now"
+    },
+    "btn_remove": {
+        "message": "Remove"
+    },
+    "options_add_all": {
+        "message": "Add all"
+    },
+    "suggestion_missing_items": {
+        "message": " missing items in preloaded list."
+    },
+    "suggestion_items_count": {
+        "message": " items."
+    },
+    "error_loading_suggestions": {
+        "message": "Error loading suggestions:"
+    },
+    "options_integrations": {
+        "message": "Integrations"
+    },
+    "int_openlapis_exp": {
+        "message": "OpenLapis"
+    },
+    "int_action_documentize": {
+        "message": "Documentize"
+    },
+    "int_action_send_details": {
+        "message": "Send Details"
+    },
+    "int_action_summarize_llm": {
+        "message": "Summarize (LLM)"
+    },
+    "int_action_import_table": {
+        "message": "Import Table"
+    },
+    "int_action_extract_authors": {
+        "message": "Extract Authors"
+    },
+    "int_action_export_blocked_items": {
+        "message": "Export Blocked Items"
+    },
+    "int_btn_push": {
+        "message": "Push"
+    },
+    "int_config_title": {
+        "message": "Configure"
+    },
+    "int_config_desktop": {
+        "message": "Desktop"
+    },
+    "int_config_desktop_li1": {
+        "message": "Latest version apps installed"
+    },
+    "int_config_desktop_li2": {
+        "message": "Native messaging host registered"
+    },
+    "int_config_mobile": {
+        "message": "Mobile"
+    },
+    "int_config_mobile_p": {
+        "message": "OpenLapis Connect app coming soon."
+    },
+    "overlay_users": {
+        "message": "Users"
     }
 }

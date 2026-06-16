@@ -1,9 +1,9 @@
 {
     "app_name": {
-        "message": "uKick — Blocco e Modifiche Stream per Kick"
+        "message": "uKick - Tutto per Kick"
     },
     "app_description": {
-        "message": "Estensione tutto in uno per bloccare, potenziare e modificare tutto su Kick per una migliore esperienza di streaming."
+        "message": "Tutto-in-uno Kick blocca canali, categorie, tag e chat. Sincronizza liste. Aumenta volume, qualità, danmaku e temi."
     },
     "btn_block_channel": {
         "message": "Blocca questo canale"
@@ -41,7 +41,7 @@
         "message": "Qualità"
     },
     "popup_volume_boost": {
-        "message": "Aumento Volume"
+        "message": "Potenziamento Volume"
     },
     "popup_open_options": {
         "message": "Opzioni"
@@ -56,34 +56,34 @@
         "message": "Tag Bloccati"
     },
     "options_show": {
-        "message": "▶️ Mostra"
+        "message": "Mostra"
     },
     "options_export": {
-        "message": "📤 Esporta"
+        "message": "Esporta"
     },
     "options_import": {
-        "message": "📥 Importa"
+        "message": "Importa"
     },
     "options_clear_all": {
-        "message": "🧹 Cancella Tutto"
+        "message": "Cancella Tutto"
     },
     "options_refresh": {
-        "message": "🔄 Aggiorna"
+        "message": "Aggiorna"
     },
     "options_add_channel": {
-        "message": "➕ Aggiungi Canale"
+        "message": "Aggiungi Canale"
     },
     "options_add_category": {
-        "message": "➕ Aggiungi Categoria"
+        "message": "Aggiungi Categoria"
     },
     "options_add_tags": {
-        "message": "➕ Aggiungi Tag"
+        "message": "Aggiungi Tag"
     },
     "options_disable_search_history": {
         "message": "Disabilita Cronologia Ricerca"
     },
-    "options_disable_chat_blocking": {
-        "message": "Disabilita Blocco Chat"
+    "options_enable_chat_blocking": {
+        "message": "Abilita Blocco Chat"
     },
     "options_hide_block_buttons": {
         "message": "Nascondi Pulsanti di Blocco"
@@ -92,12 +92,183 @@
         "message": "Abilita Chat Danmaku"
     },
     "options_disable_active_users": {
-        "message": "Disabilita Statistiche Utenti Attivi"
+        "message": "Disabilità Statistiche Utenti Attivi"
+    },
+    "options_enable_keyboard_volume": {
+        "message": "Abilita Controllo Volume da Tastiera"
     },
     "options_suggestions": {
         "message": "SUGGERIMENTI:"
     },
     "options_customization": {
         "message": "Personalizzazione"
+    },
+    "options_themes": {
+        "message": "Temi"
+    },
+    "options_subscriptions": {
+        "message": "Sottoscrizioni"
+    },
+    "placeholder_remote_url": {
+        "message": "URL dell'elenco remoto (JSON)"
+    },
+    "options_sub_add": {
+        "message": "Aggiungi"
+    },
+    "options_sub_interval": {
+        "message": "Intervallo di Sincronizzazione:"
+    },
+    "options_sub_type_channels": {
+        "message": "Canali"
+    },
+    "options_sub_type_categories": {
+        "message": "Categorie"
+    },
+    "options_sub_type_tags": {
+        "message": "Tag"
+    },
+    "options_sub_6h": {
+        "message": "6 Ore"
+    },
+    "options_sub_12h": {
+        "message": "12 Ore"
+    },
+    "options_sub_1d": {
+        "message": "1 Giorno"
+    },
+    "options_sub_2d": {
+        "message": "2 Giorni"
+    },
+    "options_sub_1w": {
+        "message": "1 Settimana"
+    },
+    "options_sub_1m": {
+        "message": "1 Mese"
+    },
+    "options_sub_update_all": {
+        "message": "Aggiorna Tutto"
+    },
+    "options_sub_updating": {
+        "message": "Sincronizzazione..."
+    },
+    "options_sub_updated": {
+        "message": "Fatto!"
+    },
+    "options_sub_update_error": {
+        "message": "Errore!"
+    },
+    "alert_duplicate_url": {
+        "message": "Questo URL esiste già."
+    },
+    "alert_permission_denied": {
+        "message": "Permesso negato per questo URL."
+    },
+    "alert_invalid_url": {
+        "message": "Formato URL non valido."
+    },
+    "time_never": {
+        "message": "Mai"
+    },
+    "time_just_now": {
+        "message": "Adesso"
+    },
+    "time_minutes_ago": {
+        "message": "$1 minuti fa",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_hours_ago": {
+        "message": "$1 ore fa",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_days_ago": {
+        "message": "$1 giorni fa",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "meta_updated": {
+        "message": "Aggiornato:"
+    },
+    "meta_items": {
+        "message": "Elementi:"
+    },
+    "btn_open_url": {
+        "message": "Apri URL"
+    },
+    "btn_update_now": {
+        "message": "Aggiorna ora"
+    },
+    "btn_remove": {
+        "message": "Rimuovi"
+    },
+    "options_add_all": {
+        "message": "Aggiungi tutto"
+    },
+    "suggestion_missing_items": {
+        "message": " elementi mancanti nell'elenco precaricato."
+    },
+    "suggestion_items_count": {
+        "message": " elementi."
+    },
+    "error_loading_suggestions": {
+        "message": "Errore durante il caricamento dei suggerimenti:"
+    },
+    "options_integrations": {
+        "message": "Integrazioni"
+    },
+    "int_openlapis_exp": {
+        "message": "OpenLapis"
+    },
+    "int_action_documentize": {
+        "message": "Documentare"
+    },
+    "int_action_send_details": {
+        "message": "Invia Dettagli"
+    },
+    "int_action_summarize_llm": {
+        "message": "Riassumi (LLM)"
+    },
+    "int_action_import_table": {
+        "message": "Importa Tabella"
+    },
+    "int_action_extract_authors": {
+        "message": "Estrai Autori"
+    },
+    "int_action_export_blocked_items": {
+        "message": "Esporta Elementi Bloccati"
+    },
+    "int_btn_push": {
+        "message": "Invia"
+    },
+    "int_config_title": {
+        "message": "Configura"
+    },
+    "int_config_desktop": {
+        "message": "Desktop"
+    },
+    "int_config_desktop_li1": {
+        "message": "App dell'ultima versione installate"
+    },
+    "int_config_desktop_li2": {
+        "message": "Host di messaggistica nativa registrato"
+    },
+    "int_config_mobile": {
+        "message": "Mobile"
+    },
+    "int_config_mobile_p": {
+        "message": "L'app OpenLapis Connect arriverà presto."
+    },
+    "overlay_users": {
+        "message": "Utenti"
     }
 }

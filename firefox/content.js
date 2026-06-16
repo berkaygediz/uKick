@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         uKick — Block & Stream Tweaks for Kick
+// @name         uKick - Everything for Kick
 // @namespace    https://github.com/berkaygediz/uKick
-// @version      2.5.0.2
+// @version      2.6.0.0
 // @description  All-in-one extension to block, boost, and tweak everything on Kick for a better streaming experience.
 // @author       berkaygediz
 // @match        https://kick.com/*
@@ -18,28 +18,30 @@
     return str?.toLowerCase().trim() || "";
   }
 
-  // ===== Firefox Extension (Promise) =====
+  // ===== Firefox Extension (Promise-based) =====
 
   async function getBlockedChannels() {
-    return new Promise((resolve) => {
-      browser.storage.local.get("blockedChannels", (result) => {
-        try {
-          const list = JSON.parse(result.blockedChannels || "[]");
-          resolve(list.map((x) => x.trim().toLowerCase()));
-        } catch {
-          resolve([]);
-        }
-      });
-    });
+    try {
+      const result = await browser.storage.local.get([
+        "blockedChannels",
+        "remoteSubscriptions",
+      ]);
+      const local = JSON.parse(result.blockedChannels || "[]");
+      const subs = result.remoteSubscriptions || [];
+      const remote = subs
+        .filter((s) => s.type === "channels" && Array.isArray(s.data))
+        .flatMap((s) => s.data);
+
+      const combined = new Set([...local, ...remote]);
+      return [...combined].map(normalizeData);
+    } catch (e) {
+      console.error("uKick Get Channels Error:", e);
+      return [];
+    }
   }
 
   async function saveBlockedChannels(list) {
-    return new Promise((resolve) => {
-      browser.storage.local.set(
-        { blockedChannels: JSON.stringify(list) },
-        resolve,
-      );
-    });
+    await browser.storage.local.set({ blockedChannels: JSON.stringify(list) });
   }
 
   async function blockChannel(username) {
@@ -61,85 +63,63 @@
   // ==== Firefox Extension ==== getBlockedCategories & saveBlockedCategories
 
   async function getBlockedCategories() {
-    return new Promise((resolve) => {
-      try {
-        browser.storage.local.get("blockedCategories", (result) => {
-          if (browser.runtime.lastError) {
-            console.error(browser.runtime.lastError);
-            resolve([]);
-            return;
-          }
-          try {
-            const list = JSON.parse(result.blockedCategories || "[]");
-            resolve(list.map(normalizeData));
-          } catch {
-            resolve([]);
-          }
-        });
-      } catch (err) {
-        console.error(err);
-        resolve([]);
-      }
-    });
+    try {
+      const result = await browser.storage.local.get([
+        "blockedCategories",
+        "remoteSubscriptions",
+      ]);
+      const local = JSON.parse(result.blockedCategories || "[]");
+      const subs = result.remoteSubscriptions || [];
+      const remote = subs
+        .filter((s) => s.type === "categories" && Array.isArray(s.data))
+        .flatMap((s) => s.data);
+
+      const combined = new Set([...local, ...remote]);
+      return [...combined].map(normalizeData);
+    } catch (e) {
+      console.error("uKick Get Categories Error:", e);
+      return [];
+    }
   }
 
   async function saveBlockedCategories(list) {
-    return new Promise((resolve) => {
-      try {
-        const data = JSON.stringify(list);
-        browser.storage.local.set({ blockedCategories: data }, () => {
-          if (browser.runtime.lastError) {
-            console.error(browser.runtime.lastError);
-          }
-          resolve();
-        });
-      } catch (err) {
-        console.error(err);
-        resolve();
-      }
-    });
+    try {
+      const data = JSON.stringify(list);
+      await browser.storage.local.set({ blockedCategories: data });
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   // ==== Firefox Extension ==== getBlockedTags & saveBlockedTags
 
   async function getBlockedTags() {
-    return new Promise((resolve) => {
-      try {
-        browser.storage.local.get("blockedTags", (result) => {
-          if (browser.runtime.lastError) {
-            console.error(browser.runtime.lastError);
-            resolve([]);
-            return;
-          }
-          try {
-            const list = JSON.parse(result.blockedTags || "[]");
-            resolve(list.map(normalizeData));
-          } catch {
-            resolve([]);
-          }
-        });
-      } catch (err) {
-        console.error(err);
-        resolve([]);
-      }
-    });
+    try {
+      const result = await browser.storage.local.get([
+        "blockedTags",
+        "remoteSubscriptions",
+      ]);
+      const local = JSON.parse(result.blockedTags || "[]");
+      const subs = result.remoteSubscriptions || [];
+      const remote = subs
+        .filter((s) => s.type === "tags" && Array.isArray(s.data))
+        .flatMap((s) => s.data);
+
+      const combined = new Set([...local, ...remote]);
+      return [...combined].map(normalizeData);
+    } catch (e) {
+      console.error("uKick Get Tags Error:", e);
+      return [];
+    }
   }
 
   async function saveBlockedTags(list) {
-    return new Promise((resolve) => {
-      try {
-        const data = JSON.stringify(list);
-        browser.storage.local.set({ blockedTags: data }, () => {
-          if (browser.runtime.lastError) {
-            console.error(browser.runtime.lastError);
-          }
-          resolve();
-        });
-      } catch (err) {
-        console.error(err);
-        resolve();
-      }
-    });
+    try {
+      const data = JSON.stringify(list);
+      await browser.storage.local.set({ blockedTags: data });
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   async function blockTag(tagName) {
@@ -147,11 +127,8 @@
     const normalizedTag = normalizeData(tagName);
     if (!blocked.includes(normalizedTag)) {
       blocked.push(normalizedTag);
-      await new Promise((resolve) => {
-        browser.storage.local.set(
-          { blockedTags: JSON.stringify(blocked) },
-          resolve,
-        );
+      await browser.storage.local.set({
+        blockedTags: JSON.stringify(blocked),
       });
     }
   }
@@ -161,19 +138,19 @@
     toast.textContent = message;
 
     toast.style.cssText = `
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background-color: #333;
-        color: #fff;
-        padding: 12px 24px;
-        border-radius: 4px;
-        z-index: 10000;
-        font-size: 14px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        `;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #333;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 4px;
+    z-index: 10000;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  `;
 
     document.body.appendChild(toast);
 
@@ -245,7 +222,7 @@
                 padding: 0;
                 flex-shrink: 0;
                 line-height: 1;
-                `;
+              `;
 
         xBtn.addEventListener("click", async (e) => {
           e.stopPropagation();
@@ -273,11 +250,8 @@
     const normalizedCategory = normalizeData(categoryName);
     if (!blocked.includes(normalizedCategory)) {
       blocked.push(normalizedCategory);
-      await new Promise((resolve) => {
-        browser.storage.local.set(
-          { blockedCategories: JSON.stringify(blocked) },
-          resolve,
-        );
+      await browser.storage.local.set({
+        blockedCategories: JSON.stringify(blocked),
       });
     }
   }
@@ -545,7 +519,6 @@
       }
     }
   }
-
   async function processCards() {
     const followTexts = [
       "follow", // English
@@ -560,6 +533,7 @@
       "フォロー", // Japanese
       "팔로우", // Korean
       "متابعة", // Arabic
+      "עקוב", // Hebrew
       "seuraa", // Finnish
       "obserwuj", // Polish
       "подписаться", // Russian
@@ -575,19 +549,50 @@
       if (disableBlockButtons) return;
       if (card.querySelector(".block-btn")) return;
 
+      // Skip categories
+      if (card.querySelector('[data-testid^="category-"]')) return;
+
       const anchor = card.querySelector('a[href^="/"]');
       if (!anchor) return;
 
       const username = anchor.getAttribute("href").split("/")[1];
 
-      const titleEl = card.querySelector("a[title]");
-      if (!titleEl) return;
+      const followBtn = Array.from(card.querySelectorAll("button")).find(
+        (btn) => {
+          const ariaLabel = (btn.getAttribute("aria-label") || "")
+            .toLowerCase()
+            .trim();
+          const text = btn.textContent.trim().toLowerCase();
+          return followTexts.some(
+            (kw) => ariaLabel.includes(kw) || text.includes(kw),
+          );
+        },
+      );
 
-      const btn = createBlockButtonAbsolute(username);
-      btn.classList.add("block-btn");
-      titleEl.parentElement.appendChild(btn);
+      if (followBtn) {
+        // Channel results
+        const btn = createBlockButton(username);
+        btn.classList.add("block-btn");
+        btn.style.marginLeft = "8px";
+        followBtn.insertAdjacentElement("afterend", btn);
+      } else {
+        // Stream results
+        const titleEl = card.querySelector("a[title]");
+        const btn = createBlockButtonAbsolute(username);
+        btn.classList.add("block-btn");
+
+        if (titleEl) {
+          titleEl.parentElement.appendChild(btn);
+        } else {
+          if (getComputedStyle(card).position === "static") {
+            card.style.position = "relative";
+          }
+          card.appendChild(btn);
+        }
+      }
     });
 
+    // Sidebar cards
     document
       .querySelectorAll("div.flex.w-full.shrink-0.grow-0.flex-col")
       .forEach((card) => {
@@ -601,8 +606,13 @@
 
         const followBtn = Array.from(card.querySelectorAll("button")).find(
           (btn) => {
+            const ariaLabel = (btn.getAttribute("aria-label") || "")
+              .toLowerCase()
+              .trim();
             const text = btn.textContent.trim().toLowerCase();
-            return followTexts.some((kw) => text.includes(kw));
+            return followTexts.some(
+              (kw) => ariaLabel.includes(kw) || text.includes(kw),
+            );
           },
         );
 
@@ -677,10 +687,12 @@
   }
 
   async function observeBlockedChatMessages() {
-    const { disableChatBlocking = false } = await browser.storage.local.get(
-      "disableChatBlocking",
-    );
-    if (disableChatBlocking) return;
+    if (window.chatBlockObserver) window.chatBlockObserver.disconnect();
+
+    const { enableChatBlocking = false } =
+      await browser.storage.local.get("enableChatBlocking");
+    if (!enableChatBlocking) return;
+
     let blockedUsers = await getBlockedChannels();
 
     const blockedSet = new Set(blockedUsers.map((u) => u.trim().toLowerCase()));
@@ -701,21 +713,60 @@
 
     function hideChatMessage(node, username) {
       const content = node.querySelector('div[class*="betterhover"]');
-      if (content) {
-        content.innerHTML = `<span style="color: gray; font-style: italic;">[${username}]</span>`;
-        content.style.opacity = "0.3";
+      if (!content) return;
+
+      if (content.dataset.hiddenUser === username) return;
+
+      if (content.dataset.hiddenUser) {
+        const existingOverlay = content.querySelector(".blocked-overlay");
+        if (existingOverlay) existingOverlay.remove();
+        Array.from(content.children).forEach((child) => {
+          if (!child.classList.contains("blocked-overlay")) {
+            child.style.display = "";
+          }
+        });
       }
+
+      content.dataset.hiddenUser = username;
+      content.style.opacity = "0.3";
+
+      Array.from(content.children).forEach(
+        (child) => (child.style.display = "none"),
+      );
+
+      const overlay = document.createElement("span");
+      overlay.className = "blocked-overlay";
+      overlay.style.cssText = "color: gray; font-style: italic;";
+      overlay.textContent = `[${username}]`;
+      content.appendChild(overlay);
+    }
+
+    function unhideChatMessage(node) {
+      const content = node.querySelector('div[class*="betterhover"]');
+      if (!content || !content.dataset.hiddenUser) return;
+
+      const existingOverlay = content.querySelector(".blocked-overlay");
+      if (existingOverlay) existingOverlay.remove();
+
+      Array.from(content.children).forEach(
+        (child) => (child.style.display = ""),
+      );
+
+      delete content.dataset.hiddenUser;
+      content.style.opacity = "";
     }
 
     function processChatNode(node) {
-      const userButton = node.querySelector("button[title]");
+      const userButton = node.querySelector("button[data-prevent-expand]");
       if (!userButton) return;
 
-      const usernameChatter = userButton.getAttribute("title");
+      const usernameChatter = userButton.textContent.trim();
       const normalizedChatter = normalize(usernameChatter);
 
       if (blockedSet.has(normalizedChatter)) {
         hideChatMessage(node, usernameChatter);
+      } else {
+        unhideChatMessage(node);
       }
     }
 
@@ -743,6 +794,7 @@
     }, 100);
 
     const chatObserver = new MutationObserver(processAddedNodes);
+    window.chatBlockObserver = chatObserver;
 
     chatObserver.observe(chatContainer, {
       childList: true,
@@ -764,8 +816,33 @@
   }
 
   async function observeChatUsernames() {
-    const chatContainer = document.getElementById("chatroom-messages");
-    if (!chatContainer) return;
+    if (window.chatUsernameObserver) window.chatUsernameObserver.disconnect();
+
+    const waitForChatContainer = () =>
+      new Promise((resolve) => {
+        const check = () => {
+          const container = document.querySelector("#chatroom-messages");
+          if (container) return resolve(container);
+          requestAnimationFrame(check);
+        };
+        check();
+      });
+
+    const chatContainer = await waitForChatContainer();
+
+    let disableBlockButtons = false;
+    let enableChatBlocking = false;
+
+    try {
+      const res = await browser.storage.local.get([
+        "disableBlockButtons",
+        "enableChatBlocking",
+      ]);
+      disableBlockButtons = res.disableBlockButtons ?? false;
+      enableChatBlocking = res.enableChatBlocking ?? false;
+    } catch (e) {}
+
+    if (!enableChatBlocking) return;
 
     function debounce(fn, delay) {
       let timeout;
@@ -777,28 +854,19 @@
 
     async function addBlockButtonsToNodes(nodes) {
       try {
-        let disableBlockButtons = false;
-        let disableChatBlocking = false;
-
-        if (browser && browser.storage && browser.storage.local) {
-          try {
-            const res1 = await browser.storage.local.get("disableBlockButtons");
-            disableBlockButtons = res1.disableBlockButtons ?? false;
-
-            const res2 = await browser.storage.local.get("disableChatBlocking");
-            disableChatBlocking = res2.disableChatBlocking ?? false;
-          } catch (e) {}
-        }
-
-        if (disableChatBlocking) return;
-
         for (const msg of nodes) {
           if (disableBlockButtons) return;
 
-          if (msg.querySelector(".username-block-btn")) continue;
-
-          const userButton = msg.querySelector("button[title]");
+          const userButton = msg.querySelector("button[data-prevent-expand]");
           if (!userButton) continue;
+
+          const usernameChatter = userButton.textContent.trim();
+
+          const existingBtn = msg.querySelector(".username-block-btn");
+          if (existingBtn) {
+            if (existingBtn.dataset.username === usernameChatter) continue;
+            existingBtn.remove();
+          }
 
           const btn = document.createElement("button");
           btn.textContent = "✕";
@@ -806,6 +874,7 @@
             ? browser.i18n.getMessage("btn_block_channel")
             : "Block";
           btn.className = "username-block-btn";
+          btn.dataset.username = usernameChatter;
 
           Object.assign(btn.style, {
             marginLeft: "6px",
@@ -824,9 +893,8 @@
             e.preventDefault();
             e.stopPropagation();
 
-            const username = userButton.getAttribute("title").trim();
             try {
-              await blockChannel(username);
+              await blockChannel(usernameChatter);
               await removeBlockedCards();
               if (window.refreshBlockedUsers) {
                 await window.refreshBlockedUsers();
@@ -865,13 +933,14 @@
       }, 100),
     );
 
+    window.chatUsernameObserver = observer;
     observer.observe(chatContainer, { childList: true, subtree: true });
   }
 
   // search page
   function createBlockButton(username) {
     const btn = document.createElement("button");
-    btn.textContent = "X";
+    btn.textContent = "✕";
     btn.title = browser.i18n.getMessage("btn_block_channel");
     Object.assign(btn.style, {
       marginLeft: "8px",
@@ -926,11 +995,10 @@
 
     return btn;
   }
-
   // === Quality Control ===
-  // ==== Firefox Extension ===
+  // ==== Firefox Extension ====
 
-  // languages (EN, ES, PT, FR, DE, IT, TR, ID, ZH, JA, KO, AR, FI, PL, RU, VI, CS)
+  // languages (EN, ES, PT, FR, DE, IT, TR, ID, ZH, JA, KO, AR, FI, PL, RU, VI, CS, HE)
   const SETTINGS_LABELS = [
     "Settings", // English (en)
     "Ajustes", // Spanish (es)
@@ -949,6 +1017,7 @@
     "Настройки", // Russian (ru)
     "Cài đặt", // Vietnamese (vi)
     "Nastavení", // Czech (cs)
+    "הגדרות", // Hebrew (he)
   ];
 
   let lastKickUrl = location.href;
@@ -1208,15 +1277,15 @@
     return new Promise((r) => setTimeout(r, ms));
   }
 
-  function getQualitySettings() {
-    return new Promise((resolve) => {
-      browser.storage.local.get(["autoQuality", "preferredQuality"], (data) => {
-        resolve({
-          autoQuality: data.autoQuality ?? false,
-          preferredQuality: data.preferredQuality ?? "1080",
-        });
-      });
-    });
+  async function getQualitySettings() {
+    const data = await browser.storage.local.get([
+      "autoQuality",
+      "preferredQuality",
+    ]);
+    return {
+      autoQuality: data.autoQuality ?? false,
+      preferredQuality: data.preferredQuality ?? "1080",
+    };
   }
 
   // Volume Boost
@@ -1312,8 +1381,8 @@
 
   let swapChatDirection = false;
 
-  function processChatLayout() {
-    addChatToggleButton();
+  async function processChatLayout() {
+    await addChatToggleButton();
     moveChatLogic(swapChatDirection);
   }
 
@@ -1337,8 +1406,17 @@
       main.after(chatroom);
     }
   }
+  function updateDanmakuBtnStyle(btn, isEnabled) {
+    if (isEnabled) {
+      btn.style.color = "#53fc18";
+      btn.style.opacity = "1";
+    } else {
+      btn.style.color = "inherit";
+      btn.style.opacity = "0.5";
+    }
+  }
 
-  function addChatToggleButton() {
+  async function addChatToggleButton() {
     if (document.getElementById("mtc-controls-wrapper")) return;
 
     const chatroom = document.getElementById("channel-chatroom");
@@ -1358,9 +1436,7 @@
 
     const btn = document.createElement("button");
     btn.id = "mtc-toggle-btn";
-
     btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>`;
-
     btn.style.cssText = `background:transparent;border:none;color:inherit;cursor:pointer;padding:8px;opacity:0.7;transition:opacity 0.2s,transform 0.2s,color 0.2s;display:flex;align-items:center;justify-content:center;`;
 
     btn.onmouseenter = function () {
@@ -1371,73 +1447,71 @@
       this.style.opacity = "0.7";
       this.style.transform = "scale(1)";
     };
-
     btn.onclick = (e) => {
       e.stopPropagation();
       swapChatDirection = !swapChatDirection;
       moveChatLogic(swapChatDirection);
     };
-
-    // Swap
     wrapper.appendChild(btn);
 
-    // Danmaku
     const danmakuBtn = document.createElement("button");
     danmakuBtn.id = "danmaku-toggle-btn";
     danmakuBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>`;
-
     danmakuBtn.style.cssText = `background:transparent;border:none;color:inherit;cursor:pointer;padding:8px;opacity:0.7;transition:opacity 0.2s,transform 0.2s,color 0.2s;display:flex;align-items:center;justify-content:center;`;
 
-    browser.storage.local.get("enableDanmaku", (result) => {
-      const isEnabled = result.enableDanmaku ?? true;
-      updateDanmakuBtnStyle(danmakuBtn, isEnabled);
-    });
+    const danmakuRes = await browser.storage.local.get("enableDanmaku");
+    const isEnabled = danmakuRes.enableDanmaku ?? false;
+    updateDanmakuBtnStyle(danmakuBtn, isEnabled);
 
     danmakuBtn.onmouseenter = function () {
       this.style.opacity = "1";
       this.style.transform = "scale(1.1)";
     };
-    danmakuBtn.onmouseleave = function () {
-      browser.storage.local.get("enableDanmaku", (res) => {
-        const isEnabled = res.enableDanmaku ?? true;
-        updateDanmakuBtnStyle(danmakuBtn, isEnabled);
-      });
+    danmakuBtn.onmouseleave = async function () {
+      const res = await browser.storage.local.get("enableDanmaku");
+      updateDanmakuBtnStyle(danmakuBtn, res.enableDanmaku ?? false);
       this.style.transform = "scale(1)";
     };
 
-    danmakuBtn.onclick = (e) => {
+    danmakuBtn.onclick = async (e) => {
       e.stopPropagation();
-      browser.storage.local.get("enableDanmaku", (result) => {
-        const currentStatus = result.enableDanmaku ?? true;
-        const newStatus = !currentStatus;
-        browser.storage.local.set({ enableDanmaku: newStatus }, () => {
-          updateDanmakuBtnStyle(danmakuBtn, newStatus);
-        });
-      });
+      const result = await browser.storage.local.get("enableDanmaku");
+      const currentStatus = result.enableDanmaku ?? false;
+      const newStatus = !currentStatus;
+      await browser.storage.local.set({ enableDanmaku: newStatus });
+      updateDanmakuBtnStyle(danmakuBtn, newStatus);
     };
-
     wrapper.appendChild(danmakuBtn);
+
+    const activeUsersBtn = document.createElement("button");
+    activeUsersBtn.id = "active-users-toggle-btn";
+    activeUsersBtn.innerHTML = ICON_USER;
+    activeUsersBtn.style.cssText = `background:transparent;border:none;color:inherit;cursor:pointer;padding:8px;opacity:0.7;transition:opacity 0.2s,transform 0.2s,color 0.2s;display:flex;align-items:center;justify-content:center;`;
+
+    activeUsersBtn.onmouseenter = function () {
+      this.style.opacity = "1";
+      this.style.transform = "scale(1.1)";
+    };
+    activeUsersBtn.onmouseleave = function () {
+      this.style.opacity = isOverlayVisible ? "1" : "0.7";
+      this.style.transform = "scale(1)";
+    };
+    activeUsersBtn.onclick = (e) => {
+      e.stopPropagation();
+      isOverlayVisible = !isOverlayVisible;
+      activeUsersBtn.style.opacity = isOverlayVisible ? "1" : "0.7";
+      activeUsersBtn.style.color = isOverlayVisible ? "#53fc18" : "inherit";
+      updateOverlayUI();
+    };
+    wrapper.appendChild(activeUsersBtn);
+
     header.appendChild(wrapper);
   }
 
-  function updateDanmakuBtnStyle(btn, isEnabled) {
-    if (isEnabled) {
-      btn.style.color = "#53fc18";
-      btn.style.opacity = "1";
-    } else {
-      btn.style.color = "inherit";
-      btn.style.opacity = "0.5";
-    }
-  }
-
   // DANMAKU
-  function isDanmakuEnabled() {
-    return new Promise((resolve) => {
-      browser.storage.local.get("enableDanmaku", (result) => {
-        const isEnabled = result.enableDanmaku ?? true;
-        resolve(isEnabled);
-      });
-    });
+  async function isDanmakuEnabled() {
+    const result = await browser.storage.local.get("enableDanmaku");
+    return result.enableDanmaku ?? false;
   }
 
   const DANMAKU_CSS = `
@@ -1477,6 +1551,7 @@
         /^Respondiendo a @[\w-]+ /i, // Spanish (es)
         /^Vastaa @[\w-]+ /i, // Finnish (fi)
         /^Répondre à @[\w-]+ /i, // French (fr)
+        /^בתשובה ל@[\w-]+ /i, // Hebrew (he)
         /^Membalas @[\w-]+ /i, // Indonesian (id)
         /^Rispondi a @[\w-]+ /i, // Italian (it)
         /^返信中 @[\w-]+ /i, // Japanese (ja)
@@ -1497,6 +1572,7 @@
         "Nuevos mensajes", // Spanish (es)
         "Uudet viestit", // Finnish (fi)
         "Nouveaux messages", // French (fr)
+        "הודעות חדשות", // Hebrew (he)
         "Pesan baru", // Indonesian (id)
         "Nuovi messaggi", // Italian (it)
         "新しいメッセージ", // Japanese (ja)
@@ -1825,25 +1901,24 @@
     }
   }
 
-  // Active Users
-
   let activeUsers = new Map();
   let messageCount = 0;
   let activeObserver = null;
   let activeUIElement = null;
   let isActiveEnabled = false;
+  let isOverlayVisible = false;
   let statsInterval = null;
   let lastUrlPath = location.pathname;
 
   const ICON_USER = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
   const ICON_CHAT = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>`;
+  const ICON_GROUP = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`;
 
   function updateStatsUI() {
     if (!isActiveEnabled) return;
     const target = document.querySelector('[data-testid="viewer-count"]');
     const parent = target?.parentElement;
     if (!parent) return;
-
     if (!activeUIElement || !document.body.contains(activeUIElement)) {
       activeUIElement = document.createElement("div");
       activeUIElement.className = "flex items-center gap-2 text-sm font-bold";
@@ -1851,7 +1926,6 @@
       activeUIElement.innerHTML = `<div class="flex items-center gap-1 text-primary-base">${ICON_USER}<span class="uk-u">0</span></div><div class="flex items-center gap-1 text-white">${ICON_CHAT}<span class="uk-m">0</span></div>`;
       parent.appendChild(activeUIElement);
     }
-
     activeUIElement.querySelector(".uk-u").textContent = activeUsers.size;
     activeUIElement.querySelector(".uk-m").textContent = messageCount;
   }
@@ -1861,6 +1935,7 @@
     activeObserver = null;
     activeUsers.clear();
     messageCount = 0;
+    closeOverlay();
     if (activeUIElement) activeUIElement.remove();
     activeUIElement = null;
   }
@@ -1873,55 +1948,73 @@
 
     activeObserver = new MutationObserver((mutations) => {
       for (const m of mutations) {
+        if (m.type !== "childList") continue;
         for (const node of m.addedNodes) {
-          if (node.nodeType !== 1) continue;
+          if (
+            node.nodeType !== 1 ||
+            !node.hasAttribute ||
+            !node.hasAttribute("data-index")
+          )
+            continue;
+          const btn = node.querySelector("button[data-prevent-expand]");
+          if (!btn) continue;
 
-          const btn = node.matches('button[title][data-prevent-expand="true"]')
-            ? node
-            : node.querySelector('button[title][data-prevent-expand="true"]');
+          const username = btn.textContent.trim();
+          if (!username) continue;
 
-          if (btn) {
-            activeUsers.set(btn.title, Date.now());
-            messageCount++;
+          const color = btn.style.color || "rgb(255, 255, 255)";
+          let role = "viewer";
+
+          if (node.querySelector('g[clip-path="url(#clip0_614_6275)"]'))
+            role = "verified";
+          else if (node.querySelector('g[clip-path="url(#clip0_817_50667)"]'))
+            role = "mod";
+
+          const existingData = activeUsers.get(username);
+          if (existingData) {
+            const p = { verified: 3, mod: 2, viewer: 1 };
+            const newRole =
+              p[role] > p[existingData.role] ? role : existingData.role;
+            activeUsers.set(username, {
+              time: Date.now(),
+              role: newRole,
+              color: existingData.color || color,
+            });
+          } else {
+            activeUsers.set(username, { time: Date.now(), role, color });
           }
+          messageCount++;
         }
       }
     });
-
-    activeObserver.observe(container, { childList: true, subtree: true });
+    activeObserver.observe(container, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    });
   }
 
   function toggleActiveStats(status) {
     isActiveEnabled = status;
-
     if (status) {
       if (/^\/\w+$/.test(location.pathname)) startActiveObserver();
-
       if (!statsInterval) {
         statsInterval = setInterval(() => {
           if (!isActiveEnabled) return;
-
           const now = Date.now();
-          activeUsers.forEach((time, user) => {
-            if (now - time > 1800000) activeUsers.delete(user);
+          activeUsers.forEach((data, user) => {
+            if (now - data.time > 1800000) activeUsers.delete(user);
           });
-
           const currentPath = location.pathname;
           const isChannelPage = /^\/\w+$/.test(currentPath);
-
           if (currentPath !== lastUrlPath) {
             lastUrlPath = currentPath;
             isChannelPage ? startActiveObserver() : resetActiveStats();
           } else if (isChannelPage) {
             const container = document.querySelector("#chatroom-messages");
-            if (
-              container &&
-              (!activeObserver || !document.contains(container))
-            ) {
+            if (container && (!activeObserver || !document.contains(container)))
               startActiveObserver();
-            }
           }
-
           updateStatsUI();
         }, 1000);
       }
@@ -1932,6 +2025,485 @@
     }
   }
 
+  function closeOverlay() {
+    const existing = document.getElementById("active-users-overlay");
+    if (existing) existing.remove();
+    isOverlayVisible = false;
+    const btn = document.getElementById("active-users-toggle-btn");
+    if (btn) updateActiveBtnStyle(btn, false);
+  }
+
+  function buildOverlay() {
+    if (!document.getElementById("ukick-au-styles")) {
+      const style = document.createElement("style");
+      style.id = "ukick-au-styles";
+      style.textContent = `
+        #active-users-overlay { position: absolute; inset: 0; background: rgba(25,27,31,.98); z-index: 9999 !important; overflow-y: auto; font-size: 13px; color: #F4F5F6; display: flex; flex-direction: column; }
+        .au-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid #24272c; position: sticky; top: 0; background: rgba(25,27,31,.98); z-index: 10; }
+        .au-header b { font-size: 15px; }
+        .au-close-btn { background: none; border: none; color: #A8ADB3; cursor: pointer; font-size: 18px; }
+        .au-search-wrap { padding: 8px 16px 4px; position: sticky; top: 46px; background: rgba(25,27,31,.98); z-index: 10; border-bottom: 1px solid #24272c; margin-bottom: 4px; }
+        .au-search-input { width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 6px; border: 1px solid #3f4349; background: #18191c; color: #F4F5F6; outline: none; font-size: 13px; }
+        .au-search-input:focus { border-color: #53fc18; }
+        .au-list { padding: 4px 16px 16px; display: flex; flex-direction: column; gap: 6px; }
+        .au-category-title { color: #A8ADB3; font-size: 11px; letter-spacing: 0.5px; margin-top: 8px; margin-bottom: 4px; font-weight: 600; }
+        .au-user { padding: 4px 8px; border-radius: 4px; cursor: pointer; font-weight: 500; }
+        .au-user:hover { background: #24272c; }
+      `;
+      document.head.appendChild(style);
+    }
+
+    const chatArea = document.querySelector(
+      "#channel-chatroom > .relative.flex.flex-1.flex-col",
+    );
+    if (!chatArea) return;
+
+    const overlay = document.createElement("div");
+    overlay.id = "active-users-overlay";
+
+    const sorted = [...activeUsers.entries()].sort((a, b) =>
+      a[0].toLowerCase().localeCompare(b[0].toLowerCase()),
+    );
+    const verified = [],
+      mods = [],
+      viewers = [];
+
+    sorted.forEach(([user, data]) => {
+      if (data.role === "verified") verified.push({ user, ...data });
+      else if (data.role === "mod") mods.push({ user, ...data });
+      else viewers.push({ user, ...data });
+    });
+
+    const renderCategory = (title, list) => {
+      if (list.length === 0) return "";
+      const usersHtml = list
+        .map(
+          (item) =>
+            `<div class="au-user" data-username="${item.user}" style="color:${item.color}">${item.user}</div>`,
+        )
+        .join("");
+      return `<div class="au-category" data-category="${title.toLowerCase()}"><div class="au-category-title">${title}</div>${usersHtml}</div>`;
+    };
+
+    const usersLabel = browser.i18n.getMessage("overlay_users") || "Users";
+
+    overlay.innerHTML = `
+      <div class="au-header">
+        <b>${usersLabel} (${activeUsers.size})</b>
+        <button class="au-close-btn" id="close-users-overlay">✕</button>
+      </div>
+      <div class="au-search-wrap">
+        <input type="text" id="active-users-search" class="au-search-input" placeholder="...">
+      </div>
+      <div class="au-list">
+        ${renderCategory("VERIFIED", verified)}
+        ${renderCategory("MODERATORS", mods)}
+        ${renderCategory("VIEWERS", viewers)}
+      </div>
+    `;
+
+    chatArea.appendChild(overlay);
+
+    document
+      .getElementById("active-users-search")
+      .addEventListener("input", function () {
+        const query = this.value.toLowerCase().trim();
+        overlay.querySelectorAll(".au-category").forEach((category) => {
+          let visibleCount = 0;
+          category.querySelectorAll(".au-user").forEach((userEl) => {
+            const isMatch = userEl.dataset.username
+              .toLowerCase()
+              .includes(query);
+            userEl.style.display = isMatch ? "" : "none";
+            if (isMatch) visibleCount++;
+          });
+          category.style.display = visibleCount === 0 ? "none" : "";
+        });
+      });
+
+    document.getElementById("close-users-overlay").onclick = closeOverlay;
+    overlay.querySelectorAll(".au-user").forEach((el) => {
+      el.onclick = () =>
+        window.open("https://kick.com/" + el.dataset.username, "_blank");
+    });
+  }
+
+  function updateActiveBtnStyle(btn, isVisible) {
+    btn.style.color = isVisible ? "#53fc18" : "inherit";
+    btn.style.opacity = isVisible ? "1" : "0.7";
+  }
+
+  function updateOverlayUI() {
+    if (isOverlayVisible) {
+      buildOverlay();
+    } else {
+      closeOverlay();
+    }
+  }
+
+  function initDynamicChatWidth() {
+    const STORAGE_KEY = "kcw_custom_width";
+
+    if (!document.getElementById("kcw-style")) {
+      const style = document.createElement("style");
+      style.id = "kcw-style";
+      style.textContent = `
+            #kcw-line {
+                position: absolute; left: 0; top: 0; bottom: 0; width: 16px;
+                background: transparent; cursor: ew-resize; z-index: 99999;
+                border-left: 2px solid #24272c; transition: border-color 0.2s;
+            }
+            #kcw-line:hover, #kcw-line.active { border-left-color: #3f4349; }
+            #kcw-panel {
+                position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
+                background: rgba(10, 10, 10, 0.95); border: 1px solid rgba(60, 63, 68, 0.8);
+                border-radius: 8px; padding: 6px; display: none; flex-direction: column;
+                align-items: center; gap: 6px; z-index: 99999;
+            }
+            #kcw-panel.active { display: flex; }
+            #kcw-val {
+                color: rgba(255, 255, 255, 0.9); text-align: center; font-size: 11px;
+                font-family: system-ui, sans-serif; user-select: none;
+                background: rgba(255, 255, 255, 0.15); padding: 3px 8px; border-radius: 4px;
+            }
+            #kcw-panel button {
+                border: none; border-radius: 50%; width: 28px; height: 28px;
+                display: flex; align-items: center; justify-content: center;
+                cursor: pointer; transition: background 0.2s, transform 0.1s;
+            }
+            #kcw-panel button:active { transform: scale(0.9); }
+            #kcw-ok { background: rgba(74, 222, 128, 0.15); }
+            #kcw-ok:hover { background: rgba(74, 222, 128, 0.35); }
+            #kcw-ok svg { color: #4ade80; }
+            #kcw-cancel { background: rgba(248, 113, 113, 0.15); }
+            #kcw-cancel:hover { background: rgba(248, 113, 113, 0.35); }
+            #kcw-cancel svg { color: #f87171; }
+            #kcw-reset { background: rgba(161, 161, 170, 0.15); }
+            #kcw-reset:hover { background: rgba(161, 161, 170, 0.35); }
+            #kcw-reset svg { color: #a1a1aa; }
+        `;
+      document.head.appendChild(style);
+    }
+
+    const observer = new MutationObserver(() => {
+      const chatEl = document.getElementById("channel-chatroom");
+      if (chatEl && !chatEl.dataset.kcw) {
+        observer.disconnect();
+        setupChat(chatEl);
+      }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    function setupChat(chat) {
+      chat.dataset.kcw = "1";
+      chat.style.position = "relative";
+
+      const savedWidth = localStorage.getItem(STORAGE_KEY);
+      if (savedWidth) chat.style.setProperty("--chat-width", savedWidth);
+
+      createDragUI(chat);
+    }
+
+    function createDragUI(chat) {
+      let isDragging = false,
+        startX = 0,
+        startW = 0,
+        prevW = 0;
+
+      chat.insertAdjacentHTML(
+        "beforeend",
+        `
+            <div id="kcw-line"></div>
+            <div id="kcw-panel">
+                <div id="kcw-val"></div>
+                <button id="kcw-ok"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
+                <button id="kcw-cancel"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+                <button id="kcw-reset"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg></button>
+            </div>
+        `,
+      );
+
+      const line = document.getElementById("kcw-line");
+      const panel = document.getElementById("kcw-panel");
+      const valDisplay = document.getElementById("kcw-val");
+
+      const updateDisplay = (w) => (valDisplay.textContent = `${w}px`);
+
+      const stopDrag = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        line.classList.remove("active");
+        chat.style.removeProperty("transition");
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", stopDrag);
+      };
+
+      const onMouseMove = (e) => {
+        let newWidth = startW + (startX - e.clientX);
+        newWidth = Math.max(250, Math.min(newWidth, window.innerWidth - 100));
+        chat.style.setProperty("--chat-width", `${newWidth}px`);
+        updateDisplay(newWidth);
+      };
+
+      line.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+        isDragging = true;
+        line.classList.add("active");
+        panel.classList.add("active");
+
+        startW =
+          parseInt(getComputedStyle(chat).getPropertyValue("--chat-width")) ||
+          chat.offsetWidth;
+        prevW = startW;
+        startX = e.clientX;
+
+        chat.style.setProperty("transition", "none");
+        updateDisplay(startW);
+
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", stopDrag);
+      });
+
+      panel.addEventListener("mouseenter", () => panel.classList.add("active"));
+
+      document.getElementById("kcw-ok").addEventListener("click", () => {
+        localStorage.setItem(
+          STORAGE_KEY,
+          getComputedStyle(chat).getPropertyValue("--chat-width"),
+        );
+        panel.classList.remove("active");
+      });
+
+      document.getElementById("kcw-cancel").addEventListener("click", () => {
+        chat.style.setProperty("--chat-width", `${prevW}px`);
+        updateDisplay(prevW);
+        panel.classList.remove("active");
+      });
+
+      document.getElementById("kcw-reset").addEventListener("click", () => {
+        localStorage.removeItem(STORAGE_KEY);
+        chat.style.removeProperty("--chat-width");
+        panel.classList.remove("active");
+      });
+    }
+  }
+
+  function initKeyboardVolumeControl() {
+    let activeVideo = null;
+    let volDisplay = null;
+    let fadeTimer = null;
+    let isRunning = false;
+
+    if (!document.getElementById("kv-style")) {
+      const style = document.createElement("style");
+      style.id = "kv-style";
+      style.textContent = `
+            .kv-vol-overlay {
+                position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                background: rgba(0, 0, 0, 0.7); color: #fff; padding: 10px 20px;
+                border-radius: 8px; font-size: 24px; font-weight: bold;
+                font-family: sans-serif; pointer-events: none; z-index: 9999;
+                opacity: 0; transition: opacity 0.2s ease-in-out;
+            }
+        `;
+      document.head.appendChild(style);
+    }
+
+    function showVolume() {
+      if (!activeVideo) return;
+
+      if (!volDisplay || !volDisplay.parentNode) {
+        volDisplay = document.createElement("div");
+        volDisplay.className = "kv-vol-overlay";
+        const holder =
+          document.getElementById("injected-channel-player") ||
+          activeVideo.parentElement;
+        if (holder) holder.appendChild(volDisplay);
+      }
+
+      volDisplay.textContent = Math.round(activeVideo.volume * 100) + "%";
+      volDisplay.style.opacity = "1";
+
+      clearTimeout(fadeTimer);
+      fadeTimer = setTimeout(() => (volDisplay.style.opacity = "0"), 1000);
+    }
+
+    function updateSlider() {
+      if (!activeVideo) return;
+      const slider = document.querySelector('[aria-label="Volume"]');
+      const track = document.querySelector(
+        '[data-orientation="horizontal"].bg-white',
+      );
+
+      if (slider && track) {
+        const pct = activeVideo.volume * 100;
+        slider.parentNode.style.left = pct + "%";
+        slider.setAttribute("aria-valuenow", pct);
+        track.style.right = 100 - pct + "%";
+      }
+    }
+
+    function onKeyDown(e) {
+      if (!activeVideo || !document.body.contains(activeVideo)) {
+        activeVideo = document.querySelector("#video-player");
+        if (!activeVideo) return;
+      }
+
+      const tag = document.activeElement.tagName.toLowerCase();
+      const editable = document.activeElement.isContentEditable;
+      const isRange =
+        tag === "input" && document.activeElement.type === "range";
+
+      if (!isRange && (tag === "input" || tag === "textarea" || editable))
+        return;
+
+      if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const step = 0.05;
+        if (e.key === "ArrowUp") {
+          if (activeVideo.muted) {
+            activeVideo.muted = false;
+            activeVideo.volume = 0;
+          }
+          activeVideo.volume = Math.min(1, activeVideo.volume + step);
+        } else {
+          activeVideo.volume = Math.max(0, activeVideo.volume - step);
+        }
+
+        updateSlider();
+        showVolume();
+      }
+    }
+
+    window.startKeyboardVolume = function () {
+      if (isRunning) return;
+      isRunning = true;
+      activeVideo = document.querySelector("#video-player");
+      document.addEventListener("keydown", onKeyDown, true);
+    };
+
+    window.stopKeyboardVolume = function () {
+      if (!isRunning) return;
+      isRunning = false;
+      document.removeEventListener("keydown", onKeyDown, true);
+      activeVideo = null;
+    };
+  }
+
+  initKeyboardVolumeControl();
+
+  const themepalettes = {
+    original: { bg: "#53fc18", text: "#000000" },
+    purple: { bg: "#9333ea", text: "#ffffff" },
+    red: { bg: "#ef4444", text: "#ffffff" },
+    blue: { bg: "#3b82f6", text: "#ffffff" },
+    orange: { bg: "#f97316", text: "#ffffff" },
+    cyan: { bg: "#06b6d4", text: "#ffffff" },
+  };
+
+  let paletteStyleTag = null;
+  let paletteObserver = null;
+  let isPaletteRunning = false;
+
+  function hexToHsl(hex) {
+    let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    if (!result) return { h: 0, s: 0, l: 0 };
+    let r = parseInt(result[1], 16) / 255,
+      g = parseInt(result[2], 16) / 255,
+      b = parseInt(result[3], 16) / 255;
+    let max = Math.max(r, g, b),
+      min = Math.min(r, g, b),
+      h,
+      s,
+      l = (max + min) / 2;
+    if (max === min) {
+      h = s = 0;
+    } else {
+      let d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r:
+          h = (g - b) / d + (g < b ? 6 : 0);
+          break;
+        case g:
+          h = (b - r) / d + 2;
+          break;
+        case b:
+          h = (r - g) / d + 4;
+          break;
+      }
+      h /= 6;
+    }
+    return { h: h * 360, s: s * 100, l: l * 100 };
+  }
+
+  function getLogoFilter(targetHex) {
+    const target = hexToHsl(targetHex);
+    if (target.s < 15) return `grayscale(1) brightness(${target.l / 50})`;
+    const sourceHue = 101;
+    return `hue-rotate(${target.h - sourceHue}deg) saturate(${target.s / 98}) brightness(${target.l / 54})`;
+  }
+
+  function applyPaletteTheme(bgColor, textColor) {
+    removePaletteTheme();
+    if (!bgColor || !textColor) return;
+
+    const filter = getLogoFilter(bgColor);
+    paletteStyleTag = document.createElement("style");
+    paletteStyleTag.id = "kick-palette-style";
+
+    paletteStyleTag.textContent = `
+          .text-primary-base, .text-green-500 { color: ${bgColor} !important; }
+          .bg-primary-base, .bg-green-500 { background-color: ${bgColor} !important; }
+          .border-green-500 { border-color: ${bgColor} !important; }
+          [fill="url(#paint0_linear_614_6275)"] { fill: ${bgColor} !important; }
+          .text-primary-onPrimary { color: ${textColor} !important; }
+          img[src*="kick-logo.svg"] { filter: ${filter} !important; }
+      `;
+    document.head.appendChild(paletteStyleTag);
+
+    paletteObserver = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        for (const node of m.addedNodes) {
+          if (node.nodeType !== 1) continue;
+          if (node.tagName === "IMG" && node.src.includes("kick-logo.svg")) {
+            node.style.filter = filter;
+          }
+        }
+      }
+    });
+    paletteObserver.observe(document.body, { childList: true, subtree: true });
+  }
+
+  function removePaletteTheme() {
+    if (paletteStyleTag) {
+      paletteStyleTag.remove();
+      paletteStyleTag = null;
+    }
+    if (paletteObserver) {
+      paletteObserver.disconnect();
+      paletteObserver = null;
+    }
+  }
+
+  window.startWebsitePalette = async function () {
+    if (isPaletteRunning) return;
+    isPaletteRunning = true;
+
+    const { themePalette = "original" } =
+      await browser.storage.local.get("themePalette");
+    const colors = themepalettes[themePalette] || themepalettes.original;
+    applyPaletteTheme(colors.bg, colors.text);
+  };
+
+  window.stopWebsitePalette = function () {
+    if (!isPaletteRunning) return;
+    isPaletteRunning = false;
+    removePaletteTheme();
+  };
+
   function debounce(fn, delay = 10) {
     let timer;
     return () => {
@@ -1939,34 +2511,34 @@
       timer = setTimeout(() => fn(), delay);
     };
   }
-
   // ==== Firefox Extension ====
 
   (async () => {
     if (typeof browser === "undefined" || !browser.storage) return;
 
     async function isEnabled() {
-      return new Promise((resolve) => {
-        browser.storage.local.get("enabled", (result) => {
-          resolve(result.enabled ?? true);
-        });
-      });
+      const result = await browser.storage.local.get("enabled");
+      return result.enabled ?? true;
     }
 
-    function isSearchHistoryDisabled() {
-      return new Promise((resolve) => {
-        browser.storage.local.get("disableSearchHistory", (res) => {
-          resolve(res.disableSearchHistory === true);
-        });
-      });
+    async function isSearchHistoryDisabled() {
+      const res = await browser.storage.local.get("disableSearchHistory");
+      return res.disableSearchHistory === true;
     }
 
-    function isActiveUsersDisabled() {
-      return new Promise((resolve) => {
-        browser.storage.local.get("disableActiveUsers", (res) => {
-          resolve(res.disableActiveUsers === true);
-        });
-      });
+    async function isActiveUsersDisabled() {
+      const res = await browser.storage.local.get("disableActiveUsers");
+      return res.disableActiveUsers === true;
+    }
+
+    async function isKeyboardVolumeEnabled() {
+      const res = await browser.storage.local.get("enableKeyboardVolume");
+      return res.enableKeyboardVolume === true;
+    }
+
+    async function isWebsitePaletteDisabled() {
+      const res = await browser.storage.local.get("disableWebsitePalette");
+      return res.disableWebsitePalette === true;
     }
 
     let enabled = await isEnabled();
@@ -1979,9 +2551,30 @@
     const disableActiveUsers = await isActiveUsersDisabled();
     toggleActiveStats(!disableActiveUsers);
 
+    const keyboardVolumeEnabled = await isKeyboardVolumeEnabled();
+    if (keyboardVolumeEnabled) {
+      startKeyboardVolume();
+    }
+
+    const disableWebsitePalette = await isWebsitePaletteDisabled();
+    if (!disableWebsitePalette) {
+      startWebsitePalette();
+    }
+
     let observer = null;
 
-    async function startProcessing() {
+    async function startUIFeatures() {
+      processChatLayout();
+      initDynamicChatWidth();
+
+      try {
+        await processDanmaku();
+      } catch {}
+    }
+
+    async function startFilteringFeatures() {
+      if (!(await isEnabled())) return;
+
       setupAudioContext();
       await processCards();
       await processSidebarChannels();
@@ -1994,55 +2587,63 @@
       await observeBlockedChatMessages();
       await observeChatUsernames();
 
-      processChatLayout();
-
-      try {
-        await processDanmaku();
-      } catch {}
-
       if (await isSearchHistoryDisabled()) {
         clearSearchHistory();
       }
+    }
+
+    function restoreHiddenElements() {
+      document.querySelectorAll(".group\\/card").forEach((card) => {
+        card.style.display = "";
+      });
+
+      document
+        .querySelectorAll('[data-testid^="sidebar-recommended-channel-"]')
+        .forEach((item) => {
+          item.style.display = "";
+        });
+
+      document
+        .querySelectorAll("div.flex.w-full.shrink-0.grow-0.flex-col")
+        .forEach((item) => {
+          item.style.display = "";
+        });
+
+      const videoPlayer = document.getElementById("video-player");
+      if (videoPlayer) videoPlayer.style.display = "";
     }
 
     function startObserver() {
       if (observer) return;
       observer = new MutationObserver(
         debounce(async () => {
-          if (!(await isEnabled())) return;
-
-          await startProcessing();
+          await startUIFeatures();
+          await startFilteringFeatures();
         }, 50),
       );
       observer.observe(document.body, { childList: true, subtree: true });
     }
 
-    function stopObserver() {
-      if (observer) {
-        observer.disconnect();
-        observer = null;
-      }
-    }
+    startObserver();
+    await startUIFeatures();
 
     if (enabled) {
-      startObserver();
-      await startProcessing();
+      await startFilteringFeatures();
     }
 
     enableAudioContextOnUserGesture();
 
-    browser.storage.onChanged.addListener((changes, areaName) => {
+    browser.storage.onChanged.addListener(async (changes, areaName) => {
       if (areaName === "local") {
         if ("enabled" in changes) {
           const newValue = changes.enabled.newValue;
           if (newValue) {
-            initAutoQualityControl();
-            startObserver();
-            startProcessing();
+            startFilteringFeatures();
           } else {
-            stopObserver();
+            restoreHiddenElements();
           }
         }
+
         if ("volumeBoost" in changes) {
           let rawValue = changes.volumeBoost.newValue;
           let parsed =
@@ -2052,22 +2653,67 @@
           const newBoost = isNaN(parsed) ? 1 : parsed;
           setVolumeBoost(newBoost);
         }
+
         if ("disableSearchHistory" in changes) {
           if (changes.disableSearchHistory.newValue === true) {
             clearSearchHistory();
           }
         }
+
         if ("enableDanmaku" in changes) {
-          const newValue = changes.enableDanmaku.newValue;
-          if (newValue === true) {
+          if (changes.enableDanmaku.newValue === true) {
             processDanmaku();
           } else {
             DanmakuEngine.stop();
           }
         }
+
         if ("disableActiveUsers" in changes) {
           const isDisabled = changes.disableActiveUsers.newValue;
           toggleActiveStats(!isDisabled);
+        }
+
+        if ("enableChatBlocking" in changes) {
+          const isEnabled = changes.enableChatBlocking.newValue;
+          if (isEnabled) {
+            observeBlockedChatMessages();
+            observeChatUsernames();
+          } else {
+            if (window.chatBlockObserver) window.chatBlockObserver.disconnect();
+            if (window.chatUsernameObserver)
+              window.chatUsernameObserver.disconnect();
+          }
+        }
+
+        if ("enableKeyboardVolume" in changes) {
+          const isEnabled = changes.enableKeyboardVolume.newValue;
+          if (isEnabled) {
+            startKeyboardVolume();
+          } else {
+            stopKeyboardVolume();
+          }
+        }
+
+        if ("disableWebsitePalette" in changes) {
+          const isDisabled = changes.disableWebsitePalette.newValue;
+          if (isDisabled) {
+            stopWebsitePalette();
+          } else {
+            startWebsitePalette();
+          }
+        }
+
+        if ("themePalette" in changes) {
+          const res = await browser.storage.local.get("disableWebsitePalette");
+          const isDisabled = res.disableWebsitePalette ?? true;
+          if (!isDisabled) {
+            const newTheme = changes.themePalette.newValue || "original";
+            const colors = themepalettes[newTheme] || themepalettes.original;
+
+            applyPaletteTheme(colors.bg, colors.text);
+
+            if (!isPaletteRunning) isPaletteRunning = true;
+          }
         }
       }
     });

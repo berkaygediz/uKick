@@ -1,9 +1,9 @@
 {
     "app_name": {
-        "message": "uKick — Kick屏蔽与直播调整工具"
+        "message": "uKick - Kick的一切"
     },
     "app_description": {
-        "message": "一体化扩展，用于在 Kick 上屏蔽、增强和调整所有内容，以获得更好的直播体验。"
+        "message": "屏蔽频道、分类、标签和聊天的多合一Kick工具。同步远程屏蔽列表。提升音量、设置画质、弹幕和主题。"
     },
     "btn_block_channel": {
         "message": "屏蔽此频道"
@@ -12,7 +12,7 @@
         "message": "隐藏分类"
     },
     "alert_channel_blocked": {
-        "message": "已屏蔽 $CHANNEL$！",
+        "message": "$CHANNEL$ 已屏蔽！",
         "placeholders": {
             "channel": {
                 "content": "$1"
@@ -47,43 +47,43 @@
         "message": "选项"
     },
     "options_blocked_channels": {
-        "message": "已屏蔽频道"
+        "message": "已屏蔽的频道"
     },
     "options_blocked_categories": {
-        "message": "已屏蔽分类"
+        "message": "已屏蔽的分类"
     },
     "options_blocked_tags": {
-        "message": "已屏蔽标签"
+        "message": "已屏蔽的标签"
     },
     "options_show": {
-        "message": "▶️ 显示"
+        "message": "显示"
     },
     "options_export": {
-        "message": "📤 导出"
+        "message": "导出"
     },
     "options_import": {
-        "message": "📥 导入"
+        "message": "导入"
     },
     "options_clear_all": {
-        "message": "🧹 清除全部"
+        "message": "全部清除"
     },
     "options_refresh": {
-        "message": "🔄 刷新"
+        "message": "刷新"
     },
     "options_add_channel": {
-        "message": "➕ 添加频道"
+        "message": "添加频道"
     },
     "options_add_category": {
-        "message": "➕ 添加分类"
+        "message": "添加分类"
     },
     "options_add_tags": {
-        "message": "➕ 添加标签"
+        "message": "添加标签"
     },
     "options_disable_search_history": {
         "message": "禁用搜索历史"
     },
-    "options_disable_chat_blocking": {
-        "message": "禁用聊天屏蔽"
+    "options_enable_chat_blocking": {
+        "message": "启用聊天屏蔽"
     },
     "options_hide_block_buttons": {
         "message": "隐藏屏蔽按钮"
@@ -94,10 +94,181 @@
     "options_disable_active_users": {
         "message": "禁用活跃用户统计"
     },
+    "options_enable_keyboard_volume": {
+        "message": "启用键盘音量控制"
+    },
     "options_suggestions": {
-        "message": "建议:"
+        "message": "建议："
     },
     "options_customization": {
         "message": "自定义"
+    },
+    "options_themes": {
+        "message": "主题"
+    },
+    "options_subscriptions": {
+        "message": "订阅"
+    },
+    "placeholder_remote_url": {
+        "message": "远程列表 URL (JSON)"
+    },
+    "options_sub_add": {
+        "message": "添加"
+    },
+    "options_sub_interval": {
+        "message": "同步间隔："
+    },
+    "options_sub_type_channels": {
+        "message": "频道"
+    },
+    "options_sub_type_categories": {
+        "message": "分类"
+    },
+    "options_sub_type_tags": {
+        "message": "标签"
+    },
+    "options_sub_6h": {
+        "message": "6 小时"
+    },
+    "options_sub_12h": {
+        "message": "12 小时"
+    },
+    "options_sub_1d": {
+        "message": "1 天"
+    },
+    "options_sub_2d": {
+        "message": "2 天"
+    },
+    "options_sub_1w": {
+        "message": "1 周"
+    },
+    "options_sub_1m": {
+        "message": "1 个月"
+    },
+    "options_sub_update_all": {
+        "message": "全部更新"
+    },
+    "options_sub_updating": {
+        "message": "同步中..."
+    },
+    "options_sub_updated": {
+        "message": "完成！"
+    },
+    "options_sub_update_error": {
+        "message": "错误！"
+    },
+    "alert_duplicate_url": {
+        "message": "此 URL 已存在。"
+    },
+    "alert_permission_denied": {
+        "message": "此 URL 的访问权限被拒绝。"
+    },
+    "alert_invalid_url": {
+        "message": "无效的 URL 格式。"
+    },
+    "time_never": {
+        "message": "从不"
+    },
+    "time_just_now": {
+        "message": "刚刚"
+    },
+    "time_minutes_ago": {
+        "message": "$1 分钟前",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_hours_ago": {
+        "message": "$1 小时前",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_days_ago": {
+        "message": "$1 天前",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "meta_updated": {
+        "message": "更新于："
+    },
+    "meta_items": {
+        "message": "项目："
+    },
+    "btn_open_url": {
+        "message": "打开 URL"
+    },
+    "btn_update_now": {
+        "message": "立即更新"
+    },
+    "btn_remove": {
+        "message": "移除"
+    },
+    "options_add_all": {
+        "message": "全部添加"
+    },
+    "suggestion_missing_items": {
+        "message": " 个项目未在预加载列表中。"
+    },
+    "suggestion_items_count": {
+        "message": " 个项目。"
+    },
+    "error_loading_suggestions": {
+        "message": "加载建议时出错："
+    },
+    "options_integrations": {
+        "message": "集成"
+    },
+    "int_openlapis_exp": {
+        "message": "OpenLapis"
+    },
+    "int_action_documentize": {
+        "message": "文档化"
+    },
+    "int_action_send_details": {
+        "message": "发送详情"
+    },
+    "int_action_summarize_llm": {
+        "message": "总结 (LLM)"
+    },
+    "int_action_import_table": {
+        "message": "导入表格"
+    },
+    "int_action_extract_authors": {
+        "message": "提取作者"
+    },
+    "int_action_export_blocked_items": {
+        "message": "导出已屏蔽的项目"
+    },
+    "int_btn_push": {
+        "message": "推送"
+    },
+    "int_config_title": {
+        "message": "配置"
+    },
+    "int_config_desktop": {
+        "message": "桌面端"
+    },
+    "int_config_desktop_li1": {
+        "message": "已安装最新版本的应用"
+    },
+    "int_config_desktop_li2": {
+        "message": "已注册原生消息主机"
+    },
+    "int_config_mobile": {
+        "message": "移动端"
+    },
+    "int_config_mobile_p": {
+        "message": "OpenLapis Connect 应用即将推出。"
+    },
+    "overlay_users": {
+        "message": "用户"
     }
 }

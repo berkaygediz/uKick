@@ -172,6 +172,7 @@
       .suggestions-container .btn-group {
         margin-bottom: 0;
       }
+
       .suggestion-btn {
         background: #444;
         font-size: 12px;
@@ -179,6 +180,449 @@
       }
       .suggestion-btn:hover {
         background: #666;
+      }
+
+      .eco-card {
+        flex: 0 0 auto;
+        width: 200px;
+        background: #262626;
+        border: 1px solid #333;
+        border-radius: 12px;
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        scroll-snap-align: start;
+        transition: 0.15s ease;
+        cursor: pointer;
+        text-decoration: none !important;
+      }
+
+      .eco-card:hover {
+        background: #2e2e2e;
+        border-color: #4d4d4d;
+        transform: translateY(-2px);
+      }
+
+      .eco-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 6px;
+      }
+
+      .eco-desc {
+        font-size: 12px;
+        color: #cfcfcf;
+        line-height: 1.35;
+      }
+
+      .donate-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 6px;
+        text-decoration: none;
+        transition:
+          background 0.3s ease,
+          transform 0.2s ease;
+        cursor: pointer;
+      }
+
+      .donate-button svg {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+      }
+
+      .donate-button.bmc {
+        background-color: #ffdd00;
+        color: #000;
+      }
+
+      .donate-button.github {
+        background-color: #24292e;
+        color: #fff;
+      }
+
+      .donate-button:hover {
+        opacity: 0.9;
+        transform: scale(1.05);
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .theme-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-top: 5px;
+      }
+
+      .theme-option {
+        padding: 8px 10px;
+        min-height: 40px;
+        border-radius: 8px;
+        cursor: pointer;
+        text-align: center;
+        font-weight: bold;
+        font-size: 14px;
+        border: 3px solid transparent;
+        transition: all 0.2s ease;
+        user-select: none;
+        position: relative;
+      }
+
+      .theme-option:hover {
+        transform: scale(1.05);
+      }
+
+      .theme-option.active {
+        border-color: #ffffff;
+        box-shadow: 0 0 12px rgba(255, 255, 255, 0.2);
+      }
+
+      .theme-option.disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+        transform: none !important;
+      }
+
+      .suggestions-container {
+        margin-top: 10px;
+        display: none;
+        background: #2a2a2a;
+        padding: 12px;
+        border-radius: 6px;
+        border: 1px solid #444;
+      }
+
+      .suggestion-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        gap: 10px;
+      }
+
+      .suggestion-info {
+        font-size: 13px;
+        color: #ddd;
+        flex-grow: 1;
+        min-width: 0;
+      }
+
+      .add-all-btn {
+        background: #00b660;
+        color: white;
+        flex: 0 0 auto;
+        font-size: 13px;
+        font-weight: bold;
+        padding: 6px 12px;
+      }
+      .add-all-btn:hover {
+        background: #009e4c;
+      }
+
+      .sub-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        flex-grow: 1;
+        min-width: 0;
+      }
+      .sub-url {
+        font-size: 13px;
+        color: #ddd;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .sub-badge {
+        font-size: 10px;
+        background: #444;
+        color: #00b660;
+        padding: 2px 8px;
+        border-radius: 3px;
+        text-transform: uppercase;
+        font-weight: bold;
+        flex-shrink: 0;
+        margin: 0 12px;
+        letter-spacing: 0.5px;
+      }
+      .sub-meta {
+        font-size: 11px;
+        color: #888;
+        display: flex;
+        gap: 10px;
+      }
+      .sub-actions {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        flex-shrink: 0;
+      }
+      .sub-actions button {
+        background: #333;
+        border: none;
+        color: #ccc;
+        width: 26px;
+        height: 26px;
+        border-radius: 4px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        min-width: auto;
+        flex: none;
+        transition:
+          background 0.2s,
+          color 0.2s;
+      }
+      .sub-actions button:hover {
+        background: #555;
+        color: #fff;
+      }
+      .sub-actions button.remove-btn:hover {
+        background: #d9534f;
+      }
+      .sub-actions svg {
+        width: 14px;
+        height: 14px;
+        fill: currentColor;
+      }
+
+      .sub-input-row {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .sub-input-row input {
+        margin-top: 0;
+        flex: 2;
+        min-width: 0;
+      }
+      .sub-input-row select {
+        flex: 1;
+        padding: 8px;
+        background: #333;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        min-width: 0;
+      }
+      .sub-input-row button {
+        flex: 0 0 auto;
+        min-width: 80px;
+      }
+
+      .sub-sync-row {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        gap: 10px;
+      }
+      .sub-sync-config {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+        background: #2a2a2a;
+        padding: 6px 10px;
+        border-radius: 4px;
+        min-width: 0;
+      }
+      .sub-sync-config span {
+        font-size: 13px;
+        color: #aaa;
+        white-space: nowrap;
+      }
+      .sub-sync-config select {
+        flex: 1;
+        padding: 6px;
+        background: #333;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 13px;
+        min-width: 0;
+      }
+      .sub-sync-row > button {
+        flex: 0 0 auto;
+        min-width: 120px;
+        padding: 10px 14px;
+      }
+      .next-sync-info {
+        font-size: 11px;
+        color: #666;
+        margin-top: 6px;
+        text-align: center;
+      }
+
+      .int-group {
+        background: #2a2a2a;
+        border: 1px solid #333;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 10px;
+      }
+      .int-group-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 14px;
+        cursor: pointer;
+        user-select: none;
+        transition: background 0.2s;
+      }
+      .int-group-header:hover {
+        background: #333;
+      }
+      .int-group-title {
+        font-size: 15px;
+        font-weight: bold;
+        color: #eaeaea;
+        user-select: none;
+      }
+      .int-group-arrow {
+        width: 18px;
+        height: 18px;
+        fill: #aaa;
+        transition: transform 0.3s ease;
+        flex-shrink: 0;
+      }
+      .int-group-header.active .int-group-arrow {
+        transform: rotate(180deg);
+      }
+      .int-group-content {
+        display: none;
+        padding: 0 12px 12px 12px;
+      }
+      .int-item {
+        display: flex;
+        align-items: center;
+        background: #1a1a1a;
+        padding: 10px 12px;
+        border-radius: 6px;
+        gap: 12px;
+        margin-top: 8px;
+      }
+      .int-logo {
+        width: 36px;
+        height: 36px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 14px;
+        color: #fff;
+        flex-shrink: 0;
+        user-select: none;
+      }
+      .int-info {
+        flex-grow: 1;
+        min-width: 0;
+        overflow: hidden;
+      }
+      .int-title {
+        font-size: 13px;
+        font-weight: bold;
+        color: #eaeaea;
+        user-select: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .int-btn {
+        background: #00b660;
+        color: black;
+        padding: 7px 14px;
+        border: none;
+        border-radius: 5px;
+        font-size: 12px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s;
+        flex-shrink: 0;
+        min-width: 90px;
+        text-align: center;
+      }
+      .int-btn:hover {
+        background: #009e4c;
+      }
+      .int-action-select {
+        background: #333;
+        color: #fff;
+        border: 1px solid #444;
+        border-radius: 5px;
+        padding: 6px 8px;
+        font-size: 12px;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+      .int-config-box {
+        background: #1a1a1a;
+        border: 1px solid #333;
+        border-radius: 6px;
+        padding: 12px;
+        margin-top: 12px;
+      }
+      .int-config-title {
+        font-size: 14px;
+        font-weight: bold;
+        color: #00b660;
+        margin-bottom: 10px;
+        user-select: none;
+      }
+      .int-config-section {
+        margin-bottom: 10px;
+      }
+      .int-config-section:last-child {
+        margin-bottom: 0;
+      }
+      .int-config-section strong {
+        display: block;
+        font-size: 13px;
+        color: #eaeaea;
+        margin-bottom: 4px;
+        user-select: none;
+      }
+      .int-config-section ul {
+        list-style: disc;
+        padding-left: 20px;
+        margin: 0;
+        max-height: none;
+        overflow-y: visible;
+      }
+      .int-config-section li {
+        background: none;
+        padding: 0;
+        margin: 0;
+        font-size: 12px;
+        color: #aaa;
+      }
+      .int-config-section p {
+        font-size: 12px;
+        color: #aaa;
+        margin: 0;
+        line-height: 1.4;
+      }
+
+      .section-content-disabled {
+        opacity: 0.4;
+        pointer-events: none;
+        user-select: none;
+        filter: blur(0.5px);
       }
 
       @media (max-width: 480px) {
@@ -193,55 +637,53 @@
         .btn-group {
           flex-direction: column;
         }
-
-        button {
+        .btn-group button {
           flex: none;
           width: 100%;
           min-width: auto;
         }
 
-        .action-buttons {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          gap: 8px;
+        .sub-input-row {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .sub-input-row input,
+        .sub-input-row select {
           width: 100%;
-          margin-top: 10px;
+          flex: none;
+        }
+        .sub-input-row button {
+          width: 100%;
+          min-width: auto;
+          flex: none;
         }
 
-        .donate-button {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          width: 40px;
-          height: 40px;
-          border-radius: 6px;
-          text-decoration: none;
-          transition:
-            background 0.3s ease,
-            transform 0.2s ease;
-          cursor: pointer;
+        .sub-sync-row {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .sub-sync-config {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .sub-sync-config select {
+          width: 100%;
+        }
+        .sub-sync-row > button {
+          width: 100%;
+          min-width: auto;
         }
 
-        .donate-button svg {
-          width: 20px;
-          height: 20px;
-          fill: currentColor;
+        .int-item {
+          flex-wrap: wrap;
         }
-
-        .donate-button.bmc {
-          background-color: #ffdd00;
-          color: #000;
+        .int-action-select {
+          flex: 1 1 auto;
+          min-width: 120px;
         }
-
-        .donate-button.github {
-          background-color: #24292e;
-          color: #fff;
-        }
-
-        .donate-button:hover {
-          opacity: 0.9;
-          transform: scale(1.05);
+        .int-btn {
+          min-width: 70px;
+          padding: 7px 10px;
         }
       }
     </style>
@@ -256,20 +698,20 @@
       <div class="section" id="channelsSection">
         <h2 id="channelTitle">Blocked Channels</h2>
         <button id="showChannelsBtn">
-          <b style="color: #000000">▶️ Show</b>
+          <b style="color: #000">Show</b>
         </button>
         <div class="btn-group" style="display: none" id="channelsControls">
           <button id="exportChannelsBtn">
-            <b style="color: #000000">📤 Export</b>
+            <b style="color: #000">Export</b>
           </button>
           <button id="importChannelsBtn">
-            <b style="color: #000000">📥 Import</b>
+            <b style="color: #000">Import</b>
           </button>
           <button id="clearChannelsBtn">
-            <b style="color: #000000">🧹 Clear All</b>
+            <b style="color: #000">Clear All</b>
           </button>
           <button id="refreshChannelsBtn">
-            <b style="color: #000000">🔄 Refresh</b>
+            <b style="color: #000">Refresh</b>
           </button>
         </div>
         <input
@@ -279,7 +721,7 @@
           style="display: none"
         />
         <button id="addChannelBtn" style="display: none">
-          <b style="color: #000000">➕ Add Channel</b>
+          <b style="color: #000">Add Channel</b>
         </button>
         <ul id="channelList" style="display: none"></ul>
       </div>
@@ -287,20 +729,20 @@
       <div class="section" id="categoriesSection">
         <h2 id="categoryTitle">Blocked Categories</h2>
         <button id="showCategoriesBtn">
-          <b style="color: #000000">▶️ Show</b>
+          <b style="color: #000">Show</b>
         </button>
         <div class="btn-group" style="display: none" id="categoriesControls">
           <button id="exportCategoriesBtn">
-            <b style="color: #000000">📤 Export</b>
+            <b style="color: #000">Export</b>
           </button>
           <button id="importCategoriesBtn">
-            <b style="color: #000000">📥 Import</b>
+            <b style="color: #000">Import</b>
           </button>
           <button id="clearCategoriesBtn">
-            <b style="color: #000000">🧹 Clear All</b>
+            <b style="color: #000">Clear All</b>
           </button>
           <button id="refreshCategoriesBtn">
-            <b style="color: #000000">🔄 Refresh</b>
+            <b style="color: #000">Refresh</b>
           </button>
         </div>
         <input
@@ -310,7 +752,7 @@
           style="display: none"
         />
         <button id="addCategoryBtn" style="display: none">
-          <b style="color: #000000"> ➕ Add Category </b>
+          <b style="color: #000">Add Category</b>
         </button>
         <ul id="categoryList" style="display: none"></ul>
         <div id="categorySuggestions" class="suggestions-container"></div>
@@ -319,20 +761,20 @@
       <div class="section" id="tagsSection">
         <h2 id="tagTitle">Blocked Tags</h2>
         <button id="showTagsBtn">
-          <b style="color: #000000">▶️ Show</b>
+          <b style="color: #000">Show</b>
         </button>
         <div class="btn-group" style="display: none" id="tagsControls">
           <button id="exportTagsBtn">
-            <b style="color: #000000">📤 Export</b>
+            <b style="color: #000">Export</b>
           </button>
           <button id="importTagsBtn">
-            <b style="color: #000000">📥 Import</b>
+            <b style="color: #000">Import</b>
           </button>
           <button id="clearTagsBtn">
-            <b style="color: #000000">🧹 Clear All</b>
+            <b style="color: #000">Clear All</b>
           </button>
           <button id="refreshTagsBtn">
-            <b style="color: #000000">🔄 Refresh</b>
+            <b style="color: #000">Refresh</b>
           </button>
         </div>
         <input
@@ -342,10 +784,52 @@
           style="display: none"
         />
         <button id="addTagBtn" style="display: none">
-          <b style="color: #000000"> ➕ Add Tag</b>
+          <b style="color: #000">Add Tag</b>
         </button>
         <ul id="tagList" style="display: none"></ul>
         <div id="tagSuggestions" class="suggestions-container"></div>
+      </div>
+
+      <div class="section" id="themesSection">
+        <div class="section-header">
+          <h2 id="themesTitle" style="margin: 0">Themes</h2>
+          <label class="switch">
+            <input type="checkbox" id="disableWebsitePaletteToggle" />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div id="themeGrid" class="theme-grid">
+          <div
+            class="theme-option"
+            data-theme="original"
+            style="background: #53fc18; color: #000"
+          ></div>
+          <div
+            class="theme-option"
+            data-theme="purple"
+            style="background: #9333ea; color: #fff"
+          ></div>
+          <div
+            class="theme-option"
+            data-theme="red"
+            style="background: #ef4444; color: #fff"
+          ></div>
+          <div
+            class="theme-option"
+            data-theme="blue"
+            style="background: #3b82f6; color: #fff"
+          ></div>
+          <div
+            class="theme-option"
+            data-theme="orange"
+            style="background: #f97316; color: #000"
+          ></div>
+          <div
+            class="theme-option"
+            data-theme="cyan"
+            style="background: #06b6d4; color: #fff"
+          ></div>
+        </div>
       </div>
 
       <div class="section" id="customizationSection">
@@ -384,11 +868,11 @@
           "
         >
           <div style="font-size: 14px; user-select: none; font-weight: bold">
-            <span id="disableChatBlockingLabel"></span>
+            <span id="enableChatBlockingLabel"></span>
           </div>
 
           <label class="switch">
-            <input type="checkbox" id="disableChatBlockingToggle" />
+            <input type="checkbox" id="enableChatBlockingToggle" />
             <span class="slider"></span>
           </label>
         </div>
@@ -454,13 +938,205 @@
             <span class="slider"></span>
           </label>
         </div>
+
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2a2a2a;
+            padding: 12px 14px;
+            border-radius: 6px;
+            margin-top: 10px;
+          "
+        >
+          <div style="font-size: 14px; user-select: none; font-weight: bold">
+            <span id="enableKeyboardVolumeLabel"></span>
+          </div>
+
+          <label class="switch">
+            <input type="checkbox" id="enableKeyboardVolumeToggle" />
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="section" id="subscriptionsSection">
+        <div class="section-header">
+          <h2 id="subTitle">Subscriptions</h2>
+          <label class="switch">
+            <input type="checkbox" id="enableSubscriptionsToggle" />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div
+          id="subscriptionsContent"
+          style="margin-top: 15px"
+          class="section-content-disabled"
+        >
+          <div class="sub-input-row">
+            <input
+              type="text"
+              id="subUrlInput"
+              placeholder="Remote Blocklist URL..."
+            />
+            <select id="subTypeSelect">
+              <option value="channels">Channels</option>
+              <option value="categories">Categories</option>
+              <option value="tags">Tags</option>
+            </select>
+            <button id="addSubBtn"><b style="color: #000">Add</b></button>
+          </div>
+
+          <ul id="subList" style="margin-top: 10px"></ul>
+
+          <div class="sub-sync-row">
+            <div class="sub-sync-config">
+              <span id="subIntervalLabel">Sync Interval:</span>
+              <select id="syncIntervalSelect">
+                <option value="360">6 Hours</option>
+                <option value="720">12 Hours</option>
+                <option value="1440" selected>1 Day</option>
+                <option value="2880">2 Days</option>
+                <option value="10080">1 Week</option>
+                <option value="43200">1 Month</option>
+              </select>
+            </div>
+            <button id="updateAllBtn">
+              <b style="color: #000000">Update All</b>
+            </button>
+          </div>
+          <div id="nextSyncInfo" class="next-sync-info"></div>
+        </div>
+      </div>
+
+      <div class="section" id="integrationsSection">
+        <div class="section-header">
+          <h2 style="margin: 0" id="options_integrations">Integrations</h2>
+          <label class="switch">
+            <input type="checkbox" id="enableIntegrationsToggle" />
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div
+          id="integrationsContent"
+          style="margin-top: 15px"
+          class="section-content-disabled"
+        >
+          <div class="int-group">
+            <div class="int-group-header">
+              <div>
+                <div class="int-group-title" id="int_openlapis_exp">
+                  OpenLapis
+                </div>
+              </div>
+              <svg class="int-group-arrow" viewBox="0 0 24 24">
+                <path
+                  d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+                />
+              </svg>
+            </div>
+            <div class="int-group-content">
+              <div class="int-item">
+                <div class="int-logo" style="background: #3f5ebd">SW</div>
+                <div class="int-info">
+                  <div class="int-title">SolidWriting</div>
+                </div>
+                <select class="int-action-select" id="sw-action-select">
+                  <option
+                    value="documentize"
+                    data-i18n="int_action_documentize"
+                  >
+                    Documentize
+                  </option>
+                  <option
+                    value="send_details"
+                    data-i18n="int_action_send_details"
+                  >
+                    Send Details
+                  </option>
+                  <option
+                    value="summarize_llm"
+                    data-i18n="int_action_summarize_llm"
+                  >
+                    Summarize (LLM)
+                  </option>
+                </select>
+                <button
+                  class="int-btn"
+                  data-app="SolidWriting"
+                  data-i18n="int_btn_push"
+                >
+                  Push
+                </button>
+              </div>
+              <div class="int-item">
+                <div class="int-logo" style="background: #419c62">SS</div>
+                <div class="int-info">
+                  <div class="int-title">SolidSheets</div>
+                </div>
+                <select class="int-action-select" id="ss-action-select">
+                  <option
+                    value="import_table"
+                    data-i18n="int_action_import_table"
+                  >
+                    Import Table
+                  </option>
+                  <option
+                    value="extract_authors"
+                    data-i18n="int_action_extract_authors"
+                  >
+                    Extract Authors
+                  </option>
+                  <option
+                    value="export_blocked_items"
+                    data-i18n="int_action_export_blocked_items"
+                  >
+                    Export Blocked Items
+                  </option>
+                </select>
+                <button
+                  class="int-btn"
+                  data-app="SolidSheets"
+                  data-i18n="int_btn_push"
+                >
+                  Push
+                </button>
+              </div>
+              <div class="int-config-box">
+                <div class="int-config-title" id="int_config_title">
+                  Configure
+                </div>
+                <div class="int-config-section">
+                  <strong id="int_config_desktop">Desktop</strong>
+                  <ul>
+                    <li id="int_config_desktop_li1">
+                      Latest version apps installed
+                    </li>
+                    <li id="int_config_desktop_li2">
+                      Native messaging host registered
+                    </li>
+                  </ul>
+                </div>
+                <div class="int-config-section">
+                  <strong id="int_config_mobile">Mobile</strong>
+                  <ul>
+                    <li id="int_config_mobile_p">
+                      OpenLapis Connect app coming soon.
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div
         id="ecosystemShowcase"
         style="
           margin: 4px 0;
-          padding: 0;
+          padding: 0 5px;
           display: flex;
           flex-direction: column;
           gap: 10px;
@@ -468,10 +1144,10 @@
         "
       >
         <div style="font-size: 16px; color: #eaeaea">
-          <b>berkaygediz’s Ecosystem</b> -
+          <b>berkaygediz's Ecosystem</b> -
           <i style="font-size: 13px"
-            >A truly transparent, fully open-source ecosystem.
-          </i>
+            >A truly transparent, fully open-source ecosystem.</i
+          >
         </div>
         <div
           style="
@@ -482,131 +1158,119 @@
             scroll-snap-type: x mandatory;
           "
         >
-          <style>
-            .eco-card {
-              flex: 0 0 auto;
-              width: 200px;
-              background: #262626;
-              border: 1px solid #333;
-              border-radius: 12px;
-              padding: 14px;
-              display: flex;
-              flex-direction: column;
-              justify-content: space-between;
-              scroll-snap-align: start;
-              transition: 0.15s ease;
-              cursor: pointer;
-              text-decoration: none !important;
-            }
-
-            .eco-card:hover {
-              background: #2e2e2e;
-              border-color: #4d4d4d;
-              transform: translateY(-2px);
-            }
-
-            .eco-title {
-              font-size: 14px;
-              font-weight: 600;
-              color: #fff;
-              margin-bottom: 6px;
-            }
-
-            .eco-desc {
-              font-size: 12px;
-              color: #cfcfcf;
-              line-height: 1.35;
-            }
-          </style>
-
+          <a
+            href="https://github.com/berkaygediz/openlapis-connect"
+            target="_blank"
+            class="eco-card"
+            style="border: 1px solid #40e0d0"
+            ><div class="eco-title">OpenLapis Connect</div>
+            <div class="eco-desc">
+              Cross-platform data bridge linking browser extensions, desktop &
+              mobile apps.
+            </div></a
+          >
           <a
             href="https://github.com/berkaygediz/SolidWriting"
             target="_blank"
             class="eco-card"
-          >
-            <div class="eco-title">SolidWriting</div>
+            style="border: 1px solid #3f5ebd"
+            ><div class="eco-title">SolidWriting</div>
             <div class="eco-desc">
               A modern word processor with AI integration, supporting real-time
               computing and advanced formatting.
-            </div>
-          </a>
-
+            </div></a
+          >
           <a
             href="https://github.com/berkaygediz/SolidSheets"
             target="_blank"
             class="eco-card"
-          >
-            <div class="eco-title">SolidSheets</div>
+            style="border: 1px solid #419c62"
+            ><div class="eco-title">SolidSheets</div>
             <div class="eco-desc">
               A modern spreadsheet editor with ML integration, supporting
               real-time graphs and formulas.
-            </div>
-          </a>
-
+            </div></a
+          >
           <a
             href="https://github.com/berkaygediz/PASPAS"
             target="_blank"
             class="eco-card"
-          >
-            <div class="eco-title">PASPAS</div>
+            style="border: 1px solid #9e9e24"
+            ><div class="eco-title">PASPAS</div>
             <div class="eco-desc">
               Blazing-fast, all-in-one system optimizer.
-            </div>
-          </a>
-
+            </div></a
+          >
           <a
             href="https://github.com/berkaygediz/uKick"
             target="_blank"
             class="eco-card"
-          >
-            <div class="eco-title">uKick</div>
+            style="border: 1px solid #1a7e4c"
+            ><div class="eco-title">uKick</div>
             <div class="eco-desc">
               All-in-one extension to block, boost and tweak everything on Kick.
-            </div>
-          </a>
-
+            </div></a
+          >
           <a
             href="https://github.com/berkaygediz/uDittor"
             target="_blank"
             class="eco-card"
-          >
-            <div class="eco-title">uDittor</div>
+            style="border: 1px solid #c4502a"
+            ><div class="eco-title">uDittor</div>
             <div class="eco-desc">
               All-in-one extension to block and tweak everything on Reddit.
-            </div>
-          </a>
-
+            </div></a
+          >
           <a
             href="https://github.com/berkaygediz/uSozluk"
             target="_blank"
             class="eco-card"
-          >
-            <div class="eco-title">uSozluk</div>
+            style="border: 1px solid #d4a90a"
+            ><div class="eco-title">uSozluk</div>
             <div class="eco-desc">
               All-in-one extension to block and tweak everything on Ekşi Sözlük.
-            </div>
-          </a>
-
+            </div></a
+          >
           <a
             href="https://github.com/berkaygediz/financeMONO"
             target="_blank"
             class="eco-card"
+            style="border: 1px solid #9775d1"
+            ><div class="eco-title">financeMONO</div>
+            <div class="eco-desc">Banks, EMI & markets API wrapper.</div></a
           >
-            <div class="eco-title">financeMONO</div>
-            <div class="eco-desc">Banks, EMI & markets API wrapper.</div>
-          </a>
-
           <a
             href="https://github.com/berkaygediz/universal-blocklist"
             target="_blank"
             class="eco-card"
-          >
-            <div class="eco-title">Universal Blocklist</div>
+            style="border: 1px solid #666666"
+            ><div class="eco-title">Universal Blocklist</div>
             <div class="eco-desc">
               Global blocklist for YouTube, Reddit & more.
-            </div>
-          </a>
-
+            </div></a
+          >
+          <a
+            href="https://github.com/berkaygediz/LocalModerationMatrix"
+            target="_blank"
+            class="eco-card"
+            style="border: 1px solid #cccccc"
+            ><div class="eco-title">LocalModerationMatrix</div>
+            <div class="eco-desc">
+              CLI tool for bulk message deletion, media cleanup, and E2EE room
+              moderation in Matrix.
+            </div></a
+          >
+          <a
+            href="https://github.com/berkaygediz/LocalModerationLemmy"
+            target="_blank"
+            class="eco-card"
+            style="border: 1px solid #cccccc"
+            ><div class="eco-title">LocalModerationLemmy</div>
+            <div class="eco-desc">
+              Full-featured, cross-instance moderation panel for Lemmy
+              communities.
+            </div></a
+          >
           <div class="eco-card">
             <div class="eco-desc">
               And many more exciting projects in the pipeline!
@@ -618,7 +1282,6 @@
       <div style="text-align: center; color: #888; font-size: 14px">
         Developed by <b>berkaygediz</b>
       </div>
-
       <div
         style="
           display: flex;
@@ -632,22 +1295,7 @@
           target="_blank"
           class="donate-button bmc"
           title="Buy Me a Coffee"
-          style="
-            background-color: #ffdd00;
-            color: #000;
-            width: 40px;
-            height: 40px;
-            border-radius: 6px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            transition:
-              background 0.3s ease,
-              transform 0.2s ease;
-          "
-        >
-          <svg
+          ><svg
             fill="#000000"
             width="20"
             height="50"
@@ -657,43 +1305,25 @@
           >
             <path
               d="m20.216 6.415-.132-.666c-.119-.598-.388-1.163-1.001-1.379-.197-.069-.42-.098-.57-.241-.152-.143-.196-.366-.231-.572-.065-.378-.125-.756-.192-1.133-.057-.325-.102-.69-.25-.987-.195-.4-.597-.634-.996-.788a5.723 5.723 0 0 0-.626-.194c-1-.263-2.05-.36-3.077-.416a25.834 25.834 0 0 0-3.7.062c-.915.083-1.88.184-2.75.5-.318.116-.646.256-.888.501-.297.302-.393.77-.177 1.146.154.267.415.456.692.58.36.162.737.284 1.123.366 1.075.238 2.189.331 3.287.37 1.218.05 2.437.01 3.65-.118.299-.033.598-.073.896-.119.352-.054.578-.513.474-.834-.124-.383-.457-.531-.834-.473-.466.074-.96.108-1.382.146-1.177.08-2.358.082-3.536.006a22.228 22.228 0 0 1-1.157-.107c-.086-.01-.18-.025-.258-.036-.243-.036-.484-.08-.724-.13-.111-.027-.111-.185 0-.212h.005c.277-.06.557-.108.838-.147h.002c.131-.009.263-.032.394-.048a25.076 25.076 0 0 1 3.426-.12c.674.019 1.347.067 2.017.144l.228.031c.267.04.533.088.798.145.392.085.895.113 1.07.542.055.137.08.288.111.431l.319 1.484a.237.237 0 0 1-.199.284h-.003c-.037.006-.075.01-.112.015a36.704 36.704 0 0 1-4.743.295 37.059 37.059 0 0 1-4.699-.304c-.14-.017-.293-.042-.417-.06-.326-.048-.649-.108-.973-.161-.393-.065-.768-.032-1.123.161-.29.16-.527.404-.675.701-.154.316-.199.66-.267 1-.069.34-.176.707-.135 1.056.087.753.613 1.365 1.37 1.502a39.69 39.69 0 0 0 11.343.376.483.483 0 0 1 .535.53l-.071.697-1.018 9.907c-.041.41-.047.832-.125 1.237-.122.637-.553 1.028-1.182 1.171-.577.131-1.165.2-1.756.205-.656.004-1.31-.025-1.966-.022-.699.004-1.556-.06-2.095-.58-.475-.458-.54-1.174-.605-1.793l-.731-7.013-.322-3.094c-.037-.351-.286-.695-.678-.678-.336.015-.718.3-.678.679l.228 2.185.949 9.112c.147 1.344 1.174 2.068 2.446 2.272.742.12 1.503.144 2.257.156.966.016 1.942.053 2.892-.122 1.408-.258 2.465-1.198 2.616-2.657.34-3.332.683-6.663 1.024-9.995l.215-2.087a.484.484 0 0 1 .39-.426c.402-.078.787-.212 1.074-.518.455-.488.546-1.124.385-1.766zm-1.478.772c-.145.137-.363.201-.578.233-2.416.359-4.866.54-7.308.46-1.748-.06-3.477-.254-5.207-.498-.17-.024-.353-.055-.47-.18-.22-.236-.111-.71-.054-.995.052-.26.152-.609.463-.646.484-.057 1.046.148 1.526.22.577.088 1.156.159 1.737.212 2.48.226 5.002.19 7.472-.14.45-.06.899-.13 1.345-.21.399-.072.84-.206 1.08.206.166.281.188.657.162.974a.544.544 0 0 1-.169.364zm-6.159 3.9c-.862.37-1.84.788-3.109.788a5.884 5.884 0 0 1-1.569-.217l.877 9.004c.065.78.717 1.38 1.5 1.38 0 0 1.243.065 1.658.065.447 0 1.786-.065 1.786-.065.783 0 1.434-.6 1.499-1.38l.94-9.95a3.996 3.996 0 0 0-1.322-.238c-.826 0-1.491.284-2.26.613z"
-            />
-          </svg>
-        </a>
-
+            /></svg
+        ></a>
         <a
           href="https://github.com/berkaygediz"
           target="_blank"
           class="donate-button github"
           title="GitHub"
-          style="
-            background-color: #ffffff;
-            color: #fff;
-            width: 40px;
-            height: 40px;
-            border-radius: 6px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            transition:
-              background 0.3s ease,
-              transform 0.2s ease;
-          "
-        >
-          <svg
+          style="background-color: #ffffff; color: #000000"
+          ><svg
             fill="#000000"
             width="20"
             height="50"
             viewBox="0 0 20 20"
-            fill="currentColor"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M10 .5A9.5 9.5 0 0 0 6.837 18.997c.5.092.683-.217.683-.483 0-.237-.008-.866-.013-1.7-2.782.605-3.369-1.34-3.369-1.34-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.607.069-.607 1.004.07 1.532 1.032 1.532 1.032.893 1.53 2.341 1.088 2.91.833.092-.647.35-1.087.636-1.337-2.22-.253-4.555-1.112-4.555-4.946 0-1.092.39-1.987 1.03-2.686-.103-.253-.447-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0 1 10 4.845c.85.004 1.705.115 2.504.337 1.909-1.294 2.748-1.025 2.748-1.025.546 1.377.202 2.394.1 2.647.64.7 1.028 1.594 1.028 2.686 0 3.842-2.339 4.69-4.566 4.938.36.31.682.924.682 1.861 0 1.344-.012 2.425-.012 2.754 0 .269.18.58.688.482A9.5 9.5 0 0 0 10 .5z"
-            />
-          </svg>
-        </a>
+            ></path></svg
+        ></a>
       </div>
     </div>
 

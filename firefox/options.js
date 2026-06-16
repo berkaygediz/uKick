@@ -59,7 +59,10 @@ function renderSuggestions(containerId, storageKey, currentList) {
 
   container.style.display = "block";
 
-  let html = `<div style="font-size: 13px; color: #b2ff59; margin-bottom: 5px; margin-top: 10px; font-weight: bold;">SUGGESTIONS:</div>`;
+  const suggestionsText =
+    browser.i18n.getMessage("options_suggestions") || "SUGGESTIONS:";
+
+  let html = `<div style="font-size: 13px; color: #b2ff59; margin-bottom: 5px; margin-top: 10px; font-weight: bold;">${suggestionsText}</div>`;
   html += `<div class="btn-group" style="flex-wrap: wrap;">`;
 
   itemsToRender.forEach((item) => {
@@ -291,6 +294,337 @@ function toggleTagsSection(show) {
   if (show) loadBlockedTags();
 }
 
+function i18n(key, substitutions) {
+  if (typeof browser !== "undefined" && browser.i18n)
+    return browser.i18n.getMessage(key, substitutions) || key;
+  return key;
+}
+
+async function checkAndRequestPermission(permissionObj) {
+  if (
+    !permissionObj ||
+    (!permissionObj.permissions?.length && !permissionObj.origins?.length)
+  ) {
+    return true;
+  }
+
+  try {
+    return await browser.permissions.request(permissionObj);
+  } catch (e) {
+    console.error("Permission request failed", e);
+    return false;
+  }
+}
+
+async function setupFeatureToggle(toggleId, contentId, permissionObj) {
+  const toggle = document.getElementById(toggleId);
+  const content = document.getElementById(contentId);
+  if (!toggle) return;
+
+  let hasPermission = true;
+  if (
+    permissionObj &&
+    (permissionObj.permissions?.length > 0 || permissionObj.origins?.length > 0)
+  ) {
+    hasPermission = await browser.permissions.contains(permissionObj);
+  }
+
+  const storedPref = (await browser.storage.local.get(toggleId))[toggleId];
+
+  if (hasPermission && storedPref === undefined) {
+    await browser.storage.local.set({ [toggleId]: true });
+  }
+
+  let isEnabled =
+    storedPref !== undefined ? storedPref && hasPermission : hasPermission;
+
+  if (!hasPermission && storedPref) {
+    isEnabled = false;
+  }
+
+  toggle.checked = isEnabled;
+
+  if (content) {
+    if (isEnabled) {
+      content.classList.remove("section-content-disabled");
+    } else {
+      content.classList.add("section-content-disabled");
+    }
+  }
+
+  toggle.addEventListener("change", async () => {
+    if (toggle.checked) {
+      const granted = await checkAndRequestPermission(permissionObj);
+      if (granted) {
+        await browser.storage.local.set({ [toggleId]: true });
+        if (content) content.classList.remove("section-content-disabled");
+
+        if (toggleId === "enableSubscriptionsToggle") {
+          try {
+            await browser.runtime.sendMessage({
+              action: "enableSubscriptions",
+            });
+          } catch (e) {}
+        }
+      } else {
+        toggle.checked = false;
+        if (content) content.classList.add("section-content-disabled");
+        alert("Permission denied. Feature cannot be enabled.");
+      }
+    } else {
+      await browser.storage.local.set({ [toggleId]: false });
+      if (content) content.classList.add("section-content-disabled");
+
+      if (toggleId === "enableSubscriptionsToggle") {
+        try {
+          await browser.runtime.sendMessage({ action: "disableSubscriptions" });
+        } catch (e) {}
+      }
+    }
+  });
+}
+
+const openSvg = `<svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>`;
+const syncSvg = `<svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>`;
+const removeSvg = `<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>`;
+
+function timeAgo(timestamp) {
+  if (!timestamp) return i18n("time_never");
+  const diff = Date.now() - timestamp;
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return i18n("time_just_now");
+  if (mins < 60) return i18n("time_minutes_ago", [mins]);
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return i18n("time_hours_ago", [hours]);
+  const days = Math.floor(hours / 24);
+  return i18n("time_days_ago", [days]);
+}
+
+async function renderSubscriptions() {
+  const result = await browser.storage.local.get([
+    "remoteSubscriptions",
+    "syncIntervalMinutes",
+  ]);
+  const subs = result.remoteSubscriptions || [];
+  const syncIntervalSelect = document.getElementById("syncIntervalSelect");
+  if (
+    result.syncIntervalMinutes !== undefined &&
+    result.syncIntervalMinutes !== null
+  )
+    syncIntervalSelect.value = result.syncIntervalMinutes;
+
+  const subListEl = document.getElementById("subList");
+  if (!subListEl) return;
+
+  subListEl.innerHTML = "";
+  const fragment = document.createDocumentFragment();
+
+  subs.forEach((sub) => {
+    const li = document.createElement("li");
+    const info = document.createElement("div");
+    info.className = "sub-info";
+    const urlSpan = document.createElement("span");
+    urlSpan.className = "sub-url";
+    urlSpan.textContent = sub.url;
+    urlSpan.title = sub.url;
+    const metaRow = document.createElement("div");
+    metaRow.className = "sub-meta";
+    metaRow.innerHTML = `<span>${i18n("meta_updated")} ${timeAgo(sub.lastSync)}</span><span>${i18n("meta_items")} ${sub.count || 0}</span>`;
+    info.appendChild(urlSpan);
+    info.appendChild(metaRow);
+
+    const badge = document.createElement("span");
+    badge.className = "sub-badge";
+    badge.textContent = sub.type;
+
+    const actions = document.createElement("div");
+    actions.className = "sub-actions";
+
+    const openBtn = document.createElement("button");
+    openBtn.innerHTML = openSvg;
+    openBtn.title = i18n("btn_open_url");
+    openBtn.onclick = () => window.open(sub.url, "_blank");
+
+    const syncBtn = document.createElement("button");
+    syncBtn.innerHTML = syncSvg;
+    syncBtn.title = i18n("btn_update_now");
+    syncBtn.onclick = async () => {
+      syncBtn.style.color = "#00b660";
+      try {
+        const res = await browser.runtime.sendMessage({
+          action: "syncUrl",
+          url: sub.url,
+        });
+        syncBtn.style.color = res?.success ? "#8bc34a" : "#d9534f";
+      } catch (e) {
+        syncBtn.style.color = "#d9534f";
+      }
+      renderSubscriptions();
+    };
+
+    const removeBtn = document.createElement("button");
+    removeBtn.className = "remove-btn";
+    removeBtn.innerHTML = removeSvg;
+    removeBtn.title = i18n("btn_remove");
+    removeBtn.onclick = async () => {
+      const updatedSubs = subs.filter((s) => s.url !== sub.url);
+      await browser.storage.local.set({ remoteSubscriptions: updatedSubs });
+      renderSubscriptions();
+    };
+
+    actions.appendChild(openBtn);
+    actions.appendChild(syncBtn);
+    actions.appendChild(removeBtn);
+
+    li.appendChild(info);
+    li.appendChild(badge);
+    li.appendChild(actions);
+    fragment.appendChild(li);
+  });
+  subListEl.appendChild(fragment);
+}
+
+function setupSubscriptionEvents() {
+  const subUrlInput = document.getElementById("subUrlInput");
+  const subTypeSelect = document.getElementById("subTypeSelect");
+  const syncIntervalSelect = document.getElementById("syncIntervalSelect");
+  const addSubBtn = document.getElementById("addSubBtn");
+  const updateAllBtn = document.getElementById("updateAllBtn");
+
+  if (!addSubBtn) return;
+
+  addSubBtn.addEventListener("click", async () => {
+    const url = subUrlInput.value.trim();
+    const type = subTypeSelect.value;
+    if (!url) return;
+
+    let urlObj;
+    try {
+      urlObj = new URL(url);
+    } catch (err) {
+      alert(i18n("alert_invalid_url"));
+      return;
+    }
+
+    try {
+      const granted = await browser.permissions.request({
+        origins: [`${urlObj.origin}/*`],
+      });
+      if (!granted) {
+        alert(i18n("alert_permission_denied"));
+        return;
+      }
+    } catch (e) {
+      console.error("Permission request failed", e);
+      alert(i18n("alert_permission_denied"));
+      return;
+    }
+
+    const { remoteSubscriptions } = await browser.storage.local.get(
+      "remoteSubscriptions",
+    );
+    const subs = remoteSubscriptions || [];
+    if (subs.some((s) => s.url === url)) {
+      alert(i18n("alert_duplicate_url"));
+      return;
+    }
+
+    subs.push({ url, type, lastSync: 0, count: 0, data: [] });
+    await browser.storage.local.set({ remoteSubscriptions: subs });
+    subUrlInput.value = "";
+    renderSubscriptions();
+    try {
+      await browser.runtime.sendMessage({ action: "syncUrl", url });
+    } catch (e) {
+      // ignore
+    }
+    renderSubscriptions();
+  });
+
+  syncIntervalSelect.addEventListener("change", async () => {
+    const interval = parseFloat(syncIntervalSelect.value);
+    await browser.storage.local.set({ syncIntervalMinutes: interval });
+    try {
+      await browser.runtime.sendMessage({
+        action: "setSyncInterval",
+        intervalMinutes: interval,
+      });
+    } catch (e) {
+      // ignore
+    }
+  });
+
+  updateAllBtn.addEventListener("click", async () => {
+    updateAllBtn.disabled = true;
+    updateAllBtn.innerHTML = `<b>${i18n("options_sub_updating")}</b>`;
+    try {
+      await browser.runtime.sendMessage({ action: "syncAll" });
+    } catch (e) {
+      // ignore
+    }
+    updateAllBtn.disabled = false;
+    updateAllBtn.innerHTML = `<b style="color: #000000">${i18n("options_sub_update_all")}</b>`;
+    renderSubscriptions();
+  });
+}
+
+function setupIntegrations() {
+  const headers = document.querySelectorAll(".int-group-header");
+  headers.forEach((header) => {
+    header.addEventListener("click", () => {
+      const content = header.nextElementSibling;
+      const isActive = header.classList.contains("active");
+      header.classList.toggle("active", !isActive);
+      content.style.display = isActive ? "none" : "block";
+    });
+  });
+
+  function buildPayload(appName, action) {
+    let source = {},
+      options = {};
+    if (appName === "SolidWriting") {
+      if (action === "documentize") source = { type: "text", content: "test" };
+      else source = { type: "details", content: { id: "1", title: "test" } };
+    } else if (appName === "SolidSheets") {
+      if (action === "import_table") source = { type: "csv", content: "a,b,c" };
+      else source = { type: "list", content: ["u1", "u2"] };
+    }
+    return { app: appName, action, source, options };
+  }
+
+  document.querySelectorAll(".int-btn").forEach((btn) => {
+    btn.addEventListener("click", async (e) => {
+      e.stopPropagation();
+      const item = btn.closest(".int-item");
+      const appName = btn.getAttribute("data-app");
+      const action = item.querySelector(".int-action-select")?.value || "test";
+      const payload = buildPayload(appName, action);
+
+      btn.style.background = "#555";
+
+      try {
+        const response = await browser.runtime.sendNativeMessage(
+          "com.openlapis.connect",
+          payload,
+        );
+        const hasError = response?.status === "error";
+        if (hasError) {
+          console.error("OpenLapis Error:", response);
+        } else {
+          console.log("OpenLapis:", response);
+        }
+        btn.style.background = hasError ? "#d9534f" : "#00b660";
+      } catch (e) {
+        console.error("OpenLapis Error:", e);
+        btn.style.background = "#d9534f";
+      }
+      setTimeout(() => {
+        btn.style.background = "";
+      }, 1500);
+    });
+  });
+}
+
 function setupEventListeners() {
   const translations = {
     channelTitle: browser.i18n.getMessage("options_blocked_channels"),
@@ -323,8 +657,8 @@ function setupEventListeners() {
     disableSearchHistoryLabel: browser.i18n.getMessage(
       "options_disable_search_history",
     ),
-    disableChatBlockingLabel: browser.i18n.getMessage(
-      "options_disable_chat_blocking",
+    enableChatBlockingLabel: browser.i18n.getMessage(
+      "options_enable_chat_blocking",
     ),
     disableBlockButtonsLabel: browser.i18n.getMessage(
       "options_hide_block_buttons",
@@ -333,16 +667,78 @@ function setupEventListeners() {
     disableActiveUsersLabel: browser.i18n.getMessage(
       "options_disable_active_users",
     ),
+    enableKeyboardVolumeLabel: browser.i18n.getMessage(
+      "options_enable_keyboard_volume",
+    ),
+
+    themesTitle: browser.i18n.getMessage("options_themes"),
+    subTitle: browser.i18n.getMessage("options_subscriptions"),
+    subUrlInput: browser.i18n.getMessage("placeholder_remote_url"),
+    addSubBtn: browser.i18n.getMessage("options_sub_add"),
+    updateAllBtn: browser.i18n.getMessage("options_sub_update_all"),
+    subIntervalLabel: browser.i18n.getMessage("options_sub_interval"),
+
+    options_integrations: browser.i18n.getMessage("options_integrations"),
+    int_openlapis_exp: browser.i18n.getMessage("int_openlapis_exp"),
+    int_config_title: browser.i18n.getMessage("int_config_title"),
+    int_config_desktop: browser.i18n.getMessage("int_config_desktop"),
+    int_config_desktop_li1: browser.i18n.getMessage("int_config_desktop_li1"),
+    int_config_desktop_li2: browser.i18n.getMessage("int_config_desktop_li2"),
+    int_config_mobile: browser.i18n.getMessage("int_config_mobile"),
+    int_config_mobile_p: browser.i18n.getMessage("int_config_mobile_p"),
   };
 
   for (const [id, text] of Object.entries(translations)) {
     const el = document.getElementById(id);
     if (el && text) {
-      const bold = el.querySelector("b");
-      if (bold) bold.textContent = text;
-      else el.textContent = text;
+      if (el.tagName === "INPUT" || el.tagName === "SELECT") {
+        if (el.tagName === "SELECT") {
+          Array.from(el.options).forEach((opt) => {
+            const optId = opt.id || opt.getAttribute("data-i18n-key");
+            if (optId && translations[optId])
+              opt.textContent = translations[optId];
+          });
+        } else {
+          el.placeholder = text;
+        }
+      } else {
+        const bold = el.querySelector("b");
+        if (bold) bold.textContent = text;
+        else el.textContent = text;
+      }
     }
   }
+
+  const subTypeSelect = document.getElementById("subTypeSelect");
+  if (subTypeSelect) {
+    subTypeSelect.options[0].textContent = i18n("options_sub_type_channels");
+    subTypeSelect.options[1].textContent = i18n("options_sub_type_categories");
+    subTypeSelect.options[2].textContent = i18n("options_sub_type_tags");
+  }
+
+  const syncIntervalSelect = document.getElementById("syncIntervalSelect");
+  if (syncIntervalSelect) {
+    const opts = syncIntervalSelect.options;
+    opts[0].textContent = i18n("options_sub_6h");
+    opts[1].textContent = i18n("options_sub_12h");
+    opts[2].textContent = i18n("options_sub_1d");
+    opts[3].textContent = i18n("options_sub_2d");
+    opts[4].textContent = i18n("options_sub_1w");
+    opts[5].textContent = i18n("options_sub_1m");
+  }
+
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const key = el.getAttribute("data-i18n");
+    const text = i18n(key);
+    if (text !== key) {
+      if (el.tagName === "OPTION") el.textContent = text;
+      else if (el.tagName === "BUTTON") {
+        const bold = el.querySelector("b");
+        if (bold) bold.textContent = text;
+        else el.textContent = text;
+      } else el.textContent = text;
+    }
+  });
 
   document
     .getElementById("showChannelsBtn")
@@ -350,7 +746,6 @@ function setupEventListeners() {
   document
     .getElementById("showCategoriesBtn")
     .addEventListener("click", () => toggleCategoriesSection(true));
-
   document
     .getElementById("addChannelBtn")
     .addEventListener("click", () =>
@@ -361,74 +756,113 @@ function setupEventListeners() {
     .addEventListener("click", () =>
       addItem("blockedCategories", "categoryInput"),
     );
-
   document
     .getElementById("exportChannelsBtn")
     .addEventListener("click", () => exportList("blockedChannels"));
   document
     .getElementById("exportCategoriesBtn")
     .addEventListener("click", () => exportList("blockedCategories"));
-
   document
     .getElementById("importChannelsBtn")
     .addEventListener("click", () => importList("blockedChannels"));
   document
     .getElementById("importCategoriesBtn")
     .addEventListener("click", () => importList("blockedCategories"));
-
   document
     .getElementById("clearChannelsBtn")
     .addEventListener("click", () => clearList("blockedChannels"));
   document
     .getElementById("clearCategoriesBtn")
     .addEventListener("click", () => clearList("blockedCategories"));
-
   document
     .getElementById("refreshChannelsBtn")
     .addEventListener("click", () => loadBlockedChannels());
   document
     .getElementById("refreshCategoriesBtn")
     .addEventListener("click", () => loadBlockedCategories());
-
   document
     .getElementById("showTagsBtn")
     .addEventListener("click", () => toggleTagsSection(true));
-
   document
     .getElementById("addTagBtn")
     .addEventListener("click", () => addItem("blockedTags", "tagInput"));
-
   document
     .getElementById("exportTagsBtn")
     .addEventListener("click", () => exportList("blockedTags"));
-
   document
     .getElementById("importTagsBtn")
     .addEventListener("click", () => importList("blockedTags"));
-
   document
     .getElementById("clearTagsBtn")
     .addEventListener("click", () => clearList("blockedTags"));
-
   document
     .getElementById("refreshTagsBtn")
     .addEventListener("click", () => loadBlockedTags());
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   setupEventListeners();
+
+  const themeOptions = document.querySelectorAll(".theme-option");
+  const paletteToggle = document.getElementById("disableWebsitePaletteToggle");
+
+  function updateThemeGridState(isEnabled) {
+    themeOptions.forEach((opt) => {
+      if (isEnabled) {
+        opt.classList.remove("disabled");
+      } else {
+        opt.classList.add("disabled");
+      }
+    });
+  }
+
+  function setActiveTheme(themeId) {
+    themeOptions.forEach((opt) => {
+      if (opt.getAttribute("data-theme") === themeId) {
+        opt.classList.add("active");
+      } else {
+        opt.classList.remove("active");
+      }
+    });
+  }
+
+  if (paletteToggle) {
+    const { disableWebsitePalette = true } = await browser.storage.local.get(
+      "disableWebsitePalette",
+    );
+    const isEnabled = !disableWebsitePalette;
+    paletteToggle.checked = isEnabled;
+    updateThemeGridState(isEnabled);
+
+    paletteToggle.addEventListener("change", () => {
+      const isEnabled = paletteToggle.checked;
+      browser.storage.local.set({ disableWebsitePalette: !isEnabled });
+      updateThemeGridState(isEnabled);
+    });
+  }
+
+  const { themePalette = "original" } =
+    await browser.storage.local.get("themePalette");
+  setActiveTheme(themePalette);
+
+  themeOptions.forEach((opt) => {
+    opt.addEventListener("click", () => {
+      if (opt.classList.contains("disabled")) return;
+      const selectedTheme = opt.getAttribute("data-theme");
+      browser.storage.local.set({ themePalette: selectedTheme });
+      setActiveTheme(selectedTheme);
+    });
+  });
 
   const disableSearchHistoryToggle = document.getElementById(
     "disableSearchHistoryToggle",
   );
 
   if (disableSearchHistoryToggle) {
-    browser.storage.local.get(
-      ["disableSearchHistory"],
-      ({ disableSearchHistory = false }) => {
-        disableSearchHistoryToggle.checked = disableSearchHistory;
-      },
+    const { disableSearchHistory = false } = await browser.storage.local.get(
+      "disableSearchHistory",
     );
+    disableSearchHistoryToggle.checked = disableSearchHistory;
 
     disableSearchHistoryToggle.addEventListener("change", async () => {
       await browser.storage.local.set({
@@ -437,21 +871,18 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  const disableChatBlockingToggle = document.getElementById(
-    "disableChatBlockingToggle",
+  const enableChatBlockingToggle = document.getElementById(
+    "enableChatBlockingToggle",
   );
 
-  if (disableChatBlockingToggle) {
-    browser.storage.local.get(
-      ["disableChatBlocking"],
-      ({ disableChatBlocking = false }) => {
-        disableChatBlockingToggle.checked = disableChatBlocking;
-      },
-    );
+  if (enableChatBlockingToggle) {
+    const { enableChatBlocking = false } =
+      await browser.storage.local.get("enableChatBlocking");
+    enableChatBlockingToggle.checked = enableChatBlocking;
 
-    disableChatBlockingToggle.addEventListener("change", async () => {
+    enableChatBlockingToggle.addEventListener("change", async () => {
       await browser.storage.local.set({
-        disableChatBlocking: disableChatBlockingToggle.checked,
+        enableChatBlocking: enableChatBlockingToggle.checked,
       });
     });
   }
@@ -461,12 +892,10 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
   if (disableBlockButtonsToggle) {
-    browser.storage.local.get(
-      ["disableBlockButtons"],
-      ({ disableBlockButtons = false }) => {
-        disableBlockButtonsToggle.checked = disableBlockButtons;
-      },
+    const { disableBlockButtons = false } = await browser.storage.local.get(
+      "disableBlockButtons",
     );
+    disableBlockButtonsToggle.checked = disableBlockButtons;
 
     disableBlockButtonsToggle.addEventListener("change", async () => {
       await browser.storage.local.set({
@@ -478,12 +907,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const enableDanmakuToggle = document.getElementById("enableDanmakuToggle");
 
   if (enableDanmakuToggle) {
-    browser.storage.local.get(
-      ["enableDanmaku"],
-      ({ enableDanmaku = false }) => {
-        enableDanmakuToggle.checked = enableDanmaku;
-      },
-    );
+    const { enableDanmaku = false } =
+      await browser.storage.local.get("enableDanmaku");
+    enableDanmakuToggle.checked = enableDanmaku;
 
     enableDanmakuToggle.addEventListener("change", async () => {
       await browser.storage.local.set({
@@ -497,16 +923,46 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
   if (disableActiveUsersToggle) {
-    browser.storage.local.get(
-      ["disableActiveUsers"],
-      ({ disableActiveUsers = false }) => {
-        disableActiveUsersToggle.checked = disableActiveUsers;
-      },
-    );
+    const { disableActiveUsers = false } =
+      await browser.storage.local.get("disableActiveUsers");
+    disableActiveUsersToggle.checked = disableActiveUsers;
     disableActiveUsersToggle.addEventListener("change", async () => {
       await browser.storage.local.set({
         disableActiveUsers: disableActiveUsersToggle.checked,
       });
     });
   }
+
+  const enableKeyboardVolumeToggle = document.getElementById(
+    "enableKeyboardVolumeToggle",
+  );
+
+  if (enableKeyboardVolumeToggle) {
+    const { enableKeyboardVolume = false } = await browser.storage.local.get(
+      "enableKeyboardVolume",
+    );
+    enableKeyboardVolumeToggle.checked = enableKeyboardVolume;
+    enableKeyboardVolumeToggle.addEventListener("change", async () => {
+      await browser.storage.local.set({
+        enableKeyboardVolume: enableKeyboardVolumeToggle.checked,
+      });
+    });
+  }
+
+  setupFeatureToggle("enableSubscriptionsToggle", "subscriptionsContent", {});
+
+  setupFeatureToggle("enableIntegrationsToggle", "integrationsContent", {
+    permissions: ["nativeMessaging"],
+  });
+
+  setupSubscriptionEvents();
+  renderSubscriptions();
+
+  setupIntegrations();
+
+  browser.storage.onChanged.addListener((changes, areaName) => {
+    if (areaName === "local" && changes.remoteSubscriptions) {
+      renderSubscriptions();
+    }
+  });
 });

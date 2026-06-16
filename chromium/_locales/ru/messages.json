@@ -1,12 +1,12 @@
 {
     "app_name": {
-        "message": "uKick — Блокировка и Настройки Стрима для Kick"
+        "message": "uKick - Всё для Kick"
     },
     "app_description": {
-        "message": "Универсальное расширение для блокировки, усиления и настройки всего на Kick для лучшего опыта стриминга."
+        "message": "Всё-в-одном Kick блокирует каналы, категории, теги и чат. Синхронизация списков. Увеличить громкость, качество, данмаку, темы."
     },
     "btn_block_channel": {
-        "message": "Заблокировать канал"
+        "message": "Заблокировать этот канал"
     },
     "btn_block_category": {
         "message": "Скрыть категорию"
@@ -35,7 +35,7 @@
         "message": "Теги"
     },
     "popup_adaptive_stream": {
-        "message": "Адаптивный стрим"
+        "message": "Адаптивный поток"
     },
     "popup_quality": {
         "message": "Качество"
@@ -56,34 +56,34 @@
         "message": "Заблокированные теги"
     },
     "options_show": {
-        "message": "▶️ Показать"
+        "message": "Показать"
     },
     "options_export": {
-        "message": "📤 Экспорт"
+        "message": "Экспорт"
     },
     "options_import": {
-        "message": "📥 Импорт"
+        "message": "Импорт"
     },
     "options_clear_all": {
-        "message": "🧹 Очистить всё"
+        "message": "Очистить всё"
     },
     "options_refresh": {
-        "message": "🔄 Обновить"
+        "message": "Обновить"
     },
     "options_add_channel": {
-        "message": "➕ Добавить канал"
+        "message": "Добавить канал"
     },
     "options_add_category": {
-        "message": "➕ Добавить категорию"
+        "message": "Добавить категорию"
     },
     "options_add_tags": {
-        "message": "➕ Добавить теги"
+        "message": "Добавить тег"
     },
     "options_disable_search_history": {
         "message": "Отключить историю поиска"
     },
-    "options_disable_chat_blocking": {
-        "message": "Отключить блокировку чата"
+    "options_enable_chat_blocking": {
+        "message": "Включить блокировку чата"
     },
     "options_hide_block_buttons": {
         "message": "Скрыть кнопки блокировки"
@@ -94,10 +94,181 @@
     "options_disable_active_users": {
         "message": "Отключить статистику активных пользователей"
     },
+    "options_enable_keyboard_volume": {
+        "message": "Включить управление громкостью с клавиатуры"
+    },
     "options_suggestions": {
         "message": "ПРЕДЛОЖЕНИЯ:"
     },
     "options_customization": {
-        "message": "Настройка"
+        "message": "Персонализация"
+    },
+    "options_themes": {
+        "message": "Темы"
+    },
+    "options_subscriptions": {
+        "message": "Подписки"
+    },
+    "placeholder_remote_url": {
+        "message": "URL удаленного списка (JSON)"
+    },
+    "options_sub_add": {
+        "message": "Добавить"
+    },
+    "options_sub_interval": {
+        "message": "Интервал синхронизации:"
+    },
+    "options_sub_type_channels": {
+        "message": "Каналы"
+    },
+    "options_sub_type_categories": {
+        "message": "Категории"
+    },
+    "options_sub_type_tags": {
+        "message": "Теги"
+    },
+    "options_sub_6h": {
+        "message": "6 часов"
+    },
+    "options_sub_12h": {
+        "message": "12 часов"
+    },
+    "options_sub_1d": {
+        "message": "1 день"
+    },
+    "options_sub_2d": {
+        "message": "2 дня"
+    },
+    "options_sub_1w": {
+        "message": "1 неделя"
+    },
+    "options_sub_1m": {
+        "message": "1 месяц"
+    },
+    "options_sub_update_all": {
+        "message": "Обновить все"
+    },
+    "options_sub_updating": {
+        "message": "Синхронизация..."
+    },
+    "options_sub_updated": {
+        "message": "Готово!"
+    },
+    "options_sub_update_error": {
+        "message": "Ошибка!"
+    },
+    "alert_duplicate_url": {
+        "message": "Этот URL уже существует."
+    },
+    "alert_permission_denied": {
+        "message": "Отказано в доступе к этому URL."
+    },
+    "alert_invalid_url": {
+        "message": "Неверный формат URL."
+    },
+    "time_never": {
+        "message": "Никогда"
+    },
+    "time_just_now": {
+        "message": "Только что"
+    },
+    "time_minutes_ago": {
+        "message": "$1 минут назад",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_hours_ago": {
+        "message": "$1 часов назад",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_days_ago": {
+        "message": "$1 дней назад",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "meta_updated": {
+        "message": "Обновлено:"
+    },
+    "meta_items": {
+        "message": "Элементы:"
+    },
+    "btn_open_url": {
+        "message": "Открыть URL"
+    },
+    "btn_update_now": {
+        "message": "Обновить сейчас"
+    },
+    "btn_remove": {
+        "message": "Удалить"
+    },
+    "options_add_all": {
+        "message": "Добавить всё"
+    },
+    "suggestion_missing_items": {
+        "message": " недостающих элементов в предзагруженном списке."
+    },
+    "suggestion_items_count": {
+        "message": " элементов."
+    },
+    "error_loading_suggestions": {
+        "message": "Ошибка загрузки предложений:"
+    },
+    "options_integrations": {
+        "message": "Интеграции"
+    },
+    "int_openlapis_exp": {
+        "message": "OpenLapis"
+    },
+    "int_action_documentize": {
+        "message": "Документировать"
+    },
+    "int_action_send_details": {
+        "message": "Отправить подробности"
+    },
+    "int_action_summarize_llm": {
+        "message": "Суммировать (LLM)"
+    },
+    "int_action_import_table": {
+        "message": "Импортировать таблицу"
+    },
+    "int_action_extract_authors": {
+        "message": "Извлечь авторов"
+    },
+    "int_action_export_blocked_items": {
+        "message": "Экспортировать заблокированные элементы"
+    },
+    "int_btn_push": {
+        "message": "Отправить"
+    },
+    "int_config_title": {
+        "message": "Настроить"
+    },
+    "int_config_desktop": {
+        "message": "Компьютер"
+    },
+    "int_config_desktop_li1": {
+        "message": "Установлены последние версии приложений"
+    },
+    "int_config_desktop_li2": {
+        "message": "Зарегистрирован нативный хост обмена сообщениями"
+    },
+    "int_config_mobile": {
+        "message": "Мобильные устройства"
+    },
+    "int_config_mobile_p": {
+        "message": "Приложение OpenLapis Connect скоро появится."
+    },
+    "overlay_users": {
+        "message": "Пользователи"
     }
 }

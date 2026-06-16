@@ -1,9 +1,9 @@
 {
     "app_name": {
-        "message": "uKick — Blokování a Úpravy Streamu pro Kick"
+        "message": "uKick - Vše pro Kick"
     },
     "app_description": {
-        "message": "Komplexní rozšíření pro blokování, posílení a úpravu všeho na Kick pro lepší zážitek ze streamování."
+        "message": "Vše-v-jednom Kick pro blok kanálů, kategorií, štítků a chatu. Sync seznamy. Zvyš hlasitost, kvalitu, danmaku a motivy."
     },
     "btn_block_channel": {
         "message": "Blokovat tento kanál"
@@ -35,69 +35,240 @@
         "message": "Štítky"
     },
     "popup_adaptive_stream": {
-        "message": "Adaptivní Stream"
+        "message": "Adaptivní stream"
     },
     "popup_quality": {
         "message": "Kvalita"
     },
     "popup_volume_boost": {
-        "message": "Posílení Hlasitosti"
+        "message": "Zesílení hlasitosti"
     },
     "popup_open_options": {
         "message": "Možnosti"
     },
     "options_blocked_channels": {
-        "message": "Zablokované Kanály"
+        "message": "Blokované kanály"
     },
     "options_blocked_categories": {
-        "message": "Zablokované Kategorie"
+        "message": "Blokované kategorie"
     },
     "options_blocked_tags": {
-        "message": "Zablokované Štítky"
+        "message": "Blokované štítky"
     },
     "options_show": {
-        "message": "▶️ Zobrazit"
+        "message": "Zobrazit"
     },
     "options_export": {
-        "message": "📤 Exportovat"
+        "message": "Exportovat"
     },
     "options_import": {
-        "message": "📥 Importovat"
+        "message": "Importovat"
     },
     "options_clear_all": {
-        "message": "🧹 Vymazat vše"
+        "message": "Vymazat vše"
     },
     "options_refresh": {
-        "message": "🔄 Obnovit"
+        "message": "Obnovit"
     },
     "options_add_channel": {
-        "message": "➕ Přidat kanál"
+        "message": "Přidat kanál"
     },
     "options_add_category": {
-        "message": "➕ Přidat kategorii"
+        "message": "Přidat kategorii"
     },
     "options_add_tags": {
-        "message": "➕ Přidat štítky"
+        "message": "Přidat štítek"
     },
     "options_disable_search_history": {
-        "message": "Zakázat Historii Vyhledávání"
+        "message": "Zakázat historii vyhledávání"
     },
-    "options_disable_chat_blocking": {
-        "message": "Zakázat Blokování Chatu"
+    "options_enable_chat_blocking": {
+        "message": "Povolit blokování chatu"
     },
     "options_hide_block_buttons": {
-        "message": "Skrýt Tlačítka Blokování"
+        "message": "Skrýt tlačítka blokování"
     },
     "options_enable_danmaku_chat": {
-        "message": "Povolit Danmaku Chat"
+        "message": "Povolit Danmaku chat"
     },
     "options_disable_active_users": {
-        "message": "Zakázat Statistiky Aktivních Uživatelů"
+        "message": "Zakázat statistiky aktivních uživatelů"
+    },
+    "options_enable_keyboard_volume": {
+        "message": "Povolit ovládání hlasitosti klávesnicí"
     },
     "options_suggestions": {
         "message": "NÁVRHY:"
     },
     "options_customization": {
         "message": "Přizpůsobení"
+    },
+    "options_themes": {
+        "message": "Motivy"
+    },
+    "options_subscriptions": {
+        "message": "Odběry"
+    },
+    "placeholder_remote_url": {
+        "message": "URL vzdáleného seznamu (JSON)"
+    },
+    "options_sub_add": {
+        "message": "Přidat"
+    },
+    "options_sub_interval": {
+        "message": "Interval synchronizace:"
+    },
+    "options_sub_type_channels": {
+        "message": "Kanály"
+    },
+    "options_sub_type_categories": {
+        "message": "Kategorie"
+    },
+    "options_sub_type_tags": {
+        "message": "Štítky"
+    },
+    "options_sub_6h": {
+        "message": "6 hodin"
+    },
+    "options_sub_12h": {
+        "message": "12 hodin"
+    },
+    "options_sub_1d": {
+        "message": "1 den"
+    },
+    "options_sub_2d": {
+        "message": "2 dny"
+    },
+    "options_sub_1w": {
+        "message": "1 týden"
+    },
+    "options_sub_1m": {
+        "message": "1 měsíc"
+    },
+    "options_sub_update_all": {
+        "message": "Aktualizovat vše"
+    },
+    "options_sub_updating": {
+        "message": "Synchronizace..."
+    },
+    "options_sub_updated": {
+        "message": "Hotovo!"
+    },
+    "options_sub_update_error": {
+        "message": "Chyba!"
+    },
+    "alert_duplicate_url": {
+        "message": "Tato URL již existuje."
+    },
+    "alert_permission_denied": {
+        "message": "Přístup k této URL byl odepřen."
+    },
+    "alert_invalid_url": {
+        "message": "Neplatný formát URL."
+    },
+    "time_never": {
+        "message": "Nikdy"
+    },
+    "time_just_now": {
+        "message": "Právě teď"
+    },
+    "time_minutes_ago": {
+        "message": "před $1 minutami",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_hours_ago": {
+        "message": "před $1 hodinami",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_days_ago": {
+        "message": "před $1 dny",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "meta_updated": {
+        "message": "Aktualizováno:"
+    },
+    "meta_items": {
+        "message": "Položky:"
+    },
+    "btn_open_url": {
+        "message": "Otevřít URL"
+    },
+    "btn_update_now": {
+        "message": "Aktualizovat nyní"
+    },
+    "btn_remove": {
+        "message": "Odebrat"
+    },
+    "options_add_all": {
+        "message": "Přidat vše"
+    },
+    "suggestion_missing_items": {
+        "message": " chybějící položky v přednačteném seznamu."
+    },
+    "suggestion_items_count": {
+        "message": " položek."
+    },
+    "error_loading_suggestions": {
+        "message": "Chyba při načítání návrhů:"
+    },
+    "options_integrations": {
+        "message": "Integrace"
+    },
+    "int_openlapis_exp": {
+        "message": "OpenLapis"
+    },
+    "int_action_documentize": {
+        "message": "Dokumentovat"
+    },
+    "int_action_send_details": {
+        "message": "Odeslat detaily"
+    },
+    "int_action_summarize_llm": {
+        "message": "Shrnout (LLM)"
+    },
+    "int_action_import_table": {
+        "message": "Importovat tabulku"
+    },
+    "int_action_extract_authors": {
+        "message": "Extrahovat autory"
+    },
+    "int_action_export_blocked_items": {
+        "message": "Exportovat blokované položky"
+    },
+    "int_btn_push": {
+        "message": "Odeslat"
+    },
+    "int_config_title": {
+        "message": "Konfigurovat"
+    },
+    "int_config_desktop": {
+        "message": "Desktop"
+    },
+    "int_config_desktop_li1": {
+        "message": "Nainstalovány nejnovější verze aplikací"
+    },
+    "int_config_desktop_li2": {
+        "message": "Nativní hostitel zasílání zpráv registrován"
+    },
+    "int_config_mobile": {
+        "message": "Mobil"
+    },
+    "int_config_mobile_p": {
+        "message": "Aplikace OpenLapis Connect bude brzy k dispozici."
+    },
+    "overlay_users": {
+        "message": "Uživatelé"
     }
 }

@@ -1,9 +1,9 @@
 {
     "app_name": {
-        "message": "uKick — Kick用ブロック＆ストリーム調整"
+        "message": "uKick - Kickのすべて"
     },
     "app_description": {
-        "message": "より良いストリーミング体験のために、Kick上のすべてをブロック、ブースト、調整するオールインワン拡張機能。"
+        "message": "チャンネル、カテゴリ、タグ、チャットをブロックするオールインワンKickツール。リモートリストを同期。音量ブースト、品質設定、弾幕、テーマ。"
     },
     "btn_block_channel": {
         "message": "このチャンネルをブロック"
@@ -12,7 +12,7 @@
         "message": "カテゴリを非表示"
     },
     "alert_channel_blocked": {
-        "message": "$CHANNEL$ をブロックしました！",
+        "message": "$CHANNEL$ がブロックされました！",
         "placeholders": {
             "channel": {
                 "content": "$1"
@@ -56,48 +56,219 @@
         "message": "ブロック済みタグ"
     },
     "options_show": {
-        "message": "▶️ 表示"
+        "message": "表示"
     },
     "options_export": {
-        "message": "📤 エクスポート"
+        "message": "エクスポート"
     },
     "options_import": {
-        "message": "📥 インポート"
+        "message": "インポート"
     },
     "options_clear_all": {
-        "message": "🧹 すべてクリア"
+        "message": "すべてクリア"
     },
     "options_refresh": {
-        "message": "🔄 更新"
+        "message": "更新"
     },
     "options_add_channel": {
-        "message": "➕ チャンネル追加"
+        "message": "チャンネルを追加"
     },
     "options_add_category": {
-        "message": "➕ カテゴリ追加"
+        "message": "カテゴリを追加"
     },
     "options_add_tags": {
-        "message": "➕ タグ追加"
+        "message": "タグを追加"
     },
     "options_disable_search_history": {
-        "message": "検索履歴を無効化"
+        "message": "検索履歴を無効にする"
     },
-    "options_disable_chat_blocking": {
-        "message": "チャットブロックを無効化"
+    "options_enable_chat_blocking": {
+        "message": "チャットブロックを有効にする"
     },
     "options_hide_block_buttons": {
         "message": "ブロックボタンを非表示"
     },
     "options_enable_danmaku_chat": {
-        "message": "弾幕チャットを有効化"
+        "message": "弾幕チャットを有効にする"
     },
     "options_disable_active_users": {
-        "message": "アクティブユーザー統計を無効化"
+        "message": "アクティブユーザー統計を無効にする"
+    },
+    "options_enable_keyboard_volume": {
+        "message": "キーボード音量制御を有効にする"
     },
     "options_suggestions": {
-        "message": "提案:"
+        "message": "提案："
     },
     "options_customization": {
         "message": "カスタマイズ"
+    },
+    "options_themes": {
+        "message": "テーマ"
+    },
+    "options_subscriptions": {
+        "message": "サブスクリプション"
+    },
+    "placeholder_remote_url": {
+        "message": "リモートリストURL (JSON)"
+    },
+    "options_sub_add": {
+        "message": "追加"
+    },
+    "options_sub_interval": {
+        "message": "同期間隔："
+    },
+    "options_sub_type_channels": {
+        "message": "チャンネル"
+    },
+    "options_sub_type_categories": {
+        "message": "カテゴリ"
+    },
+    "options_sub_type_tags": {
+        "message": "タグ"
+    },
+    "options_sub_6h": {
+        "message": "6時間"
+    },
+    "options_sub_12h": {
+        "message": "12時間"
+    },
+    "options_sub_1d": {
+        "message": "1日"
+    },
+    "options_sub_2d": {
+        "message": "2日"
+    },
+    "options_sub_1w": {
+        "message": "1週間"
+    },
+    "options_sub_1m": {
+        "message": "1ヶ月"
+    },
+    "options_sub_update_all": {
+        "message": "すべて更新"
+    },
+    "options_sub_updating": {
+        "message": "同期中..."
+    },
+    "options_sub_updated": {
+        "message": "完了！"
+    },
+    "options_sub_update_error": {
+        "message": "エラー！"
+    },
+    "alert_duplicate_url": {
+        "message": "このURLは既に存在します。"
+    },
+    "alert_permission_denied": {
+        "message": "このURLへのアクセス許可が拒否されました。"
+    },
+    "alert_invalid_url": {
+        "message": "無効なURL形式です。"
+    },
+    "time_never": {
+        "message": "なし"
+    },
+    "time_just_now": {
+        "message": "たった今"
+    },
+    "time_minutes_ago": {
+        "message": "$1 分前",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_hours_ago": {
+        "message": "$1 時間前",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_days_ago": {
+        "message": "$1 日前",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "meta_updated": {
+        "message": "更新："
+    },
+    "meta_items": {
+        "message": "アイテム："
+    },
+    "btn_open_url": {
+        "message": "URLを開く"
+    },
+    "btn_update_now": {
+        "message": "今すぐ更新"
+    },
+    "btn_remove": {
+        "message": "削除"
+    },
+    "options_add_all": {
+        "message": "すべて追加"
+    },
+    "suggestion_missing_items": {
+        "message": " 件のプリロードリストにないアイテム。"
+    },
+    "suggestion_items_count": {
+        "message": " 件のアイテム。"
+    },
+    "error_loading_suggestions": {
+        "message": "提案の読み込みエラー："
+    },
+    "options_integrations": {
+        "message": "統合"
+    },
+    "int_openlapis_exp": {
+        "message": "OpenLapis"
+    },
+    "int_action_documentize": {
+        "message": "ドキュメント化"
+    },
+    "int_action_send_details": {
+        "message": "詳細を送信"
+    },
+    "int_action_summarize_llm": {
+        "message": "要約 (LLM)"
+    },
+    "int_action_import_table": {
+        "message": "テーブルをインポート"
+    },
+    "int_action_extract_authors": {
+        "message": "作成者を抽出"
+    },
+    "int_action_export_blocked_items": {
+        "message": "ブロックしたアイテムをエクスポート"
+    },
+    "int_btn_push": {
+        "message": "プッシュ"
+    },
+    "int_config_title": {
+        "message": "構成"
+    },
+    "int_config_desktop": {
+        "message": "デスクトップ"
+    },
+    "int_config_desktop_li1": {
+        "message": "最新バージョンのアプリがインストールされている"
+    },
+    "int_config_desktop_li2": {
+        "message": "ネイティブメッセージングホストが登録されている"
+    },
+    "int_config_mobile": {
+        "message": "モバイル"
+    },
+    "int_config_mobile_p": {
+        "message": "OpenLapis Connectアプリがまもなく登場。"
+    },
+    "overlay_users": {
+        "message": "ユーザー"
     }
 }

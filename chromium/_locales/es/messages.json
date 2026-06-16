@@ -1,9 +1,9 @@
 {
     "app_name": {
-        "message": "uKick — Bloqueo y Ajustes Stream para Kick"
+        "message": "uKick - Todo para Kick"
     },
     "app_description": {
-        "message": "Extensión todo en uno para bloquear, potenciar y ajustar todo en Kick para una mejor experiencia de streaming."
+        "message": "Todo-en-uno Kick bloquea canales, categorías, etiquetas y chat. Sincroniza listas remotas. Subir volumen, calidad, danmaku y temas."
     },
     "btn_block_channel": {
         "message": "Bloquear este canal"
@@ -56,34 +56,34 @@
         "message": "Etiquetas Bloqueadas"
     },
     "options_show": {
-        "message": "▶️ Mostrar"
+        "message": "Mostrar"
     },
     "options_export": {
-        "message": "📤 Exportar"
+        "message": "Exportar"
     },
     "options_import": {
-        "message": "📥 Importar"
+        "message": "Importar"
     },
     "options_clear_all": {
-        "message": "🧹 Limpiar Todo"
+        "message": "Borrar Todo"
     },
     "options_refresh": {
-        "message": "🔄 Actualizar"
+        "message": "Actualizar"
     },
     "options_add_channel": {
-        "message": "➕ Añadir Canal"
+        "message": "Añadir Canal"
     },
     "options_add_category": {
-        "message": "➕ Añadir Categoría"
+        "message": "Añadir Categoría"
     },
     "options_add_tags": {
-        "message": "➕ Añadir Etiquetas"
+        "message": "Añadir Etiqueta"
     },
     "options_disable_search_history": {
         "message": "Desactivar Historial de Búsqueda"
     },
-    "options_disable_chat_blocking": {
-        "message": "Desactivar Bloqueo del Chat"
+    "options_enable_chat_blocking": {
+        "message": "Habilitar Bloqueo de Chat"
     },
     "options_hide_block_buttons": {
         "message": "Ocultar Botones de Bloqueo"
@@ -94,10 +94,181 @@
     "options_disable_active_users": {
         "message": "Desactivar Estadísticas de Usuarios Activos"
     },
+    "options_enable_keyboard_volume": {
+        "message": "Habilitar Control de Volumen con Teclado"
+    },
     "options_suggestions": {
         "message": "SUGERENCIAS:"
     },
     "options_customization": {
         "message": "Personalización"
+    },
+    "options_themes": {
+        "message": "Temas"
+    },
+    "options_subscriptions": {
+        "message": "Suscripciones"
+    },
+    "placeholder_remote_url": {
+        "message": "URL de lista remota (JSON)"
+    },
+    "options_sub_add": {
+        "message": "Añadir"
+    },
+    "options_sub_interval": {
+        "message": "Intervalo de Sincronización:"
+    },
+    "options_sub_type_channels": {
+        "message": "Canales"
+    },
+    "options_sub_type_categories": {
+        "message": "Categorías"
+    },
+    "options_sub_type_tags": {
+        "message": "Etiquetas"
+    },
+    "options_sub_6h": {
+        "message": "6 Horas"
+    },
+    "options_sub_12h": {
+        "message": "12 Horas"
+    },
+    "options_sub_1d": {
+        "message": "1 Día"
+    },
+    "options_sub_2d": {
+        "message": "2 Días"
+    },
+    "options_sub_1w": {
+        "message": "1 Semana"
+    },
+    "options_sub_1m": {
+        "message": "1 Mes"
+    },
+    "options_sub_update_all": {
+        "message": "Actualizar Todo"
+    },
+    "options_sub_updating": {
+        "message": "Sincronizando..."
+    },
+    "options_sub_updated": {
+        "message": "¡Hecho!"
+    },
+    "options_sub_update_error": {
+        "message": "¡Error!"
+    },
+    "alert_duplicate_url": {
+        "message": "Esta URL ya existe."
+    },
+    "alert_permission_denied": {
+        "message": "Permiso denegado para esta URL."
+    },
+    "alert_invalid_url": {
+        "message": "Formato de URL no válido."
+    },
+    "time_never": {
+        "message": "Nunca"
+    },
+    "time_just_now": {
+        "message": "Justo ahora"
+    },
+    "time_minutes_ago": {
+        "message": "hace $1 minutos",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_hours_ago": {
+        "message": "hace $1 horas",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "time_days_ago": {
+        "message": "hace $1 días",
+        "placeholders": {
+            "1": {
+                "content": "$1"
+            }
+        }
+    },
+    "meta_updated": {
+        "message": "Actualizado:"
+    },
+    "meta_items": {
+        "message": "Elementos:"
+    },
+    "btn_open_url": {
+        "message": "Abrir URL"
+    },
+    "btn_update_now": {
+        "message": "Actualizar ahora"
+    },
+    "btn_remove": {
+        "message": "Eliminar"
+    },
+    "options_add_all": {
+        "message": "Añadir todo"
+    },
+    "suggestion_missing_items": {
+        "message": " elementos faltantes en la lista precargada."
+    },
+    "suggestion_items_count": {
+        "message": " elementos."
+    },
+    "error_loading_suggestions": {
+        "message": "Error al cargar sugerencias:"
+    },
+    "options_integrations": {
+        "message": "Integraciones"
+    },
+    "int_openlapis_exp": {
+        "message": "OpenLapis"
+    },
+    "int_action_documentize": {
+        "message": "Documentar"
+    },
+    "int_action_send_details": {
+        "message": "Enviar Detalles"
+    },
+    "int_action_summarize_llm": {
+        "message": "Resumir (LLM)"
+    },
+    "int_action_import_table": {
+        "message": "Importar Tabla"
+    },
+    "int_action_extract_authors": {
+        "message": "Extraer Autores"
+    },
+    "int_action_export_blocked_items": {
+        "message": "Exportar Elementos Bloqueados"
+    },
+    "int_btn_push": {
+        "message": "Empujar"
+    },
+    "int_config_title": {
+        "message": "Configurar"
+    },
+    "int_config_desktop": {
+        "message": "Escritorio"
+    },
+    "int_config_desktop_li1": {
+        "message": "Aplicaciones de la última versión instaladas"
+    },
+    "int_config_desktop_li2": {
+        "message": "Host de mensajería nativa registrado"
+    },
+    "int_config_mobile": {
+        "message": "Móvil"
+    },
+    "int_config_mobile_p": {
+        "message": "La aplicación OpenLapis Connect llegará pronto."
+    },
+    "overlay_users": {
+        "message": "Usuarios"
     }
 }
