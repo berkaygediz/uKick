@@ -2,7 +2,7 @@
 // @name         uKick - Everything for Kick
 // @namespace    https://github.com/berkaygediz/uKick
 // @version      2.6.0.0
-// @description  All-in-one extension to block, boost, and tweak everything on Kick for a better streaming experience.
+// @description  All-in-one Kick tool to block channels, categories, tags & chat. Sync remote lists. Boost volume, set quality, danmaku & themes.
 // @author       berkaygediz
 // @match        https://kick.com/*
 // @match        https://www.kick.com/*
