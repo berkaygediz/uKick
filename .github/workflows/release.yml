@@ -1,0 +1,34 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*.*.*.*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Format version
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME//./-}" >> $GITHUB_OUTPUT
+
+      - name: Package Chromium
+        run: zip -r ukick-chromium-${{ steps.version.outputs.VERSION }}.zip chromium/*
+
+      - name: Package Firefox
+        run: zip -r ukick-firefox-${{ steps.version.outputs.VERSION }}.zip firefox/*
+
+      - name: Publish Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ukick-chromium-${{ steps.version.outputs.VERSION }}.zip
+            ukick-firefox-${{ steps.version.outputs.VERSION }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
