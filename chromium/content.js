@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uKick - Everything for Kick
 // @namespace    https://github.com/berkaygediz/uKick
-// @version      2.6.0.0
+// @version      2.7.0.0
 // @description  All-in-one Kick tool to block channels, categories, tags & chat. Sync remote lists. Boost volume, set quality, danmaku & themes.
 // @author       berkaygediz
 // @match        https://kick.com/*
@@ -69,8 +69,6 @@
     await saveBlockedChannels(blocked);
   }
 
-  // ==== Chrome Extension ==== getBlockedCategories & saveBlockedCategories
-
   async function getBlockedCategories() {
     return new Promise((resolve) => {
       chrome.storage.local.get(
@@ -86,7 +84,6 @@
             const combined = new Set([...local, ...remote]);
             resolve([...combined].map(normalizeData));
           } catch (e) {
-            console.error("uKick Get Categories Error:", e);
             resolve([]);
           }
         },
@@ -99,19 +96,14 @@
       try {
         const data = JSON.stringify(list);
         chrome.storage.local.set({ blockedCategories: data }, () => {
-          if (chrome.runtime.lastError) {
-            console.error(chrome.runtime.lastError);
-          }
+          if (chrome.runtime.lastError) console.error(chrome.runtime.lastError);
           resolve();
         });
       } catch (err) {
-        console.error(err);
         resolve();
       }
     });
   }
-
-  // ==== Chrome Extension ==== getBlockedTags & saveBlockedTags
 
   async function getBlockedTags() {
     return new Promise((resolve) => {
@@ -128,28 +120,10 @@
             const combined = new Set([...local, ...remote]);
             resolve([...combined].map(normalizeData));
           } catch (e) {
-            console.error("uKick Get Tags Error:", e);
             resolve([]);
           }
         },
       );
-    });
-  }
-
-  async function saveBlockedTags(list) {
-    return new Promise((resolve) => {
-      try {
-        const data = JSON.stringify(list);
-        chrome.storage.local.set({ blockedTags: data }, () => {
-          if (chrome.runtime.lastError) {
-            console.error(chrome.runtime.lastError);
-          }
-          resolve();
-        });
-      } catch (err) {
-        console.error(err);
-        resolve();
-      }
     });
   }
 
@@ -170,34 +144,20 @@
   function showToast(message) {
     const toast = document.createElement("div");
     toast.textContent = message;
-
     toast.style.cssText = `
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #333;
-    color: #fff;
-    padding: 12px 24px;
-    border-radius: 4px;
-    z-index: 10000;
-    font-size: 14px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  `;
-
+      position: fixed; bottom: 20px; right: 20px; background-color: #333;
+      color: #fff; padding: 12px 24px; border-radius: 4px; z-index: 10000;
+      font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); opacity: 0;
+      transition: opacity 0.3s ease;
+    `;
     document.body.appendChild(toast);
-
     requestAnimationFrame(() => {
       toast.style.opacity = "1";
     });
-
     setTimeout(() => {
       toast.style.opacity = "0";
       setTimeout(() => {
-        if (toast.parentNode) {
-          toast.parentNode.removeChild(toast);
-        }
+        if (toast.parentNode) toast.parentNode.removeChild(toast);
       }, 300);
     }, 2000);
   }
@@ -207,22 +167,18 @@
     const blockedNormalized = blockedTags.map((tag) =>
       normalizeData(tag).toLowerCase().trim(),
     );
-
     const { disableBlockButtons = false } = await chrome.storage.local.get(
       "disableBlockButtons",
     );
     if (disableBlockButtons) return;
 
-    const containers = document.querySelectorAll("div.mt-2.flex");
-
-    containers.forEach((container) => {
-      const tagElements = container.querySelectorAll("button, a");
-
-      tagElements.forEach((tagEl) => {
-        if (tagEl.classList.contains("tag-block-btn")) return;
-        if (tagEl.dataset.xAdded === "true") return;
-
-        if (tagEl.querySelector(".tag-block-btn")) {
+    document.querySelectorAll("div.mt-2.flex").forEach((container) => {
+      container.querySelectorAll("button, a").forEach((tagEl) => {
+        if (
+          tagEl.classList.contains("tag-block-btn") ||
+          tagEl.dataset.xAdded === "true" ||
+          tagEl.querySelector(".tag-block-btn")
+        ) {
           tagEl.dataset.xAdded = "true";
           return;
         }
@@ -232,52 +188,38 @@
         rawText = rawText.replace(/\s+/g, " ").trim();
         if (!rawText) return;
 
-        const normalized = normalizeData(rawText).toLowerCase().trim();
-
-        if (blockedNormalized.includes(normalized)) return;
+        if (
+          blockedNormalized.includes(
+            normalizeData(rawText).toLowerCase().trim(),
+          )
+        )
+          return;
 
         const xBtn = document.createElement("span");
         xBtn.textContent = "✖";
         xBtn.title = "Block tag: " + rawText;
         xBtn.className = "tag-block-btn";
         xBtn.style.cssText = `
-                margin-left: 4px;
-                background: rgba(0, 0, 0, 0.7);
-                color: white;
-                border: none;
-                border-radius: 50%;
-                width: 16px;
-                height: 16px;
-                font-size: 12px;
-                cursor: pointer;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                padding: 0;
-                flex-shrink: 0;
-                line-height: 1;
-              `;
-
+          margin-left: 4px; background: rgba(0, 0, 0, 0.7); color: white; border: none;
+          border-radius: 50%; width: 16px; height: 16px; font-size: 12px; cursor: pointer;
+          display: inline-flex; align-items: center; justify-content: center; padding: 0; flex-shrink: 0; line-height: 1;
+        `;
         xBtn.addEventListener("click", async (e) => {
           e.stopPropagation();
           e.preventDefault();
-
           await blockTag(rawText);
-
           showToast(`${rawText}`);
+          await removeBlockedCards();
         });
 
         tagEl.style.display = "inline-flex";
         tagEl.style.alignItems = "center";
         tagEl.style.gap = "2px";
-
         tagEl.appendChild(xBtn);
         tagEl.dataset.xAdded = "true";
       });
     });
   }
-
-  // ==== Chrome Extension ====
 
   async function blockCategory(categoryName) {
     const blocked = await getBlockedCategories();
@@ -295,11 +237,9 @@
 
   async function processCategoryCards() {
     const blockedCategories = await getBlockedCategories();
-
     const blockedNormalized = blockedCategories.map((cat) =>
       normalizeData(cat).toLowerCase().trim(),
     );
-
     const { disableBlockButtons = false } = await chrome.storage.local.get(
       "disableBlockButtons",
     );
@@ -311,15 +251,12 @@
       const categoryName = normalizeData(nameEl.textContent)
         .toLowerCase()
         .trim();
-
       if (blockedNormalized.includes(categoryName)) {
         card.style.display = "none";
         return;
       }
-
-      if (disableBlockButtons) return;
-
-      if (card.querySelector(".category-block-btn")) return;
+      if (disableBlockButtons || card.querySelector(".category-block-btn"))
+        return;
 
       const imageWrapper = card.querySelector(
         'a[href^="/category/"] > div.relative',
@@ -334,20 +271,9 @@
         nameEl.textContent;
       btn.className = "category-block-btn";
       btn.style.cssText = `
-          position: absolute;
-          top: 6px;
-          right: 6px;
-          background: rgba(0, 0, 0, 0.7);
-          color: white;
-          border: none;
-          border-radius: 50%;
-          width: 20px;
-          height: 20px;
-          font-size: 14px;
-          cursor: pointer;
-          z-index: 200;
-        `;
-
+        position: absolute; top: 6px; right: 6px; background: rgba(0, 0, 0, 0.7); color: white;
+        border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 14px; cursor: pointer; z-index: 200;
+      `;
       btn.addEventListener("click", async (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -362,7 +288,6 @@
 
   async function removeBlockedCategoryCards() {
     const blockedCategories = await getBlockedCategories();
-
     document.querySelectorAll('[class*="group/card"]').forEach((card) => {
       const nameEl = card.querySelector('[data-testid^="category-"]');
       if (!nameEl) return;
@@ -370,7 +295,6 @@
       const categoryName = normalizeData(nameEl.textContent)
         .toLowerCase()
         .trim();
-
       const blockedNormalized = blockedCategories.map((cat) =>
         normalizeData(cat).toLowerCase().trim(),
       );
@@ -386,8 +310,8 @@
   async function removeBlockedCards() {
     const blockedChannels = (await getBlockedChannels()).map(normalizeData);
     const blockedCategories =
-      (await getBlockedCategories?.()).map(normalizeData) || [];
-    const blockedTags = (await getBlockedTags?.()).map(normalizeData) || [];
+      (await getBlockedCategories?.().catch(() => [])) || [];
+    const blockedTags = (await getBlockedTags?.().catch(() => [])) || [];
 
     document.querySelectorAll(".group\\/card").forEach((card) => {
       let shouldHide = false;
@@ -401,9 +325,7 @@
         const username = normalizeData(
           channelLink.getAttribute("href").slice(1),
         );
-        if (blockedChannels.includes(username)) {
-          shouldHide = true;
-        }
+        if (blockedChannels.includes(username)) shouldHide = true;
       }
 
       if (!shouldHide) {
@@ -412,10 +334,8 @@
           const categoryText =
             categoryLink.querySelector("span")?.textContent ||
             categoryLink.textContent;
-          const categoryName = normalizeData(categoryText);
-          if (blockedCategories.includes(categoryName)) {
+          if (blockedCategories.includes(normalizeData(categoryText)))
             shouldHide = true;
-          }
         }
       }
 
@@ -424,13 +344,11 @@
         if (tagsContainer) {
           const tagElements = tagsContainer.querySelectorAll("button, a");
           for (const tag of tagElements) {
-            let tagName = "";
-
-            tagName =
-              tag.getAttribute("aria-label") ||
-              tag.getAttribute("title") ||
-              tag.textContent ||
-              "";
+            let tagName =
+              tag.getAttribute("aria-label") || tag.getAttribute("title") || "";
+            if (!tagName) {
+              tagName = tag.childNodes[0]?.textContent || tag.textContent || "";
+            }
 
             tagName = tagName.trim();
             if (!tagName) continue;
@@ -477,7 +395,6 @@
     }
   }
 
-  // Sidebar, recommended channels
   async function removeSidebarBlockedChannels() {
     const blockedChannels = (await getBlockedChannels()).map(normalizeData);
     const blockedCategories = (await getBlockedCategories()).map(normalizeData);
@@ -486,8 +403,6 @@
       .querySelectorAll('[data-testid^="sidebar-recommended-channel-"]')
       .forEach((item) => {
         let hide = false;
-
-        // === Channel  ===
         const anchor =
           item.querySelector('a[href^="/"]') || item.closest('a[href^="/"]');
         if (anchor) {
@@ -497,12 +412,12 @@
           if (blockedChannels.includes(username)) hide = true;
         }
 
-        // === Category ===
         const categoryEl = item.querySelector("span.text-xs.font-bold");
-        if (categoryEl) {
-          const categoryName = normalizeData(categoryEl.textContent);
-          if (blockedCategories.includes(categoryName)) hide = true;
-        }
+        if (
+          categoryEl &&
+          blockedCategories.includes(normalizeData(categoryEl.textContent))
+        )
+          hide = true;
 
         item.style.display = hide ? "none" : "";
       });
@@ -510,8 +425,7 @@
 
   async function addBlockButtonOnChannelPage() {
     const usernameEl = document.getElementById("channel-username");
-    if (!usernameEl) return;
-    if (document.getElementById("channelPageBlockBtn")) return;
+    if (!usernameEl || document.getElementById("channelPageBlockBtn")) return;
 
     const username = usernameEl.textContent.trim();
     const btn = document.createElement("button");
@@ -556,6 +470,7 @@
       }
     }
   }
+
   async function processCards() {
     const followTexts = [
       "follow", // English
@@ -583,17 +498,17 @@
     );
 
     document.querySelectorAll('[class*="group/card"]').forEach((card) => {
-      if (disableBlockButtons) return;
-      if (card.querySelector(".block-btn")) return;
-
-      // Skip categories
-      if (card.querySelector('[data-testid^="category-"]')) return;
+      if (
+        disableBlockButtons ||
+        card.querySelector(".block-btn") ||
+        card.querySelector('[data-testid^="category-"]')
+      )
+        return;
 
       const anchor = card.querySelector('a[href^="/"]');
       if (!anchor) return;
 
       const username = anchor.getAttribute("href").split("/")[1];
-
       const followBtn = Array.from(card.querySelectorAll("button")).find(
         (btn) => {
           const ariaLabel = (btn.getAttribute("aria-label") || "")
@@ -607,40 +522,33 @@
       );
 
       if (followBtn) {
-        // Channel results
         const btn = createBlockButton(username);
         btn.classList.add("block-btn");
         btn.style.marginLeft = "8px";
         followBtn.insertAdjacentElement("afterend", btn);
       } else {
-        // Stream results
         const titleEl = card.querySelector("a[title]");
         const btn = createBlockButtonAbsolute(username);
         btn.classList.add("block-btn");
-
         if (titleEl) {
           titleEl.parentElement.appendChild(btn);
         } else {
-          if (getComputedStyle(card).position === "static") {
+          if (getComputedStyle(card).position === "static")
             card.style.position = "relative";
-          }
           card.appendChild(btn);
         }
       }
     });
 
-    // Sidebar cards
     document
       .querySelectorAll("div.flex.w-full.shrink-0.grow-0.flex-col")
       .forEach((card) => {
-        if (disableBlockButtons) return;
-        if (card.querySelector(".block-btn")) return;
+        if (disableBlockButtons || card.querySelector(".block-btn")) return;
 
         const anchor = card.querySelector('a[href^="/"]');
         if (!anchor) return;
 
         const username = anchor.getAttribute("href").split("/")[1];
-
         const followBtn = Array.from(card.querySelectorAll("button")).find(
           (btn) => {
             const ariaLabel = (btn.getAttribute("aria-label") || "")
@@ -679,29 +587,17 @@
           return;
         }
 
-        if (disableBlockButtons) return;
-
-        if (anchor.querySelector(".sidebar-block-btn")) return;
+        if (disableBlockButtons || anchor.querySelector(".sidebar-block-btn"))
+          return;
 
         const btn = document.createElement("button");
         btn.textContent = "✕";
         btn.className = "sidebar-block-btn";
         btn.title = chrome.i18n.getMessage("btn_block_channel");
         btn.style.cssText = `
-            position: absolute;
-            top: 10px;
-            right: 4px;
-            background: #ac2c2cc2;
-            color: white;
-            border: none;
-            border-radius: 25%;
-            width: 25px;
-            height: 25px;
-            font-size: 14px;
-            display: none;
-            cursor: pointer;
-            z-index: 9999;
-          `;
+        position: absolute; top: 10px; right: 4px; background: #ac2c2cc2; color: white; border: none;
+        border-radius: 25%; width: 25px; height: 25px; font-size: 14px; display: none; cursor: pointer; z-index: 9999;
+      `;
 
         btn.addEventListener("click", async (e) => {
           e.preventDefault();
@@ -721,6 +617,21 @@
 
         anchor.appendChild(btn);
       });
+  }
+
+  function debounceRAF(fn) {
+    let ticking = false;
+    let args = [];
+    return (...newArgs) => {
+      args = newArgs;
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(() => {
+          ticking = false;
+          fn(...args);
+        });
+      }
+    };
   }
 
   async function observeBlockedChatMessages() {
@@ -750,23 +661,18 @@
 
     function hideChatMessage(node, username) {
       const content = node.querySelector('div[class*="betterhover"]');
-      if (!content) return;
-
-      if (content.dataset.hiddenUser === username) return;
+      if (!content || content.dataset.hiddenUser === username) return;
 
       if (content.dataset.hiddenUser) {
-        const existingOverlay = content.querySelector(".blocked-overlay");
-        if (existingOverlay) existingOverlay.remove();
+        content.querySelector(".blocked-overlay")?.remove();
         Array.from(content.children).forEach((child) => {
-          if (!child.classList.contains("blocked-overlay")) {
+          if (!child.classList.contains("blocked-overlay"))
             child.style.display = "";
-          }
         });
       }
 
       content.dataset.hiddenUser = username;
       content.style.opacity = "0.3";
-
       Array.from(content.children).forEach(
         (child) => (child.style.display = "none"),
       );
@@ -782,9 +688,7 @@
       const content = node.querySelector('div[class*="betterhover"]');
       if (!content || !content.dataset.hiddenUser) return;
 
-      const existingOverlay = content.querySelector(".blocked-overlay");
-      if (existingOverlay) existingOverlay.remove();
-
+      content.querySelector(".blocked-overlay")?.remove();
       Array.from(content.children).forEach(
         (child) => (child.style.display = ""),
       );
@@ -809,15 +713,7 @@
 
     const chatContainer = await waitForChatContainer();
 
-    function debounce(fn, delay) {
-      let timeout;
-      return (...args) => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => fn(...args), delay);
-      };
-    }
-
-    const processAddedNodes = debounce((mutationsList) => {
+    const processAddedNodes = debounceRAF((mutationsList) => {
       for (const mutation of mutationsList) {
         for (const addedNode of mutation.addedNodes) {
           if (!(addedNode instanceof HTMLElement)) continue;
@@ -828,28 +724,23 @@
           }
         }
       }
-    }, 100);
+    });
 
     const chatObserver = new MutationObserver(processAddedNodes);
     window.chatBlockObserver = chatObserver;
-
-    chatObserver.observe(chatContainer, {
-      childList: true,
-      subtree: true,
-    });
+    chatObserver.observe(chatContainer, { childList: true, subtree: true });
 
     setTimeout(() => {
       chatContainer.querySelectorAll("[data-index]").forEach(processChatNode);
     }, 1000);
 
-    async function refreshBlockedUsers() {
+    window.refreshBlockedUsers = async () => {
       const freshList = await getBlockedChannels();
       blockedSet.clear();
       freshList.forEach((u) => blockedSet.add(u.trim().toLowerCase()));
 
       chatContainer.querySelectorAll("[data-index]").forEach(processChatNode);
-    }
-    window.refreshBlockedUsers = refreshBlockedUsers;
+    };
   }
 
   async function observeChatUsernames() {
@@ -880,14 +771,6 @@
     } catch (e) {}
 
     if (!enableChatBlocking) return;
-
-    function debounce(fn, delay) {
-      let timeout;
-      return (...args) => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => fn(...args), delay);
-      };
-    }
 
     async function addBlockButtonsToNodes(nodes) {
       try {
@@ -933,9 +816,8 @@
             try {
               await blockChannel(usernameChatter);
               await removeBlockedCards();
-              if (window.refreshBlockedUsers) {
+              if (window.refreshBlockedUsers)
                 await window.refreshBlockedUsers();
-              }
             } catch (err) {
               console.error("Block action failed:", err);
             }
@@ -953,7 +835,7 @@
     );
 
     const observer = new MutationObserver(
-      debounce((mutationsList) => {
+      debounceRAF((mutationsList) => {
         let addedNodes = [];
         for (const mutation of mutationsList) {
           mutation.addedNodes.forEach((node) => {
@@ -967,14 +849,13 @@
           });
         }
         if (addedNodes.length) addBlockButtonsToNodes(addedNodes);
-      }, 100),
+      }),
     );
 
     window.chatUsernameObserver = observer;
     observer.observe(chatContainer, { childList: true, subtree: true });
   }
 
-  // search page
   function createBlockButton(username) {
     const btn = document.createElement("button");
     btn.textContent = "✕";
@@ -1008,18 +889,8 @@
     btn.textContent = "✕";
     btn.title = chrome.i18n.getMessage("btn_block_channel");
     btn.style.cssText = `
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      background: rgba(255, 0, 0, 0.4);
-      color: white;
-      border: none;
-      border-radius: 25%;
-      width: 24px;
-      height: 24px;
-      font-size: 14px;
-      cursor: pointer;
-      z-index: 9999;
+      position: absolute; top: 6px; right: 6px; background: rgba(255, 0, 0, 0.4); color: white;
+      border: none; border-radius: 25%; width: 24px; height: 24px; font-size: 14px; cursor: pointer; z-index: 9999;
     `;
     btn.addEventListener("click", async (e) => {
       e.stopPropagation();
@@ -1032,9 +903,8 @@
 
     return btn;
   }
-  // === Quality Control ===
-  // ==== Chrome Extension ====
 
+  // Quality Control
   // languages (EN, ES, PT, FR, DE, IT, TR, ID, ZH, JA, KO, AR, FI, PL, RU, VI, CS, HE)
   const SETTINGS_LABELS = [
     "Settings", // English (en)
@@ -1088,14 +958,11 @@
     }).observe(document, { subtree: true, childList: true });
 
     chrome.runtime.onMessage.addListener((request) => {
-      if (request.action === "setQuality") {
-        location.reload();
-      }
+      if (request.action === "setQuality") location.reload();
       if (request.action === "updateQualitySettings") {
         getQualitySettings().then((s) => {
-          if (s.autoQuality && isKickStreamUrl(location.href)) {
+          if (s.autoQuality && isKickStreamUrl(location.href))
             waitForPlayerAndApply(s.preferredQuality, false);
-          }
         });
       }
     });
@@ -1189,12 +1056,13 @@
     };
 
     const r = video.getBoundingClientRect();
-    const cx = r.left + r.width / 2;
-    const cy = r.top + r.height / 2;
-
     ["mouseenter", "mouseover", "mousemove"].forEach((t) => {
       video.dispatchEvent(
-        new MouseEvent(t, { bubbles: true, clientX: cx, clientY: cy }),
+        new MouseEvent(t, {
+          bubbles: true,
+          clientX: r.left + r.width / 2,
+          clientY: r.top + r.height / 2,
+        }),
       );
     });
 
@@ -1220,10 +1088,7 @@
         document.querySelectorAll(
           '[data-testid="player-quality-option"], [role="menuitemradio"], [role="menuitem"], li, div[class*="option"]',
         ),
-      ).filter((el) => {
-        const text = (el.textContent || "").trim();
-        return /^\d+/.test(text);
-      });
+      ).filter((el) => /^\d+/.test((el.textContent || "").trim()));
 
       let available = qualityEls
         .map((el) => (el.textContent || "").toLowerCase().trim())
@@ -1236,7 +1101,6 @@
         await sleep(500);
         continue;
       }
-
       available.sort((a, b) => b - a);
 
       let target =
@@ -1249,10 +1113,9 @@
         break;
       }
 
-      const targetEl = qualityEls.find((el) => {
-        const txt = (el.textContent || "").toLowerCase();
-        return txt.includes(String(target));
-      });
+      const targetEl = qualityEls.find((el) =>
+        (el.textContent || "").toLowerCase().includes(String(target)),
+      );
 
       if (targetEl) {
         safeClick(targetEl);
@@ -1264,43 +1127,25 @@
         await sleep(500);
       }
     }
-
     triggerReloadIfNeeded(shouldReload);
   }
 
   function findSettingsButton() {
-    const buttons = document.querySelectorAll("button[aria-label]");
-    for (const btn of buttons) {
-      const label = (btn.getAttribute("aria-label") || "").toLowerCase();
+    for (const btn of document.querySelectorAll("button[aria-label]")) {
       if (
-        SETTINGS_LABELS.some((langLabel) =>
-          label.includes(langLabel.toLowerCase()),
+        SETTINGS_LABELS.some((l) =>
+          (btn.getAttribute("aria-label") || "")
+            .toLowerCase()
+            .includes(l.toLowerCase()),
         )
-      ) {
+      )
         return btn;
-      }
     }
-
-    const settingsByClass = document.querySelector(
-      'button[class*="settings"], button[class*="cog"], .vjs-icon-cog',
+    return (
+      document.querySelector(
+        'button[class*="settings"], button[class*="cog"], .vjs-icon-cog',
+      ) || document.querySelector('button[class*="settings"]')
     );
-    if (settingsByClass) return settingsByClass;
-
-    const controlBar = document.querySelector(
-      '[class*="control-bar"], [class*="controls"], [class*="bottom-bar"]',
-    );
-    if (controlBar) {
-      const btns = controlBar.querySelectorAll("button");
-      if (btns.length > 0) {
-        for (let i = btns.length - 2; i >= 0; i--) {
-          const btn = btns[i];
-          const label = btn.getAttribute("aria-label") || "";
-          return btn;
-        }
-      }
-    }
-
-    return document.querySelector('button[class*="settings"]');
   }
 
   function triggerReloadIfNeeded(shouldReload) {
@@ -1325,13 +1170,12 @@
     });
   }
 
-  // Volume Boost
-  let audioContext;
-  let gainNode;
-  let source;
-  let currentBoost = 1;
-  let currentVideo = null;
-  let isAudioContextInitialized = false;
+  // ==== Volume Boost ====
+  let audioContext,
+    gainNode,
+    source,
+    currentBoost = 1,
+    currentVideo = null;
 
   function setupAudioContext() {
     const video = document.getElementById("video-player");
@@ -1339,21 +1183,12 @@
 
     if (video !== currentVideo || !source) {
       currentVideo = video;
-
-      if (source) {
+      if (source)
         try {
           source.disconnect();
-        } catch (e) {
-          console.warn("Audio source disconnect error:", e);
-        }
-      }
-
+        } catch (e) {}
       source = audioContext.createMediaElementSource(video);
-
-      if (!gainNode) {
-        gainNode = audioContext.createGain();
-      }
-
+      if (!gainNode) gainNode = audioContext.createGain();
       gainNode.gain.value = currentBoost;
       source.connect(gainNode).connect(audioContext.destination);
     }
@@ -1361,43 +1196,25 @@
 
   function setVolumeBoost(boostAmount) {
     if (!audioContext) return;
-
     currentBoost = boostAmount;
-
-    if (gainNode) {
-      gainNode.gain.value = boostAmount;
-    }
-
-    if (audioContext.state === "suspended") {
-      audioContext.resume();
-    }
+    if (gainNode) gainNode.gain.value = boostAmount;
+    if (audioContext.state === "suspended") audioContext.resume();
   }
 
-  // ==== Chrome Extension ====
   async function applyStoredVolumeBoost() {
     const { volumeBoost = 1 } = await chrome.storage.local.get("volumeBoost");
-    const parsed = isNaN(Number(volumeBoost)) ? 1 : Number(volumeBoost);
-    setVolumeBoost(parsed);
+    setVolumeBoost(isNaN(Number(volumeBoost)) ? 1 : Number(volumeBoost));
   }
 
   function enableAudioContextOnUserGesture() {
     function initialize() {
-      if (!audioContext) {
-        audioContext = new AudioContext();
-      }
-
-      if (audioContext.state === "suspended") {
-        audioContext.resume();
-      }
-
-      isAudioContextInitialized = true;
+      if (!audioContext) audioContext = new AudioContext();
+      if (audioContext.state === "suspended") audioContext.resume();
       setupAudioContext();
       applyStoredVolumeBoost();
-
       window.removeEventListener("click", initialize);
       window.removeEventListener("keydown", initialize);
     }
-
     window.addEventListener("click", initialize);
     window.addEventListener("keydown", initialize);
   }
@@ -1405,14 +1222,9 @@
   function clearSearchHistory() {
     try {
       const key = "search-history";
-
       if (!location.hostname.includes("kick.com")) return;
-
       const current = localStorage.getItem(key);
-
-      if (current && current !== "[]") {
-        localStorage.setItem(key, "[]");
-      }
+      if (current && current !== "[]") localStorage.setItem(key, "[]");
     } catch (e) {}
   }
 
@@ -1437,143 +1249,160 @@
 
     if (isSwapChatDirection === isCurrentlySwaped) return;
 
-    if (isSwapChatDirection) {
-      main.before(chatroom);
-    } else {
-      main.after(chatroom);
-    }
+    if (isSwapChatDirection) main.before(chatroom);
+    else main.after(chatroom);
   }
+
   function updateDanmakuBtnStyle(btn, isEnabled) {
-    if (isEnabled) {
-      btn.style.color = "#53fc18";
-      btn.style.opacity = "1";
-    } else {
-      btn.style.color = "inherit";
-      btn.style.opacity = "0.5";
-    }
+    btn.style.color = isEnabled ? "#53fc18" : "inherit";
+    btn.style.opacity = isEnabled ? "1" : "0.5";
   }
 
   function addChatToggleButton() {
-    if (document.getElementById("mtc-controls-wrapper")) return;
-
     const chatroom = document.getElementById("channel-chatroom");
     if (!chatroom) return;
-    const header = chatroom.firstElementChild;
-    if (!header) return;
 
-    const wrapper = document.createElement("div");
-    wrapper.id = "mtc-controls-wrapper";
-    wrapper.style.cssText = `
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 4px;
-        margin-right: 8px;
-    `;
+    let header = chatroom.querySelector(
+      'button[aria-label="Show active chatters"]',
+    )?.parentElement;
+    if (!header) header = chatroom.firstElementChild;
 
-    const btn = document.createElement("button");
-    btn.id = "mtc-toggle-btn";
-    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>`;
-    btn.style.cssText = `background:transparent;border:none;color:inherit;cursor:pointer;padding:8px;opacity:0.7;transition:opacity 0.2s,transform 0.2s,color 0.2s;display:flex;align-items:center;justify-content:center;`;
+    if (header && !document.getElementById("mtc-toggle-btn")) {
+      const btn = document.createElement("button");
+      btn.id = "mtc-toggle-btn";
+      btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>`;
+      btn.style.cssText = `background:transparent;border:none;color:inherit;cursor:pointer;padding:8px;opacity:0.7;transition:opacity 0.2s,transform 0.2s,color 0.2s;display:flex;align-items:center;justify-content:center;`;
 
-    btn.onmouseenter = function () {
-      this.style.opacity = "1";
-      this.style.transform = "scale(1.1)";
-    };
-    btn.onmouseleave = function () {
-      this.style.opacity = "0.7";
-      this.style.transform = "scale(1)";
-    };
-    btn.onclick = (e) => {
-      e.stopPropagation();
-      swapChatDirection = !swapChatDirection;
-      moveChatLogic(swapChatDirection);
-    };
-    wrapper.appendChild(btn);
+      btn.onmouseenter = function () {
+        this.style.opacity = "1";
+        this.style.transform = "scale(1.1)";
+      };
+      btn.onmouseleave = function () {
+        this.style.opacity = "0.7";
+        this.style.transform = "scale(1)";
+      };
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        swapChatDirection = !swapChatDirection;
+        moveChatLogic(swapChatDirection);
+      };
 
-    const danmakuBtn = document.createElement("button");
-    danmakuBtn.id = "danmaku-toggle-btn";
-    danmakuBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>`;
-    danmakuBtn.style.cssText = `background:transparent;border:none;color:inherit;cursor:pointer;padding:8px;opacity:0.7;transition:opacity 0.2s,transform 0.2s,color 0.2s;display:flex;align-items:center;justify-content:center;`;
+      const menuBtnContainer = header.querySelector(
+        "div.h-fit.w-fit.cursor-pointer",
+      );
+      if (menuBtnContainer) {
+        menuBtnContainer.insertAdjacentElement("afterend", btn);
+      } else {
+        header.insertBefore(btn, header.firstChild);
+      }
+    }
 
-    chrome.storage.local.get("enableDanmaku", (result) => {
-      const isEnabled = result.enableDanmaku ?? false;
-      updateDanmakuBtnStyle(danmakuBtn, isEnabled);
-    });
+    if (!document.getElementById("mtc-controls-wrapper")) {
+      const wrapper = document.createElement("div");
+      wrapper.id = "mtc-controls-wrapper";
+      wrapper.style.cssText = `
+        display: flex; align-items: center; gap: 4px; margin-right: 4px; z-index: 9999;
+      `;
 
-    danmakuBtn.onmouseenter = function () {
-      this.style.opacity = "1";
-      this.style.transform = "scale(1.1)";
-    };
-    danmakuBtn.onmouseleave = function () {
-      chrome.storage.local.get("enableDanmaku", (res) => {
-        updateDanmakuBtnStyle(danmakuBtn, res.enableDanmaku ?? false);
-      });
-      this.style.transform = "scale(1)";
-    };
+      const danmakuBtn = document.createElement("button");
+      danmakuBtn.id = "danmaku-toggle-btn";
+      danmakuBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>`;
+      danmakuBtn.style.cssText = `background:transparent;border:none;color:inherit;cursor:pointer;padding:8px;opacity:0.7;transition:opacity 0.2s,transform 0.2s,color 0.2s;display:flex;align-items:center;justify-content:center;`;
 
-    danmakuBtn.onclick = (e) => {
-      e.stopPropagation();
-      chrome.storage.local.get("enableDanmaku", (result) => {
-        const currentStatus = result.enableDanmaku ?? false;
-        const newStatus = !currentStatus;
-        chrome.storage.local.set({ enableDanmaku: newStatus }, () => {
-          updateDanmakuBtnStyle(danmakuBtn, newStatus);
+      chrome.storage.local.get("enableDanmaku", (result) =>
+        updateDanmakuBtnStyle(danmakuBtn, result.enableDanmaku ?? false),
+      );
+      danmakuBtn.onmouseenter = function () {
+        this.style.opacity = "1";
+        this.style.transform = "scale(1.1)";
+      };
+      danmakuBtn.onmouseleave = function () {
+        chrome.storage.local.get("enableDanmaku", (res) =>
+          updateDanmakuBtnStyle(this, res.enableDanmaku ?? false),
+        );
+        this.style.transform = "scale(1)";
+      };
+      danmakuBtn.onclick = (e) => {
+        e.stopPropagation();
+        chrome.storage.local.get("enableDanmaku", (result) => {
+          const newStatus = !(result.enableDanmaku ?? false);
+          chrome.storage.local.set({ enableDanmaku: newStatus }, () =>
+            updateDanmakuBtnStyle(danmakuBtn, newStatus),
+          );
         });
-      });
-    };
-    wrapper.appendChild(danmakuBtn);
+      };
+      wrapper.appendChild(danmakuBtn);
 
-    const activeUsersBtn = document.createElement("button");
-    activeUsersBtn.id = "active-users-toggle-btn";
-    activeUsersBtn.innerHTML = ICON_USER;
-    activeUsersBtn.style.cssText = `background:transparent;border:none;color:inherit;cursor:pointer;padding:8px;opacity:0.7;transition:opacity 0.2s,transform 0.2s,color 0.2s;display:flex;align-items:center;justify-content:center;`;
+      const activeUsersBtn = document.createElement("button");
+      activeUsersBtn.id = "active-users-toggle-btn";
+      activeUsersBtn.innerHTML = ICON_USER;
+      activeUsersBtn.style.cssText = `background:transparent;border:none;color:inherit;cursor:pointer;padding:8px;opacity:0.7;transition:opacity 0.2s,transform 0.2s,color 0.2s;display:flex;align-items:center;justify-content:center;`;
 
-    activeUsersBtn.onmouseenter = function () {
-      this.style.opacity = "1";
-      this.style.transform = "scale(1.1)";
-    };
-    activeUsersBtn.onmouseleave = function () {
-      this.style.opacity = isOverlayVisible ? "1" : "0.7";
-      this.style.transform = "scale(1)";
-    };
-    activeUsersBtn.onclick = (e) => {
-      e.stopPropagation();
-      isOverlayVisible = !isOverlayVisible;
-      activeUsersBtn.style.opacity = isOverlayVisible ? "1" : "0.7";
-      activeUsersBtn.style.color = isOverlayVisible ? "#53fc18" : "inherit";
-      updateOverlayUI();
-    };
-    wrapper.appendChild(activeUsersBtn);
+      activeUsersBtn.onmouseenter = function () {
+        this.style.opacity = "1";
+        this.style.transform = "scale(1.1)";
+      };
+      activeUsersBtn.onmouseleave = function () {
+        this.style.opacity = isOverlayVisible ? "1" : "0.7";
+        this.style.transform = "scale(1)";
+      };
+      activeUsersBtn.onclick = (e) => {
+        e.stopPropagation();
+        isOverlayVisible = !isOverlayVisible;
+        activeUsersBtn.style.opacity = isOverlayVisible ? "1" : "0.7";
+        activeUsersBtn.style.color = isOverlayVisible ? "#53fc18" : "inherit";
+        updateOverlayUI();
+      };
+      wrapper.appendChild(activeUsersBtn);
 
-    header.appendChild(wrapper);
+      const settingsBtnContainer = document.querySelector(
+        "#chatroom-footer div.ml-auto",
+      );
+      if (settingsBtnContainer) {
+        settingsBtnContainer.insertBefore(
+          wrapper,
+          settingsBtnContainer.firstChild,
+        );
+      } else {
+        let fallbackHeader =
+          chatroom.querySelector('button[aria-label="Show active chatters"]')
+            ?.parentElement || chatroom.firstElementChild;
+        if (fallbackHeader) {
+          const kickActiveBtn = fallbackHeader.querySelector(
+            'button[aria-label="Show active chatters"]',
+          );
+          if (kickActiveBtn)
+            kickActiveBtn.parentNode.insertBefore(wrapper, kickActiveBtn);
+          else fallbackHeader.appendChild(wrapper);
+        }
+      }
+    }
   }
 
   // DANMAKU
   function isDanmakuEnabled() {
     return new Promise((resolve) => {
-      chrome.storage.local.get("enableDanmaku", (result) => {
-        const isEnabled = result.enableDanmaku ?? false;
-        resolve(isEnabled);
-      });
+      chrome.storage.local.get("enableDanmaku", (result) =>
+        resolve(result.enableDanmaku ?? false),
+      );
     });
   }
 
   const DANMAKU_CSS = `
-        .ukick-danmaku-overlay {
-            position: absolute !important; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none !important; overflow: hidden !important;
-            z-index: 2147483647 !important; background: transparent !important; contain: strict;
-        }
-        .ukick-danmaku-item {
-            position: absolute !important; white-space: nowrap !important;
-            font-family: 'Inter', sans-serif !important; font-weight: 900 !important;
-            text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000 !important;
-            color: white !important; font-size: 28px !important; will-change: transform !important;
-            opacity: 0.9 !important; line-height: 1.3 !important; display: flex; align-items: center;
-        }
-        .ukick-danmaku-item img { display: inline-block !important; vertical-align: middle !important; height: 1.4em !important; width: auto !important; margin: 0 2px !important; }
-    `;
+    .ukick-danmaku-overlay {
+      position: absolute !important; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none !important; overflow: hidden !important;
+      z-index: 2147483647 !important; background: transparent !important; contain: strict;
+    }
+    .ukick-danmaku-item {
+      position: absolute !important; white-space: nowrap !important;
+      font-family: 'Inter', sans-serif !important; font-weight: 900 !important;
+      text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000 !important;
+      color: white !important; font-size: 28px !important; will-change: transform !important;
+      opacity: 0.9 !important; line-height: 1.3 !important; display: flex; align-items: center;
+    }
+    .ukick-danmaku-item img { display: inline-block !important; vertical-align: middle !important; height: 1.4em !important; width: auto !important; margin: 0 2px !important; }
+  `;
 
   const DanmakuEngine = {
     config: {
@@ -1689,12 +1518,11 @@
       if (this.state.observer) this.state.observer.disconnect();
       if (this.state.overlay) this.state.overlay.remove();
       if (this.state.displayTimer) clearTimeout(this.state.displayTimer);
-      if (this.state.chatContainer) {
+      if (this.state.chatContainer)
         this.state.chatContainer.removeEventListener(
           "scroll",
           this.handleScroll,
         );
-      }
       this.state.intervalId = null;
       this.state.observer = null;
       this.state.overlay = null;
@@ -1735,9 +1563,7 @@
     scanLatestIndex: function () {
       const container = this.state.chatContainer;
       if (!container) return -1;
-      const scrollableArea = container.querySelector(".no-scrollbar");
-      if (!scrollableArea) return -1;
-      const messages = scrollableArea.querySelectorAll("div[data-index]");
+      const messages = container.querySelectorAll("div[data-index]");
       let maxIndex = -1;
       messages.forEach((node) => {
         const idx = parseInt(node.getAttribute("data-index"));
@@ -1753,36 +1579,27 @@
         document.body.contains(this.state.chatContainer)
       )
         return;
-
       const target = this.findChatContainer();
       if (target) {
-        if (
-          this.state.chatContainer &&
-          this.state.chatContainer !== target.el
-        ) {
+        if (this.state.chatContainer && this.state.chatContainer !== target.el)
           this.state.chatContainer.removeEventListener(
             "scroll",
             this.handleScroll,
           );
-        }
-
         this.state.chatContainer = target.el;
         if (this.state.observer) this.state.observer.disconnect();
-
         this.state.chatContainer.addEventListener(
           "scroll",
           this.handleScroll.bind(this),
         );
-
         this.state.observer = new MutationObserver((mutations) => {
           if (!this.state.isActive) return;
-          mutations.forEach((m) => {
+          mutations.forEach((m) =>
             m.addedNodes.forEach((n) => {
               if (n.nodeType === 1) this.processMessage(n);
-            });
-          });
+            }),
+          );
         });
-
         this.state.observer.observe(this.state.chatContainer, {
           childList: true,
           subtree: true,
@@ -1800,8 +1617,7 @@
           .forEach((e) => e.remove());
         this.state.overlay = document.createElement("div");
         this.state.overlay.className = "ukick-danmaku-overlay";
-        const styles = window.getComputedStyle(videoContainer);
-        if (styles.position === "static")
+        if (window.getComputedStyle(videoContainer).position === "static")
           videoContainer.style.position = "relative";
         videoContainer.appendChild(this.state.overlay);
       }
@@ -1816,8 +1632,7 @@
     },
 
     processMessage: function (node) {
-      const currentIndexStr = node.getAttribute("data-index");
-      const currentIndex = parseInt(currentIndexStr);
+      const currentIndex = parseInt(node.getAttribute("data-index"));
       if (!isNaN(currentIndex)) {
         if (currentIndex <= this.state.highestProcessedIndex) return;
         this.state.highestProcessedIndex = currentIndex;
@@ -1830,7 +1645,6 @@
       const html = span.innerHTML,
         txt = span.innerText || "";
       if (!html) return;
-
       if (this.config.systemKeywords.some((k) => txt.includes(k))) return;
 
       let cleanTxt = txt;
@@ -1840,27 +1654,21 @@
       cleanTxt = cleanTxt.replace(/https?:\/\/[^\s]+/gi, "").trim();
 
       if (cleanTxt.length > this.config.maxTextLength) return;
-
       if (!cleanTxt && !html.includes("<img")) return;
 
       this.addToQueue({ html: html, text: cleanTxt });
     },
 
     addToQueue: function (msgObj) {
-      if (this.state.messageQueue.length >= this.config.maxQueueSize) {
+      if (this.state.messageQueue.length >= this.config.maxQueueSize)
         this.state.messageQueue.shift();
-      }
       this.state.messageQueue.push(msgObj);
     },
 
     startQueueProcessor: function () {
       const loop = () => {
         if (!this.state.isActive) return;
-        if (this.state.isPaused) {
-          this.state.displayTimer = setTimeout(loop, this.config.baseInterval);
-          return;
-        }
-        if (this.state.messageQueue.length === 0) {
+        if (this.state.isPaused || this.state.messageQueue.length === 0) {
           this.state.displayTimer = setTimeout(loop, this.config.baseInterval);
           return;
         }
@@ -1870,14 +1678,8 @@
 
         let nextDelay = this.config.baseInterval;
         const queueSize = this.state.messageQueue.length;
-
-        if (queueSize > 15) {
-          nextDelay = this.config.fastInterval;
-        } else if (queueSize > 5) {
-          nextDelay = this.config.normalInterval;
-        } else {
-          nextDelay = this.config.baseInterval;
-        }
+        if (queueSize > 15) nextDelay = this.config.fastInterval;
+        else if (queueSize > 5) nextDelay = this.config.normalInterval;
 
         this.state.displayTimer = setTimeout(loop, nextDelay);
       };
@@ -1907,24 +1709,21 @@
         ];
         item.style.color = colors[Math.floor(Math.random() * colors.length)];
       }
-
       this.state.overlay.appendChild(item);
 
       const lh = this.config.fontSize + 10;
-      const maxLanes = Math.floor((rect.height / lh) * 0.85);
-      const lane = Math.floor(Math.random() * Math.max(1, maxLanes));
-
+      const lane = Math.floor(
+        Math.random() * Math.max(1, Math.floor((rect.height / lh) * 0.85)),
+      );
       item.style.top = lane * lh + "px";
 
-      const anim = item.animate(
+      item.animate(
         [
           { transform: `translateX(${rect.width}px)` },
           { transform: `translateX(-100%) translateX(-${item.offsetWidth}px)` },
         ],
         { duration: this.config.speed * 1000, easing: "linear" },
-      );
-
-      anim.onfinish = () => item.remove();
+      ).onfinish = () => item.remove();
     },
   };
 
@@ -1939,13 +1738,11 @@
 
   async function processDanmaku() {
     injectDanmakuStyles();
-    if (await isDanmakuEnabled()) {
-      DanmakuEngine.start();
-    } else {
-      DanmakuEngine.stop();
-    }
+    if (await isDanmakuEnabled()) DanmakuEngine.start();
+    else DanmakuEngine.stop();
   }
 
+  // Active Users
   let activeUsers = new Map();
   let messageCount = 0;
   let activeObserver = null;
@@ -1954,16 +1751,21 @@
   let isOverlayVisible = false;
   let statsInterval = null;
   let lastUrlPath = location.pathname;
+  let lastUIUserCount = -1;
+  let lastUIMsgCount = -1;
 
   const ICON_USER = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
   const ICON_CHAT = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>`;
-  const ICON_GROUP = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`;
 
   function updateStatsUI() {
     if (!isActiveEnabled) return;
     const target = document.querySelector('[data-testid="viewer-count"]');
     const parent = target?.parentElement;
     if (!parent) return;
+
+    if (activeUsers.size === lastUIUserCount && messageCount === lastUIMsgCount)
+      return;
+
     if (!activeUIElement || !document.body.contains(activeUIElement)) {
       activeUIElement = document.createElement("div");
       activeUIElement.className = "flex items-center gap-2 text-sm font-bold";
@@ -1971,8 +1773,12 @@
       activeUIElement.innerHTML = `<div class="flex items-center gap-1 text-primary-base">${ICON_USER}<span class="uk-u">0</span></div><div class="flex items-center gap-1 text-white">${ICON_CHAT}<span class="uk-m">0</span></div>`;
       parent.appendChild(activeUIElement);
     }
-    activeUIElement.querySelector(".uk-u").textContent = activeUsers.size;
-    activeUIElement.querySelector(".uk-m").textContent = messageCount;
+
+    lastUIUserCount = activeUsers.size;
+    lastUIMsgCount = messageCount;
+
+    activeUIElement.querySelector(".uk-u").textContent = lastUIUserCount;
+    activeUIElement.querySelector(".uk-m").textContent = lastUIMsgCount;
   }
 
   function resetActiveStats() {
@@ -1980,9 +1786,50 @@
     activeObserver = null;
     activeUsers.clear();
     messageCount = 0;
+    lastUIUserCount = -1;
+    lastUIMsgCount = -1;
     closeOverlay();
     if (activeUIElement) activeUIElement.remove();
     activeUIElement = null;
+  }
+
+  function processActiveChatNodes(nodes) {
+    for (const node of nodes) {
+      if (
+        node.nodeType !== 1 ||
+        !node.hasAttribute ||
+        !node.hasAttribute("data-index")
+      )
+        continue;
+      const btn = node.querySelector("button[data-prevent-expand]");
+      if (!btn) continue;
+
+      const username = btn.textContent.trim();
+      if (!username) continue;
+
+      const color = btn.style.color || "rgb(255, 255, 255)";
+      let role = "viewer";
+
+      if (node.querySelector('g[clip-path="url(#clip0_614_6275)"]'))
+        role = "verified";
+      else if (node.querySelector('g[clip-path="url(#clip0_817_50667)"]'))
+        role = "mod";
+
+      const existingData = activeUsers.get(username);
+      if (existingData) {
+        const p = { verified: 3, mod: 2, viewer: 1 };
+        const newRole =
+          p[role] > p[existingData.role] ? role : existingData.role;
+        activeUsers.set(username, {
+          time: Date.now(),
+          role: newRole,
+          color: existingData.color || color,
+        });
+      } else {
+        activeUsers.set(username, { time: Date.now(), role, color });
+      }
+      messageCount++;
+    }
   }
 
   function startActiveObserver() {
@@ -1991,52 +1838,25 @@
     const container = document.querySelector("#chatroom-messages");
     if (!container) return;
 
+    let pendingNodes = [];
+    let rafId = null;
+    const flushNodes = () => {
+      rafId = null;
+      if (pendingNodes.length === 0) return;
+      processActiveChatNodes(pendingNodes);
+      pendingNodes = [];
+    };
+
     activeObserver = new MutationObserver((mutations) => {
       for (const m of mutations) {
         if (m.type !== "childList") continue;
-        for (const node of m.addedNodes) {
-          if (
-            node.nodeType !== 1 ||
-            !node.hasAttribute ||
-            !node.hasAttribute("data-index")
-          )
-            continue;
-          const btn = node.querySelector("button[data-prevent-expand]");
-          if (!btn) continue;
-
-          const username = btn.textContent.trim();
-          if (!username) continue;
-
-          const color = btn.style.color || "rgb(255, 255, 255)";
-          let role = "viewer";
-
-          if (node.querySelector('g[clip-path="url(#clip0_614_6275)"]'))
-            role = "verified";
-          else if (node.querySelector('g[clip-path="url(#clip0_817_50667)"]'))
-            role = "mod";
-
-          const existingData = activeUsers.get(username);
-          if (existingData) {
-            const p = { verified: 3, mod: 2, viewer: 1 };
-            const newRole =
-              p[role] > p[existingData.role] ? role : existingData.role;
-            activeUsers.set(username, {
-              time: Date.now(),
-              role: newRole,
-              color: existingData.color || color,
-            });
-          } else {
-            activeUsers.set(username, { time: Date.now(), role, color });
-          }
-          messageCount++;
-        }
+        for (const node of m.addedNodes) pendingNodes.push(node);
       }
+      if (pendingNodes.length > 0 && rafId === null)
+        rafId = requestAnimationFrame(flushNodes);
     });
-    activeObserver.observe(container, {
-      childList: true,
-      subtree: true,
-      characterData: true,
-    });
+
+    activeObserver.observe(container, { childList: true, subtree: true });
   }
 
   function toggleActiveStats(status) {
@@ -2046,10 +1866,6 @@
       if (!statsInterval) {
         statsInterval = setInterval(() => {
           if (!isActiveEnabled) return;
-          const now = Date.now();
-          activeUsers.forEach((data, user) => {
-            if (now - data.time > 1800000) activeUsers.delete(user);
-          });
           const currentPath = location.pathname;
           const isChannelPage = /^\/\w+$/.test(currentPath);
           if (currentPath !== lastUrlPath) {
@@ -2060,6 +1876,12 @@
             if (container && (!activeObserver || !document.contains(container)))
               startActiveObserver();
           }
+
+          const now = Date.now();
+          activeUsers.forEach((data, user) => {
+            if (now - data.time > 1800000) activeUsers.delete(user);
+          });
+
           updateStatsUI();
         }, 1000);
       }
@@ -2071,11 +1893,14 @@
   }
 
   function closeOverlay() {
-    const existing = document.getElementById("active-users-overlay");
+    const existing = document.getElementById("ukick-active-users-overlay");
     if (existing) existing.remove();
     isOverlayVisible = false;
     const btn = document.getElementById("active-users-toggle-btn");
-    if (btn) updateActiveBtnStyle(btn, false);
+    if (btn) {
+      btn.style.color = "inherit";
+      btn.style.opacity = "0.7";
+    }
   }
 
   function buildOverlay() {
@@ -2083,7 +1908,7 @@
       const style = document.createElement("style");
       style.id = "ukick-au-styles";
       style.textContent = `
-        #active-users-overlay { position: absolute; inset: 0; background: rgba(25,27,31,.98); z-index: 9999 !important; overflow-y: auto; font-size: 13px; color: #F4F5F6; display: flex; flex-direction: column; }
+        #ukick-active-users-overlay { position: absolute; inset: 0; background: rgba(25,27,31,.98); z-index: 2147483647 !important; overflow-y: auto; font-size: 13px; color: #F4F5F6; display: flex; flex-direction: column; pointer-events: auto !important; }
         .au-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid #24272c; position: sticky; top: 0; background: rgba(25,27,31,.98); z-index: 10; }
         .au-header b { font-size: 15px; }
         .au-close-btn { background: none; border: none; color: #A8ADB3; cursor: pointer; font-size: 18px; }
@@ -2098,13 +1923,27 @@
       document.head.appendChild(style);
     }
 
-    const chatArea = document.querySelector(
+    let chatArea = document.querySelector(
       "#channel-chatroom > .relative.flex.flex-1.flex-col",
     );
+
+    if (!chatArea) {
+      chatArea =
+        document.querySelector("#chatroom-messages")?.parentElement
+          ?.parentElement;
+    }
+    if (!chatArea) {
+      chatArea = document.getElementById("channel-chatroom");
+    }
+
     if (!chatArea) return;
 
+    if (getComputedStyle(chatArea).position === "static") {
+      chatArea.style.position = "relative";
+    }
+
     const overlay = document.createElement("div");
-    overlay.id = "active-users-overlay";
+    overlay.id = "ukick-active-users-overlay";
 
     const sorted = [...activeUsers.entries()].sort((a, b) =>
       a[0].toLowerCase().localeCompare(b[0].toLowerCase()),
@@ -2137,9 +1976,7 @@
         <b>${usersLabel} (${activeUsers.size})</b>
         <button class="au-close-btn" id="close-users-overlay">✕</button>
       </div>
-      <div class="au-search-wrap">
-        <input type="text" id="active-users-search" class="au-search-input" placeholder="...">
-      </div>
+      <div class="au-search-wrap"><input type="text" id="active-users-search" class="au-search-input" placeholder="Search..."></div>
       <div class="au-list">
         ${renderCategory("VERIFIED", verified)}
         ${renderCategory("MODERATORS", mods)}
@@ -2173,60 +2010,28 @@
     });
   }
 
-  function updateActiveBtnStyle(btn, isVisible) {
-    btn.style.color = isVisible ? "#53fc18" : "inherit";
-    btn.style.opacity = isVisible ? "1" : "0.7";
-  }
-
   function updateOverlayUI() {
-    if (isOverlayVisible) {
-      buildOverlay();
-    } else {
-      closeOverlay();
-    }
+    if (isOverlayVisible) buildOverlay();
+    else closeOverlay();
   }
 
   function initDynamicChatWidth() {
     const STORAGE_KEY = "kcw_custom_width";
-
     if (!document.getElementById("kcw-style")) {
       const style = document.createElement("style");
       style.id = "kcw-style";
       style.textContent = `
-            #kcw-line {
-                position: absolute; left: 0; top: 0; bottom: 0; width: 16px;
-                background: transparent; cursor: ew-resize; z-index: 99999;
-                border-left: 2px solid #24272c; transition: border-color 0.2s;
-            }
-            #kcw-line:hover, #kcw-line.active { border-left-color: #3f4349; }
-            #kcw-panel {
-                position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
-                background: rgba(10, 10, 10, 0.95); border: 1px solid rgba(60, 63, 68, 0.8);
-                border-radius: 8px; padding: 6px; display: none; flex-direction: column;
-                align-items: center; gap: 6px; z-index: 99999;
-            }
-            #kcw-panel.active { display: flex; }
-            #kcw-val {
-                color: rgba(255, 255, 255, 0.9); text-align: center; font-size: 11px;
-                font-family: system-ui, sans-serif; user-select: none;
-                background: rgba(255, 255, 255, 0.15); padding: 3px 8px; border-radius: 4px;
-            }
-            #kcw-panel button {
-                border: none; border-radius: 50%; width: 28px; height: 28px;
-                display: flex; align-items: center; justify-content: center;
-                cursor: pointer; transition: background 0.2s, transform 0.1s;
-            }
-            #kcw-panel button:active { transform: scale(0.9); }
-            #kcw-ok { background: rgba(74, 222, 128, 0.15); }
-            #kcw-ok:hover { background: rgba(74, 222, 128, 0.35); }
-            #kcw-ok svg { color: #4ade80; }
-            #kcw-cancel { background: rgba(248, 113, 113, 0.15); }
-            #kcw-cancel:hover { background: rgba(248, 113, 113, 0.35); }
-            #kcw-cancel svg { color: #f87171; }
-            #kcw-reset { background: rgba(161, 161, 170, 0.15); }
-            #kcw-reset:hover { background: rgba(161, 161, 170, 0.35); }
-            #kcw-reset svg { color: #a1a1aa; }
-        `;
+        #kcw-line { position: absolute; left: 0; top: 0; bottom: 0; width: 16px; background: transparent; cursor: ew-resize; z-index: 99999; border-left: 2px solid #24272c; transition: border-color 0.2s; }
+        #kcw-line:hover, #kcw-line.active { border-left-color: #3f4349; }
+        #kcw-panel { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); background: rgba(10, 10, 10, 0.95); border: 1px solid rgba(60, 63, 68, 0.8); border-radius: 8px; padding: 6px; display: none; flex-direction: column; align-items: center; gap: 6px; z-index: 99999; }
+        #kcw-panel.active { display: flex; }
+        #kcw-val { color: rgba(255, 255, 255, 0.9); text-align: center; font-size: 11px; font-family: system-ui, sans-serif; user-select: none; background: rgba(255, 255, 255, 0.15); padding: 3px 8px; border-radius: 4px; }
+        #kcw-panel button { border: none; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s, transform 0.1s; }
+        #kcw-panel button:active { transform: scale(0.9); }
+        #kcw-ok { background: rgba(74, 222, 128, 0.15); } #kcw-ok:hover { background: rgba(74, 222, 128, 0.35); } #kcw-ok svg { color: #4ade80; }
+        #kcw-cancel { background: rgba(248, 113, 113, 0.15); } #kcw-cancel:hover { background: rgba(248, 113, 113, 0.35); } #kcw-cancel svg { color: #f87171; }
+        #kcw-reset { background: rgba(161, 161, 170, 0.15); } #kcw-reset:hover { background: rgba(161, 161, 170, 0.35); } #kcw-reset svg { color: #a1a1aa; }
+      `;
       document.head.appendChild(style);
     }
 
@@ -2242,10 +2047,8 @@
     function setupChat(chat) {
       chat.dataset.kcw = "1";
       chat.style.position = "relative";
-
       const savedWidth = localStorage.getItem(STORAGE_KEY);
       if (savedWidth) chat.style.setProperty("--chat-width", savedWidth);
-
       createDragUI(chat);
     }
 
@@ -2254,23 +2057,22 @@
         startX = 0,
         startW = 0,
         prevW = 0;
-
       chat.insertAdjacentHTML(
         "beforeend",
         `
-            <div id="kcw-line"></div>
-            <div id="kcw-panel">
-                <div id="kcw-val"></div>
-                <button id="kcw-ok"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
-                <button id="kcw-cancel"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
-                <button id="kcw-reset"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg></button>
-            </div>
-        `,
+        <div id="kcw-line"></div>
+        <div id="kcw-panel">
+          <div id="kcw-val"></div>
+          <button id="kcw-ok"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
+          <button id="kcw-cancel"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+          <button id="kcw-reset"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg></button>
+        </div>
+      `,
       );
 
-      const line = document.getElementById("kcw-line");
-      const panel = document.getElementById("kcw-panel");
-      const valDisplay = document.getElementById("kcw-val");
+      const line = document.getElementById("kcw-line"),
+        panel = document.getElementById("kcw-panel"),
+        valDisplay = document.getElementById("kcw-val");
 
       const updateDisplay = (w) => (valDisplay.textContent = `${w}px`);
 
@@ -2284,8 +2086,10 @@
       };
 
       const onMouseMove = (e) => {
-        let newWidth = startW + (startX - e.clientX);
-        newWidth = Math.max(250, Math.min(newWidth, window.innerWidth - 100));
+        let newWidth = Math.max(
+          250,
+          Math.min(startW + (startX - e.clientX), window.innerWidth - 100),
+        );
         chat.style.setProperty("--chat-width", `${newWidth}px`);
         updateDisplay(newWidth);
       };
@@ -2295,16 +2099,13 @@
         isDragging = true;
         line.classList.add("active");
         panel.classList.add("active");
-
         startW =
           parseInt(getComputedStyle(chat).getPropertyValue("--chat-width")) ||
           chat.offsetWidth;
         prevW = startW;
         startX = e.clientX;
-
         chat.style.setProperty("transition", "none");
         updateDisplay(startW);
-
         document.addEventListener("mousemove", onMouseMove);
         document.addEventListener("mouseup", stopDrag);
       });
@@ -2318,13 +2119,11 @@
         );
         panel.classList.remove("active");
       });
-
       document.getElementById("kcw-cancel").addEventListener("click", () => {
         chat.style.setProperty("--chat-width", `${prevW}px`);
         updateDisplay(prevW);
         panel.classList.remove("active");
       });
-
       document.getElementById("kcw-reset").addEventListener("click", () => {
         localStorage.removeItem(STORAGE_KEY);
         chat.style.removeProperty("--chat-width");
@@ -2334,23 +2133,17 @@
   }
 
   function initKeyboardVolumeControl() {
-    let activeVideo = null;
-    let volDisplay = null;
-    let fadeTimer = null;
-    let isRunning = false;
+    let activeVideo = null,
+      volDisplay = null,
+      fadeTimer = null,
+      isRunning = false;
 
     if (!document.getElementById("kv-style")) {
       const style = document.createElement("style");
       style.id = "kv-style";
       style.textContent = `
-            .kv-vol-overlay {
-                position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-                background: rgba(0, 0, 0, 0.7); color: #fff; padding: 10px 20px;
-                border-radius: 8px; font-size: 24px; font-weight: bold;
-                font-family: sans-serif; pointer-events: none; z-index: 9999;
-                opacity: 0; transition: opacity 0.2s ease-in-out;
-            }
-        `;
+        .kv-vol-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 0, 0, 0.7); color: #fff; padding: 10px 20px; border-radius: 8px; font-size: 24px; font-weight: bold; font-family: sans-serif; pointer-events: none; z-index: 9999; opacity: 0; transition: opacity 0.2s ease-in-out; }
+      `;
       document.head.appendChild(style);
     }
 
@@ -2375,11 +2168,10 @@
 
     function updateSlider() {
       if (!activeVideo) return;
-      const slider = document.querySelector('[aria-label="Volume"]');
-      const track = document.querySelector(
-        '[data-orientation="horizontal"].bg-white',
-      );
-
+      const slider = document.querySelector('[aria-label="Volume"]'),
+        track = document.querySelector(
+          '[data-orientation="horizontal"].bg-white',
+        );
       if (slider && track) {
         const pct = activeVideo.volume * 100;
         slider.parentNode.style.left = pct + "%";
@@ -2394,8 +2186,8 @@
         if (!activeVideo) return;
       }
 
-      const tag = document.activeElement.tagName.toLowerCase();
-      const editable = document.activeElement.isContentEditable;
+      const tag = document.activeElement.tagName.toLowerCase(),
+        editable = document.activeElement.isContentEditable;
       const isRange =
         tag === "input" && document.activeElement.type === "range";
 
@@ -2448,9 +2240,9 @@
     cyan: { bg: "#06b6d4", text: "#ffffff" },
   };
 
-  let paletteStyleTag = null;
-  let paletteObserver = null;
-  let isPaletteRunning = false;
+  let paletteStyleTag = null,
+    paletteObserver = null,
+    isPaletteRunning = false;
 
   function hexToHsl(hex) {
     let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -2487,35 +2279,34 @@
   function getLogoFilter(targetHex) {
     const target = hexToHsl(targetHex);
     if (target.s < 15) return `grayscale(1) brightness(${target.l / 50})`;
-    const sourceHue = 101;
-    return `hue-rotate(${target.h - sourceHue}deg) saturate(${target.s / 98}) brightness(${target.l / 54})`;
+    return `hue-rotate(${target.h - 101}deg) saturate(${target.s / 98}) brightness(${target.l / 54})`;
   }
 
   function applyPaletteTheme(bgColor, textColor) {
     removePaletteTheme();
     if (!bgColor || !textColor) return;
-
     const filter = getLogoFilter(bgColor);
     paletteStyleTag = document.createElement("style");
     paletteStyleTag.id = "kick-palette-style";
-
     paletteStyleTag.textContent = `
-          .text-primary-base, .text-green-500 { color: ${bgColor} !important; }
-          .bg-primary-base, .bg-green-500 { background-color: ${bgColor} !important; }
-          .border-green-500 { border-color: ${bgColor} !important; }
-          [fill="url(#paint0_linear_614_6275)"] { fill: ${bgColor} !important; }
-          .text-primary-onPrimary { color: ${textColor} !important; }
-          img[src*="kick-logo.svg"] { filter: ${filter} !important; }
-      `;
+      .text-primary-base, .text-green-500 { color: ${bgColor} !important; }
+      .bg-primary-base, .bg-green-500 { background-color: ${bgColor} !important; }
+      .border-green-500 { border-color: ${bgColor} !important; }
+      [fill="url(#paint0_linear_614_6275)"] { fill: ${bgColor} !important; }
+      .text-primary-onPrimary { color: ${textColor} !important; }
+      img[src*="kick-logo.svg"] { filter: ${filter} !important; }
+    `;
     document.head.appendChild(paletteStyleTag);
 
     paletteObserver = new MutationObserver((mutations) => {
       for (const m of mutations) {
         for (const node of m.addedNodes) {
-          if (node.nodeType !== 1) continue;
-          if (node.tagName === "IMG" && node.src.includes("kick-logo.svg")) {
+          if (
+            node.nodeType === 1 &&
+            node.tagName === "IMG" &&
+            node.src.includes("kick-logo.svg")
+          )
             node.style.filter = filter;
-          }
         }
       }
     });
@@ -2536,7 +2327,6 @@
   window.startWebsitePalette = async function () {
     if (isPaletteRunning) return;
     isPaletteRunning = true;
-
     const { themePalette = "original" } =
       await chrome.storage.local.get("themePalette");
     const colors = themepalettes[themePalette] || themepalettes.original;
@@ -2556,77 +2346,58 @@
       timer = setTimeout(() => fn(), delay);
     };
   }
-  // ==== Chrome Extension ====
 
   (async () => {
     if (typeof chrome === "undefined" || !chrome.storage) return;
 
     async function isEnabled() {
-      return new Promise((resolve) => {
-        chrome.storage.local.get("enabled", (result) => {
-          resolve(result.enabled ?? true);
-        });
-      });
+      return new Promise((resolve) =>
+        chrome.storage.local.get("enabled", (result) =>
+          resolve(result.enabled ?? true),
+        ),
+      );
     }
-
     function isSearchHistoryDisabled() {
-      return new Promise((resolve) => {
-        chrome.storage.local.get("disableSearchHistory", (res) => {
-          resolve(res.disableSearchHistory === true);
-        });
-      });
+      return new Promise((resolve) =>
+        chrome.storage.local.get("disableSearchHistory", (res) =>
+          resolve(res.disableSearchHistory === true),
+        ),
+      );
     }
-
     function isActiveUsersDisabled() {
-      return new Promise((resolve) => {
-        chrome.storage.local.get("disableActiveUsers", (res) => {
-          resolve(res.disableActiveUsers === true);
-        });
-      });
+      return new Promise((resolve) =>
+        chrome.storage.local.get("disableActiveUsers", (res) =>
+          resolve(res.disableActiveUsers === true),
+        ),
+      );
     }
-
     function isKeyboardVolumeEnabled() {
-      return new Promise((resolve) => {
-        chrome.storage.local.get("enableKeyboardVolume", (res) => {
-          resolve(res.enableKeyboardVolume === true);
-        });
-      });
+      return new Promise((resolve) =>
+        chrome.storage.local.get("enableKeyboardVolume", (res) =>
+          resolve(res.enableKeyboardVolume === true),
+        ),
+      );
     }
-
     function isWebsitePaletteDisabled() {
-      return new Promise((resolve) => {
-        chrome.storage.local.get("disableWebsitePalette", (res) => {
-          resolve(res.disableWebsitePalette === true);
-        });
-      });
+      return new Promise((resolve) =>
+        chrome.storage.local.get("disableWebsitePalette", (res) =>
+          resolve(res.disableWebsitePalette === true),
+        ),
+      );
     }
 
     let enabled = await isEnabled();
 
-    const disableSearchHistory = await isSearchHistoryDisabled();
-    if (disableSearchHistory) {
-      clearSearchHistory();
-    }
-
-    const disableActiveUsers = await isActiveUsersDisabled();
-    toggleActiveStats(!disableActiveUsers);
-
-    const keyboardVolumeEnabled = await isKeyboardVolumeEnabled();
-    if (keyboardVolumeEnabled) {
-      startKeyboardVolume();
-    }
-
-    const disableWebsitePalette = await isWebsitePaletteDisabled();
-    if (!disableWebsitePalette) {
-      startWebsitePalette();
-    }
+    if (await isSearchHistoryDisabled()) clearSearchHistory();
+    toggleActiveStats(!(await isActiveUsersDisabled()));
+    if (await isKeyboardVolumeEnabled()) startKeyboardVolume();
+    if (!(await isWebsitePaletteDisabled())) startWebsitePalette();
 
     let observer = null;
 
     async function startUIFeatures() {
       processChatLayout();
       initDynamicChatWidth();
-
       try {
         await processDanmaku();
       } catch {}
@@ -2634,7 +2405,6 @@
 
     async function startFilteringFeatures() {
       if (!(await isEnabled())) return;
-
       setupAudioContext();
       await processCards();
       await processSidebarChannels();
@@ -2646,31 +2416,17 @@
       await addBlockButtonOnChannelPage();
       await observeBlockedChatMessages();
       await observeChatUsernames();
-
-      if (await isSearchHistoryDisabled()) {
-        clearSearchHistory();
-      }
+      if (await isSearchHistoryDisabled()) clearSearchHistory();
     }
 
     function restoreHiddenElements() {
-      document.querySelectorAll(".group\\/card").forEach((card) => {
-        card.style.display = "";
-      });
-
       document
-        .querySelectorAll('[data-testid^="sidebar-recommended-channel-"]')
-        .forEach((item) => {
-          item.style.display = "";
-        });
-
-      document
-        .querySelectorAll("div.flex.w-full.shrink-0.grow-0.flex-col")
-        .forEach((item) => {
-          item.style.display = "";
-        });
-
-      const videoPlayer = document.getElementById("video-player");
-      if (videoPlayer) videoPlayer.style.display = "";
+        .querySelectorAll(
+          ".group\\/card, [data-testid^='sidebar-recommended-channel-'], div.flex.w-full.shrink-0.grow-0.flex-col",
+        )
+        .forEach((item) => (item.style.display = ""));
+      const vp = document.getElementById("video-player");
+      if (vp) vp.style.display = "";
     }
 
     function startObserver() {
@@ -2686,96 +2442,59 @@
 
     startObserver();
     await startUIFeatures();
-
-    if (enabled) {
-      await startFilteringFeatures();
-    }
-
+    if (enabled) await startFilteringFeatures();
     enableAudioContextOnUserGesture();
 
     chrome.storage.onChanged.addListener((changes, areaName) => {
-      if (areaName === "local") {
-        if ("enabled" in changes) {
-          const newValue = changes.enabled.newValue;
-          if (newValue) {
-            startFilteringFeatures();
-          } else {
-            restoreHiddenElements();
+      if (areaName !== "local") return;
+      if ("enabled" in changes) {
+        if (changes.enabled.newValue) startFilteringFeatures();
+        else restoreHiddenElements();
+      }
+      if ("volumeBoost" in changes)
+        setVolumeBoost(
+          isNaN(Number(changes.volumeBoost.newValue))
+            ? 1
+            : Number(changes.volumeBoost.newValue),
+        );
+      if (
+        "disableSearchHistory" in changes &&
+        changes.disableSearchHistory.newValue === true
+      )
+        clearSearchHistory();
+      if ("enableDanmaku" in changes) {
+        if (changes.enableDanmaku.newValue) processDanmaku();
+        else DanmakuEngine.stop();
+      }
+      if ("disableActiveUsers" in changes)
+        toggleActiveStats(!changes.disableActiveUsers.newValue);
+      if ("enableChatBlocking" in changes) {
+        if (changes.enableChatBlocking.newValue) {
+          observeBlockedChatMessages();
+          observeChatUsernames();
+        } else {
+          window.chatBlockObserver?.disconnect();
+          window.chatUsernameObserver?.disconnect();
+        }
+      }
+      if ("enableKeyboardVolume" in changes) {
+        if (changes.enableKeyboardVolume.newValue) startKeyboardVolume();
+        else stopKeyboardVolume();
+      }
+      if ("disableWebsitePalette" in changes) {
+        if (changes.disableWebsitePalette.newValue) stopWebsitePalette();
+        else startWebsitePalette();
+      }
+      if ("themePalette" in changes) {
+        chrome.storage.local.get("disableWebsitePalette", (res) => {
+          if (!(res.disableWebsitePalette ?? true)) {
+            const colors =
+              themepalettes[changes.themePalette.newValue || "original"] ||
+              themepalettes.original;
+            applyPaletteTheme(colors.bg, colors.text);
+            isPaletteRunning = true;
           }
-        }
-
-        if ("volumeBoost" in changes) {
-          let rawValue = changes.volumeBoost.newValue;
-          let parsed =
-            typeof rawValue === "string"
-              ? parseFloat(rawValue)
-              : Number(rawValue);
-          const newBoost = isNaN(parsed) ? 1 : parsed;
-          setVolumeBoost(newBoost);
-        }
-
-        if ("disableSearchHistory" in changes) {
-          if (changes.disableSearchHistory.newValue === true) {
-            clearSearchHistory();
-          }
-        }
-
-        if ("enableDanmaku" in changes) {
-          if (changes.enableDanmaku.newValue === true) {
-            processDanmaku();
-          } else {
-            DanmakuEngine.stop();
-          }
-        }
-
-        if ("disableActiveUsers" in changes) {
-          const isDisabled = changes.disableActiveUsers.newValue;
-          toggleActiveStats(!isDisabled);
-        }
-
-        if ("enableChatBlocking" in changes) {
-          const isEnabled = changes.enableChatBlocking.newValue;
-          if (isEnabled) {
-            observeBlockedChatMessages();
-            observeChatUsernames();
-          } else {
-            if (window.chatBlockObserver) window.chatBlockObserver.disconnect();
-            if (window.chatUsernameObserver)
-              window.chatUsernameObserver.disconnect();
-          }
-        }
-
-        if ("enableKeyboardVolume" in changes) {
-          const isEnabled = changes.enableKeyboardVolume.newValue;
-          if (isEnabled) {
-            startKeyboardVolume();
-          } else {
-            stopKeyboardVolume();
-          }
-        }
-
-        if ("disableWebsitePalette" in changes) {
-          const isDisabled = changes.disableWebsitePalette.newValue;
-          if (isDisabled) {
-            stopWebsitePalette();
-          } else {
-            startWebsitePalette();
-          }
-        }
-
-        if ("themePalette" in changes) {
-          chrome.storage.local.get("disableWebsitePalette", (res) => {
-            const isDisabled = res.disableWebsitePalette ?? true;
-            if (!isDisabled) {
-              const newTheme = changes.themePalette.newValue || "original";
-              const colors = themepalettes[newTheme] || themepalettes.original;
-
-              applyPaletteTheme(colors.bg, colors.text);
-
-              if (!isPaletteRunning) isPaletteRunning = true;
-            }
-          });
-        }
+        });
       }
     });
   })();
