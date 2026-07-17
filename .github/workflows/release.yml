@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - '*.*.*.*'
+      - "*.*.*.*"
 
 jobs:
   release:
@@ -19,10 +19,14 @@ jobs:
         run: echo "VERSION=${GITHUB_REF_NAME//./-}" >> $GITHUB_OUTPUT
 
       - name: Package Chromium
-        run: zip -r ukick-chromium-${{ steps.version.outputs.VERSION }}.zip chromium/*
+        run: |
+          cd chromium
+          zip -r ../ukick-chromium-${{ steps.version.outputs.VERSION }}.zip .
 
       - name: Package Firefox
-        run: zip -r ukick-firefox-${{ steps.version.outputs.VERSION }}.zip firefox/*
+        run: |
+          cd firefox
+          zip -r ../ukick-firefox-${{ steps.version.outputs.VERSION }}.zip .
 
       - name: Publish Release
         uses: softprops/action-gh-release@v2
