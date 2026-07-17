@@ -32,7 +32,7 @@ Block channels, categories, and tags, filter toxic chat messages, and enhance yo
 - **Multi-language:** Supports Arabic (ar), Czech (cs), German (de), English (en), Spanish (es), Finnish (fi), French (fr), Hebrew (he), Indonesian (id), Italian (it), Japanese (ja), Korean (ko), Polish (pl), Portuguese (pt_BR, pt_PT), Russian (ru), Turkish (tr), Vietnamese (vi), and Chinese Simplified (zh_CN).
 - **Customizable Interface:** Toggle chat filtering, block buttons, and other features as needed.
 - **OpenLapis Integration:** Send blocklists and data to SolidWriting and SolidSheets via native messaging.
-- **Local & Private:** Runs locally on Kick domains; no tracking, servers, or ads. 
+- **Local & Private:** Runs locally on Kick domains; no tracking, servers, or ads.
 
 ## Disclaimer
 
