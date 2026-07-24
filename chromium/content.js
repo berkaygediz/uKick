@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uKick - Everything for Kick
 // @namespace    https://github.com/berkaygediz/uKick
-// @version      2.7.0.0
+// @version      2.7.0.6
 // @description  All-in-one Kick tool to block channels, categories, tags & chat. Sync remote lists. Boost volume, set quality, danmaku & themes.
 // @author       berkaygediz
 // @match        https://kick.com/*
@@ -13,6 +13,70 @@
 
 (function () {
   "use strict";
+
+  function injectButtonStyles() {
+    if (!document.getElementById("ukick-btn-styles")) {
+      const style = document.createElement("style");
+      style.id = "ukick-btn-styles";
+      style.textContent = `
+        .ukick-x-btn {
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          background: rgba(0, 0, 0, 0.6);
+          color: rgba(255, 255, 255, 0.7);
+          display: flex; align-items: center; justify-content: center;
+          cursor: pointer; padding: 0; line-height: 1; flex-shrink: 0;
+          transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+        }
+        .ukick-x-btn:hover {
+          background: rgba(255, 80, 80, 0.4) !important;
+          border-color: rgba(255, 80, 80, 0.6) !important;
+          color: #ffffff !important;
+        }
+        .ukick-btn-thumb {
+          position: absolute; top: 6px; right: 6px;
+          width: 24px; height: 24px; font-size: 12px; border-radius: 9999px;
+          z-index: 9999;
+          background: rgba(25, 12, 12, 0.85);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          color: rgba(255, 255, 255, 0.9);
+        }
+        .ukick-btn-cat {
+          position: absolute; top: 6px; right: 6px;
+          width: 20px; height: 20px; font-size: 10px; border-radius: 9999px;
+          z-index: 200;
+        }
+        .ukick-btn-tag {
+          width: 16px; height: 16px; font-size: 9px; border-radius: 9999px;
+          margin-left: 4px; vertical-align: middle; display: inline-flex;
+        }
+        .ukick-btn-follow {
+          margin-left: 8px;
+          width: 24px; height: 24px; font-size: 12px; border-radius: 9999px;
+          vertical-align: middle;
+        }
+        .ukick-btn-chat {
+          margin-left: 6px;
+          width: 16px; height: 16px; font-size: 9px; border-radius: 9999px;
+          vertical-align: middle;
+        }
+        .ukick-btn-channel {
+          margin-left: 8px;
+          width: 24px; height: 24px; font-size: 12px; border-radius: 9999px;
+          vertical-align: middle;
+        }
+        .ukick-btn-sidebar {
+          position: absolute; top: 10px; right: 4px;
+          width: 25px; height: 25px; font-size: 14px; border-radius: 9999px;
+          display: none; z-index: 99999; 
+          background: rgba(120, 20, 20, 0.85);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          color: #ffffff;
+        }
+      `;
+      document.head.appendChild(style);
+    }
+  }
+  injectButtonStyles();
 
   function normalizeData(str) {
     return str?.toLowerCase().trim() || "";
@@ -173,6 +237,10 @@
     if (disableBlockButtons) return;
 
     document.querySelectorAll("div.mt-2.flex").forEach((container) => {
+      container.style.maxHeight = "none";
+      container.style.overflow = "visible";
+      container.style.rowGap = "4px";
+
       container.querySelectorAll("button, a").forEach((tagEl) => {
         if (
           tagEl.classList.contains("tag-block-btn") ||
@@ -198,12 +266,8 @@
         const xBtn = document.createElement("span");
         xBtn.textContent = "✖";
         xBtn.title = "Block tag: " + rawText;
-        xBtn.className = "tag-block-btn";
-        xBtn.style.cssText = `
-          margin-left: 4px; background: rgba(0, 0, 0, 0.7); color: white; border: none;
-          border-radius: 50%; width: 16px; height: 16px; font-size: 12px; cursor: pointer;
-          display: inline-flex; align-items: center; justify-content: center; padding: 0; flex-shrink: 0; line-height: 1;
-        `;
+        xBtn.className = "ukick-x-btn ukick-btn-tag tag-block-btn";
+
         xBtn.addEventListener("click", async (e) => {
           e.stopPropagation();
           e.preventDefault();
@@ -269,11 +333,8 @@
         chrome.i18n.getMessage("btn_block_category") +
         ": " +
         nameEl.textContent;
-      btn.className = "category-block-btn";
-      btn.style.cssText = `
-        position: absolute; top: 6px; right: 6px; background: rgba(0, 0, 0, 0.7); color: white;
-        border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 14px; cursor: pointer; z-index: 200;
-      `;
+      btn.className = "ukick-x-btn ukick-btn-cat category-block-btn";
+
       btn.addEventListener("click", async (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -432,19 +493,7 @@
     btn.id = "channelPageBlockBtn";
     btn.textContent = "✕";
     btn.title = chrome.i18n.getMessage("btn_block_channel");
-    Object.assign(btn.style, {
-      marginLeft: "8px",
-      color: "white",
-      backgroundColor: "#962424",
-      border: "none",
-      borderRadius: "4px",
-      cursor: "pointer",
-      fontSize: "16px",
-      padding: "3px 5px",
-      userSelect: "none",
-      verticalAlign: "middle",
-      lineHeight: "1",
-    });
+    btn.className = "ukick-x-btn ukick-btn-channel";
 
     btn.addEventListener("click", async (e) => {
       e.preventDefault();
@@ -592,12 +641,8 @@
 
         const btn = document.createElement("button");
         btn.textContent = "✕";
-        btn.className = "sidebar-block-btn";
+        btn.className = "ukick-x-btn ukick-btn-sidebar sidebar-block-btn";
         btn.title = chrome.i18n.getMessage("btn_block_channel");
-        btn.style.cssText = `
-        position: absolute; top: 10px; right: 4px; background: #ac2c2cc2; color: white; border: none;
-        border-radius: 25%; width: 25px; height: 25px; font-size: 14px; display: none; cursor: pointer; z-index: 9999;
-      `;
 
         btn.addEventListener("click", async (e) => {
           e.preventDefault();
@@ -609,7 +654,7 @@
 
         anchor.style.position = "relative";
         anchor.addEventListener("mouseenter", () => {
-          btn.style.display = "block";
+          btn.style.display = "flex";
         });
         anchor.addEventListener("mouseleave", () => {
           btn.style.display = "none";
@@ -793,21 +838,8 @@
           btn.title = chrome.i18n
             ? chrome.i18n.getMessage("btn_block_channel")
             : "Block";
-          btn.className = "username-block-btn";
+          btn.className = "ukick-x-btn ukick-btn-chat username-block-btn";
           btn.dataset.username = usernameChatter;
-
-          Object.assign(btn.style, {
-            marginLeft: "6px",
-            backgroundColor: "#6b1919",
-            color: "white",
-            border: "none",
-            borderRadius: "3px",
-            cursor: "pointer",
-            fontSize: "10px",
-            padding: "0 4px",
-            userSelect: "none",
-            verticalAlign: "middle",
-          });
 
           btn.addEventListener("click", async (e) => {
             e.preventDefault();
@@ -860,17 +892,7 @@
     const btn = document.createElement("button");
     btn.textContent = "✕";
     btn.title = chrome.i18n.getMessage("btn_block_channel");
-    Object.assign(btn.style, {
-      marginLeft: "8px",
-      color: "white",
-      backgroundColor: "#bd2c2c",
-      border: "none",
-      borderRadius: "4px",
-      cursor: "pointer",
-      fontSize: "12px",
-      padding: "2px 6px",
-      userSelect: "none",
-    });
+    btn.className = "ukick-x-btn ukick-btn-follow";
 
     btn.addEventListener("click", async (e) => {
       e.stopPropagation();
@@ -888,10 +910,8 @@
     const btn = document.createElement("button");
     btn.textContent = "✕";
     btn.title = chrome.i18n.getMessage("btn_block_channel");
-    btn.style.cssText = `
-      position: absolute; top: 6px; right: 6px; background: rgba(255, 0, 0, 0.4); color: white;
-      border: none; border-radius: 25%; width: 24px; height: 24px; font-size: 14px; cursor: pointer; z-index: 9999;
-    `;
+    btn.className = "ukick-x-btn ukick-btn-thumb";
+
     btn.addEventListener("click", async (e) => {
       e.stopPropagation();
       e.preventDefault();
@@ -1976,7 +1996,7 @@
         <b>${usersLabel} (${activeUsers.size})</b>
         <button class="au-close-btn" id="close-users-overlay">✕</button>
       </div>
-      <div class="au-search-wrap"><input type="text" id="active-users-search" class="au-search-input" placeholder="Search..."></div>
+      <div class="au-search-wrap"><input type="text" id="active-users-search" class="au-search-input" placeholder="..."></div>
       <div class="au-list">
         ${renderCategory("VERIFIED", verified)}
         ${renderCategory("MODERATORS", mods)}
