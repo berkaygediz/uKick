@@ -1241,7 +1241,10 @@
   function clearSearchHistory() {
     try {
       const key = "search-history";
-      if (!location.hostname.includes("kick.com")) return;
+      const hostname = location.hostname;
+
+      if (hostname !== "kick.com" && !hostname.endsWith(".kick.com")) return;
+
       const current = localStorage.getItem(key);
       if (current && current !== "[]") localStorage.setItem(key, "[]");
     } catch (e) {}

@@ -137,13 +137,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     await chrome.storage.local.set({ volumeBoost: boostAmount });
   });
 
-  function notifyContentScript(message) {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const tab = tabs[0];
-      if (tab?.id && tab.url?.includes("kick.com")) {
-        chrome.tabs.sendMessage(tab.id, message);
-      }
+  async function notifyContentScript(message) {
+    const tabs = await browser.tabs.query({
+      active: true,
+      currentWindow: true,
     });
+    const tab = tabs[0];
+    if (tab?.id && tab.url) {
+      try {
+        const hostname = new URL(tab.url).hostname;
+        if (hostname === "kick.com" || hostname.endsWith(".kick.com")) {
+          browser.tabs.sendMessage(tab.id, message);
+        }
+      } catch (e) {}
+    }
   }
 
   const promo = document.getElementById("bgEcosystemPromo");
