@@ -270,5 +270,11 @@
     },
     "overlay_users": {
         "message": "Uživatelé"
+    },
+    "options_hover_block_buttons": {
+        "message": "Tlačítka při najetí myší"
+    },
+    "platform_redirect_label": {
+        "message": "Režim TV"
     }
 }

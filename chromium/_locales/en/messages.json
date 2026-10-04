@@ -97,6 +97,29 @@
     "options_enable_keyboard_volume": {
         "message": "Enable Keyboard Volume Control"
     },
+    "platform_redirect_label": {
+        "message": "TV Mode"
+    },
+    "platform_web": {
+        "message": "Web (kick.com)"
+    },
+    "platform_webos": {
+        "message": "webOS (webos.kick.com)"
+    },
+    "platform_tizen": {
+        "message": "Tizen (tizen.kick.com)"
+    },
+    "btn_unblock_channel": {
+        "message": "Unblock channel"
+    },
+    "alert_channel_unblocked": {
+        "message": "$CHANNEL$ unblocked!",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
     "options_suggestions": {
         "message": "SUGGESTIONS:"
     },
@@ -270,5 +293,8 @@
     },
     "overlay_users": {
         "message": "Users"
+    },
+    "options_hover_block_buttons": {
+        "message": "Buttons on Hover"
     }
 }

@@ -270,5 +270,11 @@
     },
     "overlay_users": {
         "message": "Pengguna"
+    },
+    "options_hover_block_buttons": {
+        "message": "Tombol saat kursor melayang"
+    },
+    "platform_redirect_label": {
+        "message": "Mode TV"
     }
 }

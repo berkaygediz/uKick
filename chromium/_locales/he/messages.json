@@ -270,5 +270,11 @@
     },
     "overlay_users": {
         "message": "משתמשים"
+    },
+    "options_hover_block_buttons": {
+        "message": "כפתורים בעת ריחוף"
+    },
+    "platform_redirect_label": {
+        "message": "מצב TV"
     }
 }

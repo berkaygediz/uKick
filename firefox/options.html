@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>uKick</title>
     <style>
       body {
@@ -53,13 +54,15 @@
       .btn-group {
         display: flex;
         flex-wrap: wrap;
-        gap: 8px;
+        gap: 10px;
+        margin-top: 10px;
         margin-bottom: 10px;
       }
 
       button {
         background: #00b660;
-        color: white;
+        color: #000;
+        font-weight: bold;
         border: none;
         border-radius: 4px;
         cursor: pointer;
@@ -76,17 +79,21 @@
 
       .delete-btn {
         flex: 0 0 auto;
+        min-width: auto;
         width: 26px;
         height: 26px;
         padding: 0;
-        font-size: 18px;
-        line-height: 26px;
-        text-align: center;
-        border-radius: 4px;
+        border-radius: 6px;
         background-color: #d9534f;
-        color: white;
+        color: #ffffff;
         border: none;
         cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        line-height: 1;
+        font-weight: bold;
       }
 
       input[type="text"] {
@@ -112,7 +119,8 @@
       }
 
       li {
-        background: #2a2a2a;
+        background: #333;
+        border: 1px solid #3f3f3f;
         padding: 6px 10px;
         margin: 6px 0;
         border-radius: 4px;
@@ -127,6 +135,7 @@
         display: inline-block;
         width: 46px;
         height: 24px;
+        flex-shrink: 0;
       }
 
       .switch input {
@@ -165,21 +174,92 @@
         background-color: #000;
       }
 
+      .sub-list {
+        background: #2a2a2a;
+        border: 1px solid #333;
+        border-radius: 6px;
+        padding: 12px 14px;
+        margin-top: 10px;
+      }
+
+      .sub-list-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .sub-list-head h3 {
+        margin: 0;
+        color: #b2ff59;
+        font-size: 16px;
+      }
+
+      .sub-list-head button {
+        flex: 0 0 auto;
+        min-width: auto;
+        padding: 6px 16px;
+      }
+
       .suggestions-container {
         margin-top: 10px;
         display: none;
+        background: #2a2a2a;
+        padding: 12px;
+        border-radius: 6px;
+        border: 1px solid #444;
       }
       .suggestions-container .btn-group {
         margin-bottom: 0;
       }
 
       .suggestion-btn {
-        background: #444;
+        background: #3a3a3a;
+        color: #ffffff;
+        border: 1px solid #666;
         font-size: 12px;
         flex: 0 1 auto;
+        min-width: auto;
       }
+
       .suggestion-btn:hover {
-        background: #666;
+        background: #5a5a5a;
+        border-color: #888;
+      }
+
+      .eco-showcase {
+        margin: 4px 0;
+        padding: 0 5px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .eco-headline {
+        font-size: 16px;
+        color: #eaeaea;
+      }
+
+      .eco-headline a {
+        color: #eaeaea;
+        text-decoration: none;
+      }
+
+      .eco-headline a:hover {
+        color: #ffffff;
+        text-decoration: underline;
+      }
+
+      .eco-headline i {
+        font-size: 13px;
+      }
+
+      .eco-scroller {
+        display: flex;
+        gap: 12px;
+        overflow-x: auto;
+        padding: 6px 2px 12px 2px;
+        scroll-snap-type: x mandatory;
       }
 
       .eco-card {
@@ -217,41 +297,6 @@
         line-height: 1.35;
       }
 
-      .donate-button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        border-radius: 6px;
-        text-decoration: none;
-        transition:
-          background 0.3s ease,
-          transform 0.2s ease;
-        cursor: pointer;
-      }
-
-      .donate-button svg {
-        width: 20px;
-        height: 20px;
-        fill: currentColor;
-      }
-
-      .donate-button.bmc {
-        background-color: #ffdd00;
-        color: #000;
-      }
-
-      .donate-button.github {
-        background-color: #24292e;
-        color: #fff;
-      }
-
-      .donate-button:hover {
-        opacity: 0.9;
-        transform: scale(1.05);
-      }
-
       .section-header {
         display: flex;
         justify-content: space-between;
@@ -259,76 +304,70 @@
         margin-bottom: 10px;
       }
 
+      .setting-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        background: #2a2a2a;
+        padding: 12px 14px;
+        border-radius: 6px;
+        margin-top: 10px;
+      }
+
+      .setting-label {
+        font-size: 14px;
+        font-weight: bold;
+        user-select: none;
+        min-width: 0;
+      }
+
+      .setting-row select {
+        flex: 1;
+        min-width: 150px;
+        max-width: 180px;
+        padding: 8px;
+        background: #333;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+
       .theme-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        padding: 6px 2px 12px 2px;
+        scroll-snap-type: x mandatory;
         margin-top: 5px;
       }
 
       .theme-option {
-        padding: 8px 10px;
-        min-height: 40px;
+        flex: 0 0 auto;
+        width: 46px;
+        height: 46px;
+        scroll-snap-align: start;
         border-radius: 8px;
         cursor: pointer;
-        text-align: center;
-        font-weight: bold;
-        font-size: 14px;
         border: 3px solid transparent;
         transition: all 0.2s ease;
         user-select: none;
-        position: relative;
       }
 
       .theme-option:hover {
-        transform: scale(1.05);
+        transform: scale(1.08);
       }
 
       .theme-option.active {
         border-color: #ffffff;
-        box-shadow: 0 0 12px rgba(255, 255, 255, 0.2);
       }
 
       .theme-option.disabled {
         opacity: 0.3;
         cursor: not-allowed;
         transform: none !important;
-      }
-
-      .suggestions-container {
-        margin-top: 10px;
-        display: none;
-        background: #2a2a2a;
-        padding: 12px;
-        border-radius: 6px;
-        border: 1px solid #444;
-      }
-
-      .suggestion-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        gap: 10px;
-      }
-
-      .suggestion-info {
-        font-size: 13px;
-        color: #ddd;
-        flex-grow: 1;
-        min-width: 0;
-      }
-
-      .add-all-btn {
-        background: #00b660;
-        color: white;
-        flex: 0 0 auto;
-        font-size: 13px;
-        font-weight: bold;
-        padding: 6px 12px;
-      }
-      .add-all-btn:hover {
-        background: #009e4c;
       }
 
       .sub-info {
@@ -507,14 +546,24 @@
         display: none;
         padding: 0 12px 12px 12px;
       }
+
+      .int-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 10px;
+      }
       .int-item {
         display: flex;
-        align-items: center;
+        flex-direction: column;
+        gap: 8px;
         background: #1a1a1a;
-        padding: 10px 12px;
-        border-radius: 6px;
-        gap: 12px;
-        margin-top: 8px;
+        padding: 12px;
+        border-radius: 8px;
+      }
+      .int-item-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
       }
       .int-logo {
         width: 36px;
@@ -535,7 +584,7 @@
         overflow: hidden;
       }
       .int-title {
-        font-size: 13px;
+        font-size: 14px;
         font-weight: bold;
         color: #eaeaea;
         user-select: none;
@@ -543,33 +592,51 @@
         overflow: hidden;
         text-overflow: ellipsis;
       }
-      .int-btn {
-        background: #00b660;
-        color: black;
-        padding: 7px 14px;
-        border: none;
-        border-radius: 5px;
-        font-size: 12px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.2s;
-        flex-shrink: 0;
-        min-width: 90px;
-        text-align: center;
-      }
-      .int-btn:hover {
-        background: #009e4c;
-      }
       .int-action-select {
+        width: 100%;
+        box-sizing: border-box;
         background: #333;
         color: #fff;
         border: 1px solid #444;
         border-radius: 5px;
-        padding: 6px 8px;
+        padding: 8px;
         font-size: 12px;
         cursor: pointer;
-        flex-shrink: 0;
       }
+      .int-btn {
+        width: 100%;
+        box-sizing: border-box;
+        background: #00b660;
+        color: #000;
+        padding: 9px 14px;
+        border: none;
+        border-radius: 5px;
+        font-size: 13px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .int-btn:hover {
+        background: #009e4c;
+      }
+
+      .ol-status-dot {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #f1c40f;
+        margin-left: 8px;
+        vertical-align: middle;
+        transition: background 0.3s;
+      }
+      .ol-status-dot.online {
+        background: #00b660;
+      }
+      .ol-status-dot.offline {
+        background: #d9534f;
+      }
+
       .int-config-box {
         background: #1a1a1a;
         border: 1px solid #333;
@@ -606,16 +673,13 @@
       }
       .int-config-section li {
         background: none;
+        border: none;
+        border-radius: 0;
+        display: list-item;
         padding: 0;
         margin: 0;
         font-size: 12px;
         color: #aaa;
-      }
-      .int-config-section p {
-        font-size: 12px;
-        color: #aaa;
-        margin: 0;
-        line-height: 1.4;
       }
 
       .section-content-disabled {
@@ -625,7 +689,56 @@
         filter: blur(0.5px);
       }
 
-      @media (max-width: 480px) {
+      .platform-content {
+        margin-top: 10px;
+      }
+      .platform-content select {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px 14px;
+        background: #1a1a1a;
+        color: white;
+        border: 1px solid #333;
+        border-radius: 6px;
+        font-size: 14px;
+      }
+
+      .footer {
+        display: flex;
+        justify-content: center;
+        padding: 4px 0;
+      }
+
+      .footer a {
+        color: #888;
+        text-decoration: none;
+      }
+      .footer a:hover {
+        color: #ffffff;
+      }
+
+      .footer .donate-text {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 16px;
+        border-radius: 6px;
+        background-color: #ffdd00;
+        color: #000;
+        font-weight: bold;
+        font-size: 13px;
+        text-decoration: none;
+        transition:
+          opacity 0.2s ease,
+          transform 0.2s ease;
+      }
+      .footer .donate-text:hover {
+        opacity: 0.9;
+        transform: scale(1.03);
+        color: #000;
+      }
+
+      @media (max-width: 520px) {
         body {
           padding: 10px;
         }
@@ -641,6 +754,24 @@
           flex: none;
           width: 100%;
           min-width: auto;
+        }
+
+        .sub-list-head {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 10px;
+        }
+
+        .setting-row {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 6px;
+        }
+        .setting-row select {
+          max-width: none;
+          width: 100%;
         }
 
         .sub-input-row {
@@ -673,18 +804,6 @@
           width: 100%;
           min-width: auto;
         }
-
-        .int-item {
-          flex-wrap: wrap;
-        }
-        .int-action-select {
-          flex: 1 1 auto;
-          min-width: 120px;
-        }
-        .int-btn {
-          min-width: 70px;
-          padding: 7px 10px;
-        }
       }
     </style>
   </head>
@@ -695,99 +814,81 @@
     </h1>
 
     <div class="container">
-      <div class="section" id="channelsSection">
-        <h2 id="channelTitle">Blocked Channels</h2>
-        <button id="showChannelsBtn">
-          <b style="color: #000">Show</b>
-        </button>
-        <div class="btn-group" style="display: none" id="channelsControls">
-          <button id="exportChannelsBtn">
-            <b style="color: #000">Export</b>
-          </button>
-          <button id="importChannelsBtn">
-            <b style="color: #000">Import</b>
-          </button>
-          <button id="clearChannelsBtn">
-            <b style="color: #000">Clear All</b>
-          </button>
-          <button id="refreshChannelsBtn">
-            <b style="color: #000">Refresh</b>
-          </button>
+      <div class="section" id="filteringSection">
+        <div class="section-header">
+          <h2 style="margin: 0" id="options_master">Filtering</h2>
+          <label class="switch">
+            <input type="checkbox" id="enableMasterToggle" />
+            <span class="slider"></span>
+          </label>
         </div>
-        <input
-          type="text"
-          id="channelInput"
-          placeholder="..."
-          style="display: none"
-        />
-        <button id="addChannelBtn" style="display: none">
-          <b style="color: #000">Add Channel</b>
-        </button>
-        <ul id="channelList" style="display: none"></ul>
-      </div>
 
-      <div class="section" id="categoriesSection">
-        <h2 id="categoryTitle">Blocked Categories</h2>
-        <button id="showCategoriesBtn">
-          <b style="color: #000">Show</b>
-        </button>
-        <div class="btn-group" style="display: none" id="categoriesControls">
-          <button id="exportCategoriesBtn">
-            <b style="color: #000">Export</b>
-          </button>
-          <button id="importCategoriesBtn">
-            <b style="color: #000">Import</b>
-          </button>
-          <button id="clearCategoriesBtn">
-            <b style="color: #000">Clear All</b>
-          </button>
-          <button id="refreshCategoriesBtn">
-            <b style="color: #000">Refresh</b>
-          </button>
+        <div class="sub-list" id="channelsSection">
+          <div class="sub-list-head">
+            <h3 id="channelTitle">Blocked Channels</h3>
+            <button id="showChannelsBtn">Show</button>
+          </div>
+          <div class="btn-group" style="display: none" id="channelsControls">
+            <button id="exportChannelsBtn">Export</button>
+            <button id="importChannelsBtn">Import</button>
+            <button id="clearChannelsBtn">Clear All</button>
+            <button id="refreshChannelsBtn">Refresh</button>
+          </div>
+          <input
+            type="text"
+            id="channelInput"
+            placeholder="..."
+            style="display: none"
+          />
+          <button id="addChannelBtn" style="display: none">Add Channel</button>
+          <ul id="channelList" style="display: none"></ul>
         </div>
-        <input
-          type="text"
-          id="categoryInput"
-          placeholder="..."
-          style="display: none"
-        />
-        <button id="addCategoryBtn" style="display: none">
-          <b style="color: #000">Add Category</b>
-        </button>
-        <ul id="categoryList" style="display: none"></ul>
-        <div id="categorySuggestions" class="suggestions-container"></div>
-      </div>
 
-      <div class="section" id="tagsSection">
-        <h2 id="tagTitle">Blocked Tags</h2>
-        <button id="showTagsBtn">
-          <b style="color: #000">Show</b>
-        </button>
-        <div class="btn-group" style="display: none" id="tagsControls">
-          <button id="exportTagsBtn">
-            <b style="color: #000">Export</b>
+        <div class="sub-list" id="categoriesSection">
+          <div class="sub-list-head">
+            <h3 id="categoryTitle">Blocked Categories</h3>
+            <button id="showCategoriesBtn">Show</button>
+          </div>
+          <div class="btn-group" style="display: none" id="categoriesControls">
+            <button id="exportCategoriesBtn">Export</button>
+            <button id="importCategoriesBtn">Import</button>
+            <button id="clearCategoriesBtn">Clear All</button>
+            <button id="refreshCategoriesBtn">Refresh</button>
+          </div>
+          <input
+            type="text"
+            id="categoryInput"
+            placeholder="..."
+            style="display: none"
+          />
+          <button id="addCategoryBtn" style="display: none">
+            Add Category
           </button>
-          <button id="importTagsBtn">
-            <b style="color: #000">Import</b>
-          </button>
-          <button id="clearTagsBtn">
-            <b style="color: #000">Clear All</b>
-          </button>
-          <button id="refreshTagsBtn">
-            <b style="color: #000">Refresh</b>
-          </button>
+          <ul id="categoryList" style="display: none"></ul>
+          <div id="categorySuggestions" class="suggestions-container"></div>
         </div>
-        <input
-          type="text"
-          id="tagInput"
-          placeholder="..."
-          style="display: none"
-        />
-        <button id="addTagBtn" style="display: none">
-          <b style="color: #000">Add Tag</b>
-        </button>
-        <ul id="tagList" style="display: none"></ul>
-        <div id="tagSuggestions" class="suggestions-container"></div>
+
+        <div class="sub-list" id="tagsSection">
+          <div class="sub-list-head">
+            <h3 id="tagTitle">Blocked Tags</h3>
+            <button id="showTagsBtn">Show</button>
+          </div>
+          <div class="btn-group" style="display: none" id="tagsControls">
+            <button id="exportTagsBtn">Export</button>
+            <button id="importTagsBtn">Import</button>
+            <button id="clearTagsBtn">Clear All</button>
+            <button id="refreshTagsBtn">Refresh</button>
+          </div>
+          <input
+            type="text"
+            id="tagInput"
+            placeholder="..."
+            style="display: none"
+          />
+          <button id="addTagBtn" style="display: none">Add Tag</button>
+          <ul id="tagList" style="display: none"></ul>
+          <div id="tagSuggestions" class="suggestions-container"></div>
+        </div>
       </div>
 
       <div class="section" id="themesSection">
@@ -802,168 +903,217 @@
           <div
             class="theme-option"
             data-theme="original"
-            style="background: #53fc18; color: #000"
+            style="background: #53fc18"
           ></div>
           <div
             class="theme-option"
             data-theme="purple"
-            style="background: #9333ea; color: #fff"
+            style="background: #9333ea"
           ></div>
           <div
             class="theme-option"
             data-theme="red"
-            style="background: #ef4444; color: #fff"
+            style="background: #ef4444"
           ></div>
           <div
             class="theme-option"
             data-theme="blue"
-            style="background: #3b82f6; color: #fff"
+            style="background: #3b82f6"
           ></div>
           <div
             class="theme-option"
             data-theme="orange"
-            style="background: #f97316; color: #000"
+            style="background: #f97316"
           ></div>
           <div
             class="theme-option"
             data-theme="cyan"
-            style="background: #06b6d4; color: #fff"
+            style="background: #06b6d4"
+          ></div>
+          <div
+            class="theme-option"
+            data-theme="pink"
+            style="background: #ec4899"
+          ></div>
+          <div
+            class="theme-option"
+            data-theme="yellow"
+            style="background: #eab308"
+          ></div>
+          <div
+            class="theme-option"
+            data-theme="white"
+            style="background: #f5f5f5"
+          ></div>
+          <div
+            class="theme-option"
+            data-theme="magenta"
+            style="background: #d946ef"
+          ></div>
+          <div
+            class="theme-option"
+            data-theme="teal"
+            style="background: #14b8a6"
+          ></div>
+          <div
+            class="theme-option"
+            data-theme="indigo"
+            style="background: #6366f1"
+          ></div>
+          <div
+            class="theme-option"
+            data-theme="lime"
+            style="background: #a3e635"
+          ></div>
+          <div
+            class="theme-option"
+            data-theme="sky"
+            style="background: #38bdf8"
+          ></div>
+          <div
+            class="theme-option"
+            data-theme="coral"
+            style="background: #fb7185"
           ></div>
         </div>
       </div>
 
+      <div class="section" id="playerSection">
+        <div class="section-header">
+          <h2 style="margin: 0" id="adaptiveStreamTitle">Adaptive Stream</h2>
+          <label class="switch">
+            <input type="checkbox" id="autoQualityToggle" />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <span class="setting-label" id="qualityLabel">Quality</span>
+          <select id="qualitySelect">
+            <option value="0">Auto</option>
+            <option value="2160">2160p (!)</option>
+            <option value="1440">1440p (!)</option>
+            <option value="1080">1080p (?)</option>
+            <option value="720">720p</option>
+            <option value="480">480p</option>
+            <option value="360">360p</option>
+            <option value="160">160p</option>
+          </select>
+        </div>
+
+        <div class="setting-row">
+          <span class="setting-label" id="volumeBoostLabel">Volume Boost</span>
+          <select id="volumeBoostSelect">
+            <option value="1">1x</option>
+            <option value="2">2x</option>
+            <option value="3">3x</option>
+            <option value="4">4x</option>
+            <option value="5">5x</option>
+            <option value="6">6x</option>
+            <option value="7">7x</option>
+            <option value="8">8x</option>
+            <option value="9">9x</option>
+            <option value="10">10x</option>
+          </select>
+        </div>
+      </div>
+
       <div class="section" id="customizationSection">
-        <h2 id="customizationTitle"></h2>
+        <h2 id="customizationTitle">Customization</h2>
 
-        <div
-          style="
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #2a2a2a;
-            padding: 12px 14px;
-            border-radius: 6px;
-            margin-top: 10px;
-          "
-        >
-          <div style="font-size: 14px; user-select: none; font-weight: bold">
-            <span id="disableSearchHistoryLabel"></span>
-          </div>
-
+        <div class="setting-row">
+          <span class="setting-label" id="disableSearchHistoryLabel"
+            >Hide Search History</span
+          >
           <label class="switch">
             <input type="checkbox" id="disableSearchHistoryToggle" />
             <span class="slider"></span>
           </label>
         </div>
 
-        <div
-          style="
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #2a2a2a;
-            padding: 12px 14px;
-            border-radius: 6px;
-            margin-top: 10px;
-          "
-        >
-          <div style="font-size: 14px; user-select: none; font-weight: bold">
-            <span id="enableChatBlockingLabel"></span>
-          </div>
-
+        <div class="setting-row">
+          <span class="setting-label" id="enableChatBlockingLabel"
+            >Chat Blocking</span
+          >
           <label class="switch">
             <input type="checkbox" id="enableChatBlockingToggle" />
             <span class="slider"></span>
           </label>
         </div>
 
-        <div
-          style="
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #2a2a2a;
-            padding: 12px 14px;
-            border-radius: 6px;
-            margin-top: 10px;
-          "
-        >
-          <div style="font-size: 14px; user-select: none; font-weight: bold">
-            <span id="disableBlockButtonsLabel"></span>
-          </div>
-
+        <div class="setting-row">
+          <span class="setting-label" id="disableBlockButtonsLabel"
+            >Hide Block Buttons</span
+          >
           <label class="switch">
             <input type="checkbox" id="disableBlockButtonsToggle" />
             <span class="slider"></span>
           </label>
         </div>
 
-        <div
-          style="
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #2a2a2a;
-            padding: 12px 14px;
-            border-radius: 6px;
-            margin-top: 10px;
-          "
-        >
-          <div style="font-size: 14px; user-select: none; font-weight: bold">
-            <span id="enableDanmakuLabel"></span>
-          </div>
+        <div class="setting-row">
+          <span class="setting-label" id="hoverBlockButtonsLabel"
+            >Buttons on Hover</span
+          >
+          <label class="switch">
+            <input type="checkbox" id="hoverBlockButtonsToggle" />
+            <span class="slider"></span>
+          </label>
+        </div>
 
+        <div class="setting-row">
+          <span class="setting-label" id="enableDanmakuLabel">Danmaku</span>
           <label class="switch">
             <input type="checkbox" id="enableDanmakuToggle" />
             <span class="slider"></span>
           </label>
         </div>
-        <div
-          style="
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #2a2a2a;
-            padding: 12px 14px;
-            border-radius: 6px;
-            margin-top: 10px;
-          "
-        >
-          <div style="font-size: 14px; user-select: none; font-weight: bold">
-            <span id="disableActiveUsersLabel"></span>
-          </div>
 
+        <div class="setting-row">
+          <span class="setting-label" id="disableActiveUsersLabel"
+            >Hide Active Users</span
+          >
           <label class="switch">
             <input type="checkbox" id="disableActiveUsersToggle" />
             <span class="slider"></span>
           </label>
         </div>
 
-        <div
-          style="
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #2a2a2a;
-            padding: 12px 14px;
-            border-radius: 6px;
-            margin-top: 10px;
-          "
-        >
-          <div style="font-size: 14px; user-select: none; font-weight: bold">
-            <span id="enableKeyboardVolumeLabel"></span>
-          </div>
-
+        <div class="setting-row">
+          <span class="setting-label" id="enableKeyboardVolumeLabel"
+            >Keyboard Volume</span
+          >
           <label class="switch">
             <input type="checkbox" id="enableKeyboardVolumeToggle" />
             <span class="slider"></span>
           </label>
         </div>
+
+        <div class="setting-row">
+          <span class="setting-label" data-i18n="platform_redirect_label"
+            >TV Mode</span
+          >
+          <label class="switch">
+            <input type="checkbox" id="enablePlatformRedirectToggle" />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div
+          id="platformContent"
+          class="platform-content section-content-disabled"
+        >
+          <select id="platformPreferenceSelect">
+            <option value="web">Web (kick.com)</option>
+            <option value="webos">webOS (webos.kick.com)</option>
+            <option value="tizen">Tizen (tizen.kick.com)</option>
+          </select>
+        </div>
       </div>
 
       <div class="section" id="subscriptionsSection">
         <div class="section-header">
-          <h2 id="subTitle">Subscriptions</h2>
+          <h2 id="subTitle" style="margin: 0">Subscriptions</h2>
           <label class="switch">
             <input type="checkbox" id="enableSubscriptionsToggle" />
             <span class="slider"></span>
@@ -985,7 +1135,7 @@
               <option value="categories">Categories</option>
               <option value="tags">Tags</option>
             </select>
-            <button id="addSubBtn"><b style="color: #000">Add</b></button>
+            <button id="addSubBtn">Add</button>
           </div>
 
           <ul id="subList" style="margin-top: 10px"></ul>
@@ -1002,9 +1152,7 @@
                 <option value="43200">1 Month</option>
               </select>
             </div>
-            <button id="updateAllBtn">
-              <b style="color: #000000">Update All</b>
-            </button>
+            <button id="updateAllBtn">Update All</button>
           </div>
           <div id="nextSyncInfo" class="next-sync-info"></div>
         </div>
@@ -1026,8 +1174,9 @@
           <div class="int-group">
             <div class="int-group-header">
               <div>
-                <div class="int-group-title" id="int_openlapis_exp">
-                  OpenLapis
+                <div class="int-group-title">
+                  <span id="int_openlapis_exp">OpenLapis</span>
+                  <span id="openlapisStatusBadge" class="ol-status-dot"></span>
                 </div>
               </div>
               <svg class="int-group-arrow" viewBox="0 0 24 24">
@@ -1037,71 +1186,77 @@
               </svg>
             </div>
             <div class="int-group-content">
-              <div class="int-item">
-                <div class="int-logo" style="background: #3f5ebd">SW</div>
-                <div class="int-info">
-                  <div class="int-title">SolidWriting</div>
+              <div class="int-grid">
+                <div class="int-item">
+                  <div class="int-item-head">
+                    <div class="int-logo" style="background: #3f5ebd">SW</div>
+                    <div class="int-info">
+                      <div class="int-title">SolidWriting</div>
+                    </div>
+                  </div>
+                  <select class="int-action-select" id="sw-action-select">
+                    <option
+                      value="documentize"
+                      data-i18n="int_action_documentize"
+                    >
+                      Documentize
+                    </option>
+                    <option
+                      value="send_details"
+                      data-i18n="int_action_send_details"
+                    >
+                      Send Details
+                    </option>
+                    <option
+                      value="summarize_llm"
+                      data-i18n="int_action_summarize_llm"
+                    >
+                      Summarize (LLM)
+                    </option>
+                  </select>
+                  <button
+                    class="int-btn"
+                    data-app="SolidWriting"
+                    data-i18n="int_btn_push"
+                  >
+                    Push
+                  </button>
                 </div>
-                <select class="int-action-select" id="sw-action-select">
-                  <option
-                    value="documentize"
-                    data-i18n="int_action_documentize"
+                <div class="int-item">
+                  <div class="int-item-head">
+                    <div class="int-logo" style="background: #419c62">SS</div>
+                    <div class="int-info">
+                      <div class="int-title">SolidSheets</div>
+                    </div>
+                  </div>
+                  <select class="int-action-select" id="ss-action-select">
+                    <option
+                      value="import_table"
+                      data-i18n="int_action_import_table"
+                    >
+                      Import Table
+                    </option>
+                    <option
+                      value="extract_authors"
+                      data-i18n="int_action_extract_authors"
+                    >
+                      Extract Authors
+                    </option>
+                    <option
+                      value="export_blocked_items"
+                      data-i18n="int_action_export_blocked_items"
+                    >
+                      Export Blocked Items
+                    </option>
+                  </select>
+                  <button
+                    class="int-btn"
+                    data-app="SolidSheets"
+                    data-i18n="int_btn_push"
                   >
-                    Documentize
-                  </option>
-                  <option
-                    value="send_details"
-                    data-i18n="int_action_send_details"
-                  >
-                    Send Details
-                  </option>
-                  <option
-                    value="summarize_llm"
-                    data-i18n="int_action_summarize_llm"
-                  >
-                    Summarize (LLM)
-                  </option>
-                </select>
-                <button
-                  class="int-btn"
-                  data-app="SolidWriting"
-                  data-i18n="int_btn_push"
-                >
-                  Push
-                </button>
-              </div>
-              <div class="int-item">
-                <div class="int-logo" style="background: #419c62">SS</div>
-                <div class="int-info">
-                  <div class="int-title">SolidSheets</div>
+                    Push
+                  </button>
                 </div>
-                <select class="int-action-select" id="ss-action-select">
-                  <option
-                    value="import_table"
-                    data-i18n="int_action_import_table"
-                  >
-                    Import Table
-                  </option>
-                  <option
-                    value="extract_authors"
-                    data-i18n="int_action_extract_authors"
-                  >
-                    Extract Authors
-                  </option>
-                  <option
-                    value="export_blocked_items"
-                    data-i18n="int_action_export_blocked_items"
-                  >
-                    Export Blocked Items
-                  </option>
-                </select>
-                <button
-                  class="int-btn"
-                  data-app="SolidSheets"
-                  data-i18n="int_btn_push"
-                >
-                  Push
-                </button>
               </div>
               <div class="int-config-box">
                 <div class="int-config-title" id="int_config_title">
@@ -1132,32 +1287,14 @@
         </div>
       </div>
 
-      <div
-        id="ecosystemShowcase"
-        style="
-          margin: 4px 0;
-          padding: 0 5px;
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-          font-family: Arial, Helvetica, sans-serif;
-        "
-      >
-        <div style="font-size: 16px; color: #eaeaea">
-          <b>berkaygediz's Ecosystem</b> -
-          <i style="font-size: 13px"
-            >A truly transparent, fully open-source ecosystem.</i
-          >
+      <div class="eco-showcase" id="ecosystemShowcase">
+        <div class="eco-headline">
+          <a href="https://github.com/berkaygediz" target="_blank"
+            ><b>Berkay Gediz</b></a
+          >'s Ecosystem -
+          <i>A truly transparent, fully open-source ecosystem.</i>
         </div>
-        <div
-          style="
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding: 6px 2px 12px 2px;
-            scroll-snap-type: x mandatory;
-          "
-        >
+        <div class="eco-scroller">
           <a
             href="https://github.com/berkaygediz/openlapis-connect"
             target="_blank"
@@ -1165,8 +1302,8 @@
             style="border: 1px solid #40e0d0"
             ><div class="eco-title">OpenLapis Connect</div>
             <div class="eco-desc">
-              Cross-platform data bridge linking browser extensions, desktop &
-              mobile apps.
+              Cross-platform backbone for data exchange between browser
+              extensions, desktop apps, and mobile devices.
             </div></a
           >
           <a
@@ -1176,8 +1313,8 @@
             style="border: 1px solid #3f5ebd"
             ><div class="eco-title">SolidWriting</div>
             <div class="eco-desc">
-              A modern word processor with AI integration, supporting real-time
-              computing and advanced formatting.
+              A modern, dual-mode word processor with integrated AI, supporting
+              real-time computing and advanced formatting.
             </div></a
           >
           <a
@@ -1198,7 +1335,9 @@
             style="border: 1px solid #9e9e24"
             ><div class="eco-title">PASPAS</div>
             <div class="eco-desc">
-              Blazing-fast, all-in-one system optimizer.
+              All-in-one system utility to clean temporary files, review
+              registry entries, uninstall programs, and tweak Windows
+              performance.
             </div></a
           >
           <a
@@ -1208,7 +1347,8 @@
             style="border: 1px solid #1a7e4c"
             ><div class="eco-title">uKick</div>
             <div class="eco-desc">
-              All-in-one extension to block, boost and tweak everything on Kick.
+              All-in-one extension to block, boost, and tweak everything on Kick
+              for a better streaming experience.
             </div></a
           >
           <a
@@ -1218,7 +1358,7 @@
             style="border: 1px solid #c4502a"
             ><div class="eco-title">uDittor</div>
             <div class="eco-desc">
-              All-in-one extension to block and tweak everything on Reddit.
+              Block users &amp; subreddits on Reddit.
             </div></a
           >
           <a
@@ -1228,16 +1368,9 @@
             style="border: 1px solid #d4a90a"
             ><div class="eco-title">uSozluk</div>
             <div class="eco-desc">
-              All-in-one extension to block and tweak everything on Ekşi Sözlük.
+              Block users, topics &amp; entries on Ekşi Sözlük. Features
+              auto-expand, image previews and interface customization.
             </div></a
-          >
-          <a
-            href="https://github.com/berkaygediz/financeMONO"
-            target="_blank"
-            class="eco-card"
-            style="border: 1px solid #9775d1"
-            ><div class="eco-title">financeMONO</div>
-            <div class="eco-desc">Banks, EMI & markets API wrapper.</div></a
           >
           <a
             href="https://github.com/berkaygediz/universal-blocklist"
@@ -1246,7 +1379,8 @@
             style="border: 1px solid #666666"
             ><div class="eco-title">Universal Blocklist</div>
             <div class="eco-desc">
-              Global blocklist for YouTube, Reddit & more.
+              Personal universal blocklist for search results, YouTube, Kick,
+              Twitch, Reddit, and Ekşi Sözlük.
             </div></a
           >
           <a
@@ -1256,8 +1390,8 @@
             style="border: 1px solid #cccccc"
             ><div class="eco-title">LocalModerationMatrix</div>
             <div class="eco-desc">
-              CLI tool for bulk message deletion, media cleanup, and E2EE room
-              moderation in Matrix.
+              CLI moderation tool for bulk message deletion and media cleanup in
+              Matrix rooms.
             </div></a
           >
           <a
@@ -1267,66 +1401,24 @@
             style="border: 1px solid #cccccc"
             ><div class="eco-title">LocalModerationLemmy</div>
             <div class="eco-desc">
-              Full-featured, cross-instance moderation panel for Lemmy
-              communities.
+              Web-based moderation interface for bulk content deletion and
+              community management.
             </div></a
           >
-          <div class="eco-card">
-            <div class="eco-desc">
-              And many more exciting projects in the pipeline!
-            </div>
-          </div>
         </div>
       </div>
 
-      <div style="text-align: center; color: #888; font-size: 14px">
-        Developed by <b>berkaygediz</b>
-      </div>
-      <div
-        style="
-          display: flex;
-          justify-content: center;
-          gap: 10px;
-          margin-top: 0px;
-        "
-      >
+      <div class="footer">
         <a
           href="https://www.buymeacoffee.com/berkaygediz"
           target="_blank"
-          class="donate-button bmc"
+          class="donate-text"
           title="Buy Me a Coffee"
-          ><svg
-            fill="#000000"
-            width="20"
-            height="50"
-            viewBox="0 0 24 24"
-            role="img"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="m20.216 6.415-.132-.666c-.119-.598-.388-1.163-1.001-1.379-.197-.069-.42-.098-.57-.241-.152-.143-.196-.366-.231-.572-.065-.378-.125-.756-.192-1.133-.057-.325-.102-.69-.25-.987-.195-.4-.597-.634-.996-.788a5.723 5.723 0 0 0-.626-.194c-1-.263-2.05-.36-3.077-.416a25.834 25.834 0 0 0-3.7.062c-.915.083-1.88.184-2.75.5-.318.116-.646.256-.888.501-.297.302-.393.77-.177 1.146.154.267.415.456.692.58.36.162.737.284 1.123.366 1.075.238 2.189.331 3.287.37 1.218.05 2.437.01 3.65-.118.299-.033.598-.073.896-.119.352-.054.578-.513.474-.834-.124-.383-.457-.531-.834-.473-.466.074-.96.108-1.382.146-1.177.08-2.358.082-3.536.006a22.228 22.228 0 0 1-1.157-.107c-.086-.01-.18-.025-.258-.036-.243-.036-.484-.08-.724-.13-.111-.027-.111-.185 0-.212h.005c.277-.06.557-.108.838-.147h.002c.131-.009.263-.032.394-.048a25.076 25.076 0 0 1 3.426-.12c.674.019 1.347.067 2.017.144l.228.031c.267.04.533.088.798.145.392.085.895.113 1.07.542.055.137.08.288.111.431l.319 1.484a.237.237 0 0 1-.199.284h-.003c-.037.006-.075.01-.112.015a36.704 36.704 0 0 1-4.743.295 37.059 37.059 0 0 1-4.699-.304c-.14-.017-.293-.042-.417-.06-.326-.048-.649-.108-.973-.161-.393-.065-.768-.032-1.123.161-.29.16-.527.404-.675.701-.154.316-.199.66-.267 1-.069.34-.176.707-.135 1.056.087.753.613 1.365 1.37 1.502a39.69 39.69 0 0 0 11.343.376.483.483 0 0 1 .535.53l-.071.697-1.018 9.907c-.041.41-.047.832-.125 1.237-.122.637-.553 1.028-1.182 1.171-.577.131-1.165.2-1.756.205-.656.004-1.31-.025-1.966-.022-.699.004-1.556-.06-2.095-.58-.475-.458-.54-1.174-.605-1.793l-.731-7.013-.322-3.094c-.037-.351-.286-.695-.678-.678-.336.015-.718.3-.678.679l.228 2.185.949 9.112c.147 1.344 1.174 2.068 2.446 2.272.742.12 1.503.144 2.257.156.966.016 1.942.053 2.892-.122 1.408-.258 2.465-1.198 2.616-2.657.34-3.332.683-6.663 1.024-9.995l.215-2.087a.484.484 0 0 1 .39-.426c.402-.078.787-.212 1.074-.518.455-.488.546-1.124.385-1.766zm-1.478.772c-.145.137-.363.201-.578.233-2.416.359-4.866.54-7.308.46-1.748-.06-3.477-.254-5.207-.498-.17-.024-.353-.055-.47-.18-.22-.236-.111-.71-.054-.995.052-.26.152-.609.463-.646.484-.057 1.046.148 1.526.22.577.088 1.156.159 1.737.212 2.48.226 5.002.19 7.472-.14.45-.06.899-.13 1.345-.21.399-.072.84-.206 1.08.206.166.281.188.657.162.974a.544.544 0 0 1-.169.364zm-6.159 3.9c-.862.37-1.84.788-3.109.788a5.884 5.884 0 0 1-1.569-.217l.877 9.004c.065.78.717 1.38 1.5 1.38 0 0 1.243.065 1.658.065.447 0 1.786-.065 1.786-.065.783 0 1.434-.6 1.499-1.38l.94-9.95a3.996 3.996 0 0 0-1.322-.238c-.826 0-1.491.284-2.26.613z"
-            /></svg
-        ></a>
-        <a
-          href="https://github.com/berkaygediz"
-          target="_blank"
-          class="donate-button github"
-          title="GitHub"
-          style="background-color: #ffffff; color: #000000"
-          ><svg
-            fill="#000000"
-            width="20"
-            height="50"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M10 .5A9.5 9.5 0 0 0 6.837 18.997c.5.092.683-.217.683-.483 0-.237-.008-.866-.013-1.7-2.782.605-3.369-1.34-3.369-1.34-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.607.069-.607 1.004.07 1.532 1.032 1.532 1.032.893 1.53 2.341 1.088 2.91.833.092-.647.35-1.087.636-1.337-2.22-.253-4.555-1.112-4.555-4.946 0-1.092.39-1.987 1.03-2.686-.103-.253-.447-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0 1 10 4.845c.85.004 1.705.115 2.504.337 1.909-1.294 2.748-1.025 2.748-1.025.546 1.377.202 2.394.1 2.647.64.7 1.028 1.594 1.028 2.686 0 3.842-2.339 4.69-4.566 4.938.36.31.682.924.682 1.861 0 1.344-.012 2.425-.012 2.754 0 .269.18.58.688.482A9.5 9.5 0 0 0 10 .5z"
-            ></path></svg
-        ></a>
+          >Buy Me a Coffee</a
+        >
       </div>
     </div>
 
-    <script src="options.js"></script>
+    <script type="module" src="options.js"></script>
   </body>
 </html>

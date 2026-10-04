@@ -270,5 +270,11 @@
     },
     "overlay_users": {
         "message": "Benutzer"
+    },
+    "options_hover_block_buttons": {
+        "message": "Schaltflächen beim Hover"
+    },
+    "platform_redirect_label": {
+        "message": "TV-Modus"
     }
 }

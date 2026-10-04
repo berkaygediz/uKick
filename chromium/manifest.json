@@ -2,7 +2,7 @@
   "name": "__MSG_app_name__",
   "short_name": "uKick",
   "description": "__MSG_app_description__",
-  "version": "2.7.0.7",
+  "version": "3.0.0.0",
   "default_locale": "en",
   "manifest_version": 3,
   "permissions": [
@@ -40,6 +40,22 @@
         "content.js"
       ],
       "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "modules/*.js",
+        "modules/core/*.js",
+        "modules/features/*.js"
+      ],
+      "matches": [
+        "https://kick.com/*",
+        "https://www.kick.com/*",
+        "*://kick.com/*",
+        "*://*.kick.com/*",
+        "*://dashboard.kick.com/*"
+      ]
     }
   ],
   "action": {

@@ -270,5 +270,11 @@
     },
     "overlay_users": {
         "message": "用户"
+    },
+    "options_hover_block_buttons": {
+        "message": "悬停时显示按钮"
+    },
+    "platform_redirect_label": {
+        "message": "TV 模式"
     }
 }

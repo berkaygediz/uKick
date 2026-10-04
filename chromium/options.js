@@ -1,3 +1,8 @@
+import {
+  getOpenLapisStatus,
+  sendToOpenLapis,
+} from "./modules/integrations/openlapisStatus.js";
+
 function normalize(str) {
   return str.trim().toLowerCase();
 }
@@ -7,7 +12,7 @@ function createListItem(name, onRemove) {
   li.textContent = name;
 
   const btn = document.createElement("button");
-  btn.textContent = "X";
+  btn.textContent = "✕";
   btn.className = "delete-btn";
   btn.onclick = () => onRemove(name);
 
@@ -218,7 +223,9 @@ async function importList(storageKey) {
 
       const data = await chrome.storage.local.get([storageKey]);
       const currentList = JSON.parse(data[storageKey] || "[]");
-      const merged = [...new Set([...currentList, ...importedList])];
+      const merged = [
+        ...new Set([...currentList, ...importedList.map(normalize)]),
+      ];
       await chrome.storage.local.set({ [storageKey]: JSON.stringify(merged) });
 
       if (storageKey === "blockedChannels") {
@@ -408,7 +415,7 @@ function renderSubscriptions() {
 
         const badge = document.createElement("span");
         badge.className = "sub-badge";
-        badge.textContent = sub.type; // channels, categories, tags
+        badge.textContent = sub.type;
 
         const actions = document.createElement("div");
         actions.className = "sub-actions";
@@ -518,10 +525,10 @@ function setupSubscriptionEvents() {
 
   updateAllBtn.addEventListener("click", async () => {
     updateAllBtn.disabled = true;
-    updateAllBtn.innerHTML = `<b>${i18n("options_sub_updating")}</b>`;
+    updateAllBtn.textContent = i18n("options_sub_updating");
     chrome.runtime.sendMessage({ action: "syncAll" }, (res) => {
       updateAllBtn.disabled = false;
-      updateAllBtn.innerHTML = `<b style="color: #000000">${i18n("options_sub_update_all")}</b>`;
+      updateAllBtn.textContent = i18n("options_sub_update_all");
       renderSubscriptions();
     });
   });
@@ -535,6 +542,7 @@ function setupIntegrations() {
       const isActive = header.classList.contains("active");
       header.classList.toggle("active", !isActive);
       content.style.display = isActive ? "none" : "block";
+      if (!isActive) refreshOpenLapisStatus();
     });
   });
 
@@ -552,37 +560,39 @@ function setupIntegrations() {
   }
 
   document.querySelectorAll(".int-btn").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
+    btn.addEventListener("click", async (e) => {
       e.stopPropagation();
       const item = btn.closest(".int-item");
       const appName = btn.getAttribute("data-app");
       const action = item.querySelector(".int-action-select")?.value || "test";
       const payload = buildPayload(appName, action);
 
-      const runtime = typeof browser !== "undefined" ? browser : chrome;
       btn.style.background = "#555";
+      const res = await sendToOpenLapis(payload);
 
-      runtime.runtime.sendNativeMessage(
-        "com.openlapis.connect",
-        payload,
-        (response) => {
-          const hasError =
-            runtime.runtime.lastError || response?.status === "error";
+      if (!res.ok) console.error("OpenLapis Error:", res.error);
+      else console.log("OpenLapis:", res.data);
 
-          if (runtime.runtime.lastError) {
-            console.error("OpenLapis Error:", runtime.runtime.lastError);
-          } else {
-            console.log("OpenLapis:", response);
-          }
-
-          btn.style.background = hasError ? "#d9534f" : "#00b660";
-          setTimeout(() => {
-            btn.style.background = "";
-          }, 1500);
-        },
-      );
+      btn.style.background = res.ok ? "#00b660" : "#d9534f";
+      setTimeout(() => {
+        btn.style.background = "";
+      }, 1500);
     });
   });
+}
+
+async function refreshOpenLapisStatus() {
+  const dot = document.getElementById("openlapisStatusBadge");
+  if (!dot) return;
+
+  dot.className = "ol-status-dot";
+  dot.title = "";
+
+  const status = await getOpenLapisStatus();
+  dot.className = "ol-status-dot " + (status.connected ? "online" : "offline");
+  dot.title = status.connected
+    ? "OpenLapis: connected"
+    : "OpenLapis: not connected";
 }
 
 function setupEventListeners() {
@@ -613,6 +623,11 @@ function setupEventListeners() {
     refreshTagsBtn: chrome.i18n.getMessage("options_refresh"),
     addTagBtn: chrome.i18n.getMessage("options_add_tags"),
 
+    options_master: chrome.i18n.getMessage("popup_filtering"),
+    adaptiveStreamTitle: chrome.i18n.getMessage("popup_adaptive_stream"),
+    qualityLabel: chrome.i18n.getMessage("popup_quality"),
+    volumeBoostLabel: chrome.i18n.getMessage("popup_volume_boost"),
+
     customizationTitle: chrome.i18n.getMessage("options_customization"),
     disableSearchHistoryLabel: chrome.i18n.getMessage(
       "options_disable_search_history",
@@ -622,6 +637,9 @@ function setupEventListeners() {
     ),
     disableBlockButtonsLabel: chrome.i18n.getMessage(
       "options_hide_block_buttons",
+    ),
+    hoverBlockButtonsLabel: chrome.i18n.getMessage(
+      "options_hover_block_buttons",
     ),
     enableDanmakuLabel: chrome.i18n.getMessage("options_enable_danmaku_chat"),
     disableActiveUsersLabel: chrome.i18n.getMessage(
@@ -819,6 +837,54 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  const enableMasterToggle = document.getElementById("enableMasterToggle");
+  if (enableMasterToggle) {
+    chrome.storage.local.get(["enabled"], ({ enabled = true }) => {
+      enableMasterToggle.checked = enabled;
+    });
+    enableMasterToggle.addEventListener("change", async () => {
+      await chrome.storage.local.set({
+        enabled: enableMasterToggle.checked,
+      });
+    });
+  }
+
+  const autoQualityToggle = document.getElementById("autoQualityToggle");
+  const qualitySelect = document.getElementById("qualitySelect");
+  const volumeBoostSelect = document.getElementById("volumeBoostSelect");
+
+  if (autoQualityToggle && qualitySelect && volumeBoostSelect) {
+    chrome.storage.local.get(
+      ["autoQuality", "preferredQuality", "volumeBoost"],
+      ({ autoQuality = false, preferredQuality = "1080", volumeBoost = 1 }) => {
+        autoQualityToggle.checked = autoQuality;
+        qualitySelect.value = preferredQuality;
+        qualitySelect.disabled = !autoQuality;
+        volumeBoostSelect.disabled = !autoQuality;
+        volumeBoostSelect.value = String(volumeBoost);
+      },
+    );
+
+    autoQualityToggle.addEventListener("change", async () => {
+      const on = autoQualityToggle.checked;
+      qualitySelect.disabled = !on;
+      volumeBoostSelect.disabled = !on;
+      await chrome.storage.local.set({ autoQuality: on });
+    });
+
+    qualitySelect.addEventListener("change", async () => {
+      await chrome.storage.local.set({
+        preferredQuality: qualitySelect.value,
+      });
+    });
+
+    volumeBoostSelect.addEventListener("change", async () => {
+      await chrome.storage.local.set({
+        volumeBoost: Number(volumeBoostSelect.value),
+      });
+    });
+  }
+
   const disableSearchHistoryToggle = document.getElementById(
     "disableSearchHistoryToggle",
   );
@@ -857,21 +923,21 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  const disableBlockButtonsToggle = document.getElementById(
-    "disableBlockButtonsToggle",
+  const hoverBlockButtonsToggle = document.getElementById(
+    "hoverBlockButtonsToggle",
   );
 
-  if (disableBlockButtonsToggle) {
+  if (hoverBlockButtonsToggle) {
     chrome.storage.local.get(
-      ["disableBlockButtons"],
-      ({ disableBlockButtons = false }) => {
-        disableBlockButtonsToggle.checked = disableBlockButtons;
+      ["blockButtonMode"],
+      ({ blockButtonMode = "static" }) => {
+        hoverBlockButtonsToggle.checked = blockButtonMode === "hover";
       },
     );
 
-    disableBlockButtonsToggle.addEventListener("change", async () => {
+    hoverBlockButtonsToggle.addEventListener("change", async () => {
       await chrome.storage.local.set({
-        disableBlockButtons: disableBlockButtonsToggle.checked,
+        blockButtonMode: hoverBlockButtonsToggle.checked ? "hover" : "static",
       });
     });
   }
@@ -926,6 +992,43 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  const enablePlatformRedirectToggle = document.getElementById(
+    "enablePlatformRedirectToggle",
+  );
+  const platformPreferenceSelect = document.getElementById(
+    "platformPreferenceSelect",
+  );
+
+  if (enablePlatformRedirectToggle && platformPreferenceSelect) {
+    const platformContent = document.getElementById("platformContent");
+
+    chrome.storage.local.get(
+      ["enablePlatformRedirect", "platformPreference"],
+      ({ enablePlatformRedirect = false, platformPreference = "web" }) => {
+        enablePlatformRedirectToggle.checked = enablePlatformRedirect;
+        platformPreferenceSelect.value = platformPreference;
+        platformContent.classList.toggle(
+          "section-content-disabled",
+          !enablePlatformRedirect,
+        );
+        platformPreferenceSelect.disabled = !enablePlatformRedirect;
+      },
+    );
+
+    enablePlatformRedirectToggle.addEventListener("change", async () => {
+      const enabled = enablePlatformRedirectToggle.checked;
+      await chrome.storage.local.set({ enablePlatformRedirect: enabled });
+      platformContent.classList.toggle("section-content-disabled", !enabled);
+      platformPreferenceSelect.disabled = !enabled;
+    });
+
+    platformPreferenceSelect.addEventListener("change", async () => {
+      await chrome.storage.local.set({
+        platformPreference: platformPreferenceSelect.value,
+      });
+    });
+  }
+
   setupFeatureToggle("enableSubscriptionsToggle", "subscriptionsContent", {
     permissions: ["alarms"],
   });
@@ -938,6 +1041,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderSubscriptions();
 
   setupIntegrations();
+  refreshOpenLapisStatus();
 
   chrome.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === "local" && changes.remoteSubscriptions) {

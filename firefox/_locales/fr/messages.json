@@ -270,5 +270,11 @@
     },
     "overlay_users": {
         "message": "Utilisateurs"
+    },
+    "options_hover_block_buttons": {
+        "message": "Boutons au survol"
+    },
+    "platform_redirect_label": {
+        "message": "Mode TV"
     }
 }

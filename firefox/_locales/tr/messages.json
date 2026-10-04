@@ -270,5 +270,11 @@
     },
     "overlay_users": {
         "message": "Kullanıcılar"
+    },
+    "options_hover_block_buttons": {
+        "message": "Hover'da Göster"
+    },
+    "platform_redirect_label": {
+        "message": "TV Modu"
     }
 }

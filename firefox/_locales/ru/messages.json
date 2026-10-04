@@ -270,5 +270,11 @@
     },
     "overlay_users": {
         "message": "Пользователи"
+    },
+    "options_hover_block_buttons": {
+        "message": "Кнопки при наведении"
+    },
+    "platform_redirect_label": {
+        "message": "Режим ТВ"
     }
 }

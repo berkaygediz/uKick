@@ -270,5 +270,11 @@
     },
     "overlay_users": {
         "message": "Utenti"
+    },
+    "options_hover_block_buttons": {
+        "message": "Pulsanti al passaggio del mouse"
+    },
+    "platform_redirect_label": {
+        "message": "Modalità TV"
     }
 }

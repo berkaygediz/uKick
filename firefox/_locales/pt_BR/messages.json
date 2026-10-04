@@ -270,5 +270,11 @@
     },
     "overlay_users": {
         "message": "Usuários"
+    },
+    "options_hover_block_buttons": {
+        "message": "Botões ao passar o mouse"
+    },
+    "platform_redirect_label": {
+        "message": "Modo TV"
     }
 }

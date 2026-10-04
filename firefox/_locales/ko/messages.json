@@ -270,5 +270,11 @@
     },
     "overlay_users": {
         "message": "사용자"
+    },
+    "options_hover_block_buttons": {
+        "message": "마우스 오버 시 버튼 표시"
+    },
+    "platform_redirect_label": {
+        "message": "TV 모드"
     }
 }

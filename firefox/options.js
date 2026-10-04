@@ -1,3 +1,8 @@
+import {
+  getOpenLapisStatus,
+  sendToOpenLapis,
+} from "./modules/integrations/openlapisStatus.js";
+
 function normalize(str) {
   return str.trim().toLowerCase();
 }
@@ -7,7 +12,7 @@ function createListItem(name, onRemove) {
   li.textContent = name;
 
   const btn = document.createElement("button");
-  btn.textContent = "X";
+  btn.textContent = "✕";
   btn.className = "delete-btn";
   btn.onclick = () => onRemove(name);
 
@@ -218,7 +223,9 @@ async function importList(storageKey) {
 
       const data = await browser.storage.local.get([storageKey]);
       const currentList = JSON.parse(data[storageKey] || "[]");
-      const merged = [...new Set([...currentList, ...importedList])];
+      const merged = [
+        ...new Set([...currentList, ...importedList.map(normalize)]),
+      ];
       await browser.storage.local.set({ [storageKey]: JSON.stringify(merged) });
 
       if (storageKey === "blockedChannels") {
@@ -295,7 +302,7 @@ function toggleTagsSection(show) {
 }
 
 function i18n(key, substitutions) {
-  if (typeof browser !== "undefined" && browser.i18n)
+  if (typeof chrome !== "undefined" && browser.i18n)
     return browser.i18n.getMessage(key, substitutions) || key;
   return key;
 }
@@ -321,22 +328,14 @@ async function setupFeatureToggle(toggleId, contentId, permissionObj) {
   const content = document.getElementById(contentId);
   if (!toggle) return;
 
-  let hasPermission = true;
-  if (
-    permissionObj &&
-    (permissionObj.permissions?.length > 0 || permissionObj.origins?.length > 0)
-  ) {
-    hasPermission = await browser.permissions.contains(permissionObj);
-  }
-
+  const hasPermission = await browser.permissions.contains(permissionObj);
   const storedPref = (await browser.storage.local.get(toggleId))[toggleId];
 
   if (hasPermission && storedPref === undefined) {
     await browser.storage.local.set({ [toggleId]: true });
   }
 
-  let isEnabled =
-    storedPref !== undefined ? storedPref && hasPermission : hasPermission;
+  let isEnabled = storedPref && hasPermission;
 
   if (!hasPermission && storedPref) {
     isEnabled = false;
@@ -358,14 +357,6 @@ async function setupFeatureToggle(toggleId, contentId, permissionObj) {
       if (granted) {
         await browser.storage.local.set({ [toggleId]: true });
         if (content) content.classList.remove("section-content-disabled");
-
-        if (toggleId === "enableSubscriptionsToggle") {
-          try {
-            await browser.runtime.sendMessage({
-              action: "enableSubscriptions",
-            });
-          } catch (e) {}
-        }
       } else {
         toggle.checked = false;
         if (content) content.classList.add("section-content-disabled");
@@ -374,12 +365,6 @@ async function setupFeatureToggle(toggleId, contentId, permissionObj) {
     } else {
       await browser.storage.local.set({ [toggleId]: false });
       if (content) content.classList.add("section-content-disabled");
-
-      if (toggleId === "enableSubscriptionsToggle") {
-        try {
-          await browser.runtime.sendMessage({ action: "disableSubscriptions" });
-        } catch (e) {}
-      }
     }
   });
 }
@@ -400,88 +385,86 @@ function timeAgo(timestamp) {
   return i18n("time_days_ago", [days]);
 }
 
-async function renderSubscriptions() {
-  const result = await browser.storage.local.get([
-    "remoteSubscriptions",
-    "syncIntervalMinutes",
-  ]);
-  const subs = result.remoteSubscriptions || [];
-  const syncIntervalSelect = document.getElementById("syncIntervalSelect");
-  if (
-    result.syncIntervalMinutes !== undefined &&
-    result.syncIntervalMinutes !== null
-  )
-    syncIntervalSelect.value = result.syncIntervalMinutes;
+function renderSubscriptions() {
+  browser.storage.local.get(
+    ["remoteSubscriptions", "syncIntervalMinutes"],
+    (result) => {
+      const subs = result.remoteSubscriptions || [];
+      const syncIntervalSelect = document.getElementById("syncIntervalSelect");
+      if (
+        result.syncIntervalMinutes !== undefined &&
+        result.syncIntervalMinutes !== null
+      )
+        syncIntervalSelect.value = result.syncIntervalMinutes;
 
-  const subListEl = document.getElementById("subList");
-  if (!subListEl) return;
+      const subListEl = document.getElementById("subList");
+      if (!subListEl) return;
 
-  subListEl.innerHTML = "";
-  const fragment = document.createDocumentFragment();
+      subListEl.innerHTML = "";
+      const fragment = document.createDocumentFragment();
 
-  subs.forEach((sub) => {
-    const li = document.createElement("li");
-    const info = document.createElement("div");
-    info.className = "sub-info";
-    const urlSpan = document.createElement("span");
-    urlSpan.className = "sub-url";
-    urlSpan.textContent = sub.url;
-    urlSpan.title = sub.url;
-    const metaRow = document.createElement("div");
-    metaRow.className = "sub-meta";
-    metaRow.innerHTML = `<span>${i18n("meta_updated")} ${timeAgo(sub.lastSync)}</span><span>${i18n("meta_items")} ${sub.count || 0}</span>`;
-    info.appendChild(urlSpan);
-    info.appendChild(metaRow);
+      subs.forEach((sub) => {
+        const li = document.createElement("li");
+        const info = document.createElement("div");
+        info.className = "sub-info";
+        const urlSpan = document.createElement("span");
+        urlSpan.className = "sub-url";
+        urlSpan.textContent = sub.url;
+        urlSpan.title = sub.url;
+        const metaRow = document.createElement("div");
+        metaRow.className = "sub-meta";
+        metaRow.innerHTML = `<span>${i18n("meta_updated")} ${timeAgo(sub.lastSync)}</span><span>${i18n("meta_items")} ${sub.count || 0}</span>`;
+        info.appendChild(urlSpan);
+        info.appendChild(metaRow);
 
-    const badge = document.createElement("span");
-    badge.className = "sub-badge";
-    badge.textContent = sub.type;
+        const badge = document.createElement("span");
+        badge.className = "sub-badge";
+        badge.textContent = sub.type;
 
-    const actions = document.createElement("div");
-    actions.className = "sub-actions";
+        const actions = document.createElement("div");
+        actions.className = "sub-actions";
 
-    const openBtn = document.createElement("button");
-    openBtn.innerHTML = openSvg;
-    openBtn.title = i18n("btn_open_url");
-    openBtn.onclick = () => window.open(sub.url, "_blank");
+        const openBtn = document.createElement("button");
+        openBtn.innerHTML = openSvg;
+        openBtn.title = i18n("btn_open_url");
+        openBtn.onclick = () => window.open(sub.url, "_blank");
 
-    const syncBtn = document.createElement("button");
-    syncBtn.innerHTML = syncSvg;
-    syncBtn.title = i18n("btn_update_now");
-    syncBtn.onclick = async () => {
-      syncBtn.style.color = "#00b660";
-      try {
-        const res = await browser.runtime.sendMessage({
-          action: "syncUrl",
-          url: sub.url,
-        });
-        syncBtn.style.color = res?.success ? "#8bc34a" : "#d9534f";
-      } catch (e) {
-        syncBtn.style.color = "#d9534f";
-      }
-      renderSubscriptions();
-    };
+        const syncBtn = document.createElement("button");
+        syncBtn.innerHTML = syncSvg;
+        syncBtn.title = i18n("btn_update_now");
+        syncBtn.onclick = async () => {
+          syncBtn.style.color = "#00b660";
+          browser.runtime.sendMessage(
+            { action: "syncUrl", url: sub.url },
+            (res) => {
+              syncBtn.style.color = res?.success ? "#8bc34a" : "#d9534f";
+              renderSubscriptions();
+            },
+          );
+        };
 
-    const removeBtn = document.createElement("button");
-    removeBtn.className = "remove-btn";
-    removeBtn.innerHTML = removeSvg;
-    removeBtn.title = i18n("btn_remove");
-    removeBtn.onclick = async () => {
-      const updatedSubs = subs.filter((s) => s.url !== sub.url);
-      await browser.storage.local.set({ remoteSubscriptions: updatedSubs });
-      renderSubscriptions();
-    };
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "remove-btn";
+        removeBtn.innerHTML = removeSvg;
+        removeBtn.title = i18n("btn_remove");
+        removeBtn.onclick = async () => {
+          const updatedSubs = subs.filter((s) => s.url !== sub.url);
+          await browser.storage.local.set({ remoteSubscriptions: updatedSubs });
+          renderSubscriptions();
+        };
 
-    actions.appendChild(openBtn);
-    actions.appendChild(syncBtn);
-    actions.appendChild(removeBtn);
+        actions.appendChild(openBtn);
+        actions.appendChild(syncBtn);
+        actions.appendChild(removeBtn);
 
-    li.appendChild(info);
-    li.appendChild(badge);
-    li.appendChild(actions);
-    fragment.appendChild(li);
-  });
-  subListEl.appendChild(fragment);
+        li.appendChild(info);
+        li.appendChild(badge);
+        li.appendChild(actions);
+        fragment.appendChild(li);
+      });
+      subListEl.appendChild(fragment);
+    },
+  );
 }
 
 function setupSubscriptionEvents() {
@@ -498,25 +481,22 @@ function setupSubscriptionEvents() {
     const type = subTypeSelect.value;
     if (!url) return;
 
-    let urlObj;
     try {
-      urlObj = new URL(url);
-    } catch (err) {
-      alert(i18n("alert_invalid_url"));
-      return;
-    }
-
-    try {
-      const granted = await browser.permissions.request({
+      const urlObj = new URL(url);
+      const hasPermission = await browser.permissions.contains({
         origins: [`${urlObj.origin}/*`],
       });
-      if (!granted) {
-        alert(i18n("alert_permission_denied"));
-        return;
+      if (!hasPermission) {
+        const granted = await browser.permissions.request({
+          origins: [`${urlObj.origin}/*`],
+        });
+        if (!granted) {
+          alert(i18n("alert_permission_denied"));
+          return;
+        }
       }
-    } catch (e) {
-      console.error("Permission request failed", e);
-      alert(i18n("alert_permission_denied"));
+    } catch (err) {
+      alert(i18n("alert_invalid_url"));
       return;
     }
 
@@ -533,38 +513,28 @@ function setupSubscriptionEvents() {
     await browser.storage.local.set({ remoteSubscriptions: subs });
     subUrlInput.value = "";
     renderSubscriptions();
-    try {
-      await browser.runtime.sendMessage({ action: "syncUrl", url });
-    } catch (e) {
-      // ignore
-    }
-    renderSubscriptions();
+    browser.runtime.sendMessage({ action: "syncUrl", url }, () =>
+      renderSubscriptions(),
+    );
   });
 
   syncIntervalSelect.addEventListener("change", async () => {
     const interval = parseFloat(syncIntervalSelect.value);
     await browser.storage.local.set({ syncIntervalMinutes: interval });
-    try {
-      await browser.runtime.sendMessage({
-        action: "setSyncInterval",
-        intervalMinutes: interval,
-      });
-    } catch (e) {
-      // ignore
-    }
+    browser.runtime.sendMessage({
+      action: "setSyncInterval",
+      intervalMinutes: interval,
+    });
   });
 
   updateAllBtn.addEventListener("click", async () => {
     updateAllBtn.disabled = true;
-    updateAllBtn.innerHTML = `<b>${i18n("options_sub_updating")}</b>`;
-    try {
-      await browser.runtime.sendMessage({ action: "syncAll" });
-    } catch (e) {
-      // ignore
-    }
-    updateAllBtn.disabled = false;
-    updateAllBtn.innerHTML = `<b style="color: #000000">${i18n("options_sub_update_all")}</b>`;
-    renderSubscriptions();
+    updateAllBtn.textContent = i18n("options_sub_updating");
+    browser.runtime.sendMessage({ action: "syncAll" }, (res) => {
+      updateAllBtn.disabled = false;
+      updateAllBtn.textContent = i18n("options_sub_update_all");
+      renderSubscriptions();
+    });
   });
 }
 
@@ -576,6 +546,7 @@ function setupIntegrations() {
       const isActive = header.classList.contains("active");
       header.classList.toggle("active", !isActive);
       content.style.display = isActive ? "none" : "block";
+      if (!isActive) refreshOpenLapisStatus();
     });
   });
 
@@ -601,28 +572,31 @@ function setupIntegrations() {
       const payload = buildPayload(appName, action);
 
       btn.style.background = "#555";
+      const res = await sendToOpenLapis(payload);
 
-      try {
-        const response = await browser.runtime.sendNativeMessage(
-          "com.openlapis.connect",
-          payload,
-        );
-        const hasError = response?.status === "error";
-        if (hasError) {
-          console.error("OpenLapis Error:", response);
-        } else {
-          console.log("OpenLapis:", response);
-        }
-        btn.style.background = hasError ? "#d9534f" : "#00b660";
-      } catch (e) {
-        console.error("OpenLapis Error:", e);
-        btn.style.background = "#d9534f";
-      }
+      if (!res.ok) console.error("OpenLapis Error:", res.error);
+      else console.log("OpenLapis:", res.data);
+
+      btn.style.background = res.ok ? "#00b660" : "#d9534f";
       setTimeout(() => {
         btn.style.background = "";
       }, 1500);
     });
   });
+}
+
+async function refreshOpenLapisStatus() {
+  const dot = document.getElementById("openlapisStatusBadge");
+  if (!dot) return;
+
+  dot.className = "ol-status-dot";
+  dot.title = "";
+
+  const status = await getOpenLapisStatus();
+  dot.className = "ol-status-dot " + (status.connected ? "online" : "offline");
+  dot.title = status.connected
+    ? "OpenLapis: connected"
+    : "OpenLapis: not connected";
 }
 
 function setupEventListeners() {
@@ -653,6 +627,11 @@ function setupEventListeners() {
     refreshTagsBtn: browser.i18n.getMessage("options_refresh"),
     addTagBtn: browser.i18n.getMessage("options_add_tags"),
 
+    options_master: browser.i18n.getMessage("popup_filtering"),
+    adaptiveStreamTitle: browser.i18n.getMessage("popup_adaptive_stream"),
+    qualityLabel: browser.i18n.getMessage("popup_quality"),
+    volumeBoostLabel: browser.i18n.getMessage("popup_volume_boost"),
+
     customizationTitle: browser.i18n.getMessage("options_customization"),
     disableSearchHistoryLabel: browser.i18n.getMessage(
       "options_disable_search_history",
@@ -662,6 +641,9 @@ function setupEventListeners() {
     ),
     disableBlockButtonsLabel: browser.i18n.getMessage(
       "options_hide_block_buttons",
+    ),
+    hoverBlockButtonsLabel: browser.i18n.getMessage(
+      "options_hover_block_buttons",
     ),
     enableDanmakuLabel: browser.i18n.getMessage("options_enable_danmaku_chat"),
     disableActiveUsersLabel: browser.i18n.getMessage(
@@ -800,7 +782,7 @@ function setupEventListeners() {
     .addEventListener("click", () => loadBlockedTags());
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
   setupEventListeners();
 
   const themeOptions = document.querySelectorAll(".theme-option");
@@ -827,12 +809,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   if (paletteToggle) {
-    const { disableWebsitePalette = true } = await browser.storage.local.get(
-      "disableWebsitePalette",
+    browser.storage.local.get(
+      ["disableWebsitePalette"],
+      ({ disableWebsitePalette = true }) => {
+        const isEnabled = !disableWebsitePalette;
+        paletteToggle.checked = isEnabled;
+        updateThemeGridState(isEnabled);
+      },
     );
-    const isEnabled = !disableWebsitePalette;
-    paletteToggle.checked = isEnabled;
-    updateThemeGridState(isEnabled);
 
     paletteToggle.addEventListener("change", () => {
       const isEnabled = paletteToggle.checked;
@@ -841,9 +825,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  const { themePalette = "original" } =
-    await browser.storage.local.get("themePalette");
-  setActiveTheme(themePalette);
+  browser.storage.local.get(
+    ["themePalette"],
+    ({ themePalette = "original" }) => {
+      setActiveTheme(themePalette);
+    },
+  );
 
   themeOptions.forEach((opt) => {
     opt.addEventListener("click", () => {
@@ -854,15 +841,65 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
+  const enableMasterToggle = document.getElementById("enableMasterToggle");
+  if (enableMasterToggle) {
+    browser.storage.local.get(["enabled"], ({ enabled = true }) => {
+      enableMasterToggle.checked = enabled;
+    });
+    enableMasterToggle.addEventListener("change", async () => {
+      await browser.storage.local.set({
+        enabled: enableMasterToggle.checked,
+      });
+    });
+  }
+
+  const autoQualityToggle = document.getElementById("autoQualityToggle");
+  const qualitySelect = document.getElementById("qualitySelect");
+  const volumeBoostSelect = document.getElementById("volumeBoostSelect");
+
+  if (autoQualityToggle && qualitySelect && volumeBoostSelect) {
+    browser.storage.local.get(
+      ["autoQuality", "preferredQuality", "volumeBoost"],
+      ({ autoQuality = false, preferredQuality = "1080", volumeBoost = 1 }) => {
+        autoQualityToggle.checked = autoQuality;
+        qualitySelect.value = preferredQuality;
+        qualitySelect.disabled = !autoQuality;
+        volumeBoostSelect.disabled = !autoQuality;
+        volumeBoostSelect.value = String(volumeBoost);
+      },
+    );
+
+    autoQualityToggle.addEventListener("change", async () => {
+      const on = autoQualityToggle.checked;
+      qualitySelect.disabled = !on;
+      volumeBoostSelect.disabled = !on;
+      await browser.storage.local.set({ autoQuality: on });
+    });
+
+    qualitySelect.addEventListener("change", async () => {
+      await browser.storage.local.set({
+        preferredQuality: qualitySelect.value,
+      });
+    });
+
+    volumeBoostSelect.addEventListener("change", async () => {
+      await browser.storage.local.set({
+        volumeBoost: Number(volumeBoostSelect.value),
+      });
+    });
+  }
+
   const disableSearchHistoryToggle = document.getElementById(
     "disableSearchHistoryToggle",
   );
 
   if (disableSearchHistoryToggle) {
-    const { disableSearchHistory = false } = await browser.storage.local.get(
-      "disableSearchHistory",
+    browser.storage.local.get(
+      ["disableSearchHistory"],
+      ({ disableSearchHistory = false }) => {
+        disableSearchHistoryToggle.checked = disableSearchHistory;
+      },
     );
-    disableSearchHistoryToggle.checked = disableSearchHistory;
 
     disableSearchHistoryToggle.addEventListener("change", async () => {
       await browser.storage.local.set({
@@ -876,9 +913,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   );
 
   if (enableChatBlockingToggle) {
-    const { enableChatBlocking = false } =
-      await browser.storage.local.get("enableChatBlocking");
-    enableChatBlockingToggle.checked = enableChatBlocking;
+    browser.storage.local.get(
+      ["enableChatBlocking"],
+      ({ enableChatBlocking = false }) => {
+        enableChatBlockingToggle.checked = enableChatBlocking;
+      },
+    );
 
     enableChatBlockingToggle.addEventListener("change", async () => {
       await browser.storage.local.set({
@@ -887,19 +927,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  const disableBlockButtonsToggle = document.getElementById(
-    "disableBlockButtonsToggle",
+  const hoverBlockButtonsToggle = document.getElementById(
+    "hoverBlockButtonsToggle",
   );
 
-  if (disableBlockButtonsToggle) {
-    const { disableBlockButtons = false } = await browser.storage.local.get(
-      "disableBlockButtons",
+  if (hoverBlockButtonsToggle) {
+    browser.storage.local.get(
+      ["blockButtonMode"],
+      ({ blockButtonMode = "static" }) => {
+        hoverBlockButtonsToggle.checked = blockButtonMode === "hover";
+      },
     );
-    disableBlockButtonsToggle.checked = disableBlockButtons;
 
-    disableBlockButtonsToggle.addEventListener("change", async () => {
+    hoverBlockButtonsToggle.addEventListener("change", async () => {
       await browser.storage.local.set({
-        disableBlockButtons: disableBlockButtonsToggle.checked,
+        blockButtonMode: hoverBlockButtonsToggle.checked ? "hover" : "static",
       });
     });
   }
@@ -907,9 +949,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   const enableDanmakuToggle = document.getElementById("enableDanmakuToggle");
 
   if (enableDanmakuToggle) {
-    const { enableDanmaku = false } =
-      await browser.storage.local.get("enableDanmaku");
-    enableDanmakuToggle.checked = enableDanmaku;
+    browser.storage.local.get(
+      ["enableDanmaku"],
+      ({ enableDanmaku = false }) => {
+        enableDanmakuToggle.checked = enableDanmaku;
+      },
+    );
 
     enableDanmakuToggle.addEventListener("change", async () => {
       await browser.storage.local.set({
@@ -923,9 +968,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   );
 
   if (disableActiveUsersToggle) {
-    const { disableActiveUsers = false } =
-      await browser.storage.local.get("disableActiveUsers");
-    disableActiveUsersToggle.checked = disableActiveUsers;
+    browser.storage.local.get(
+      ["disableActiveUsers"],
+      ({ disableActiveUsers = false }) => {
+        disableActiveUsersToggle.checked = disableActiveUsers;
+      },
+    );
     disableActiveUsersToggle.addEventListener("change", async () => {
       await browser.storage.local.set({
         disableActiveUsers: disableActiveUsersToggle.checked,
@@ -938,10 +986,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   );
 
   if (enableKeyboardVolumeToggle) {
-    const { enableKeyboardVolume = false } = await browser.storage.local.get(
-      "enableKeyboardVolume",
+    browser.storage.local.get(
+      ["enableKeyboardVolume"],
+      ({ enableKeyboardVolume = false }) => {
+        enableKeyboardVolumeToggle.checked = enableKeyboardVolume;
+      },
     );
-    enableKeyboardVolumeToggle.checked = enableKeyboardVolume;
     enableKeyboardVolumeToggle.addEventListener("change", async () => {
       await browser.storage.local.set({
         enableKeyboardVolume: enableKeyboardVolumeToggle.checked,
@@ -949,7 +999,46 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  setupFeatureToggle("enableSubscriptionsToggle", "subscriptionsContent", {});
+  const enablePlatformRedirectToggle = document.getElementById(
+    "enablePlatformRedirectToggle",
+  );
+  const platformPreferenceSelect = document.getElementById(
+    "platformPreferenceSelect",
+  );
+
+  if (enablePlatformRedirectToggle && platformPreferenceSelect) {
+    const platformContent = document.getElementById("platformContent");
+
+    browser.storage.local.get(
+      ["enablePlatformRedirect", "platformPreference"],
+      ({ enablePlatformRedirect = false, platformPreference = "web" }) => {
+        enablePlatformRedirectToggle.checked = enablePlatformRedirect;
+        platformPreferenceSelect.value = platformPreference;
+        platformContent.classList.toggle(
+          "section-content-disabled",
+          !enablePlatformRedirect,
+        );
+        platformPreferenceSelect.disabled = !enablePlatformRedirect;
+      },
+    );
+
+    enablePlatformRedirectToggle.addEventListener("change", async () => {
+      const enabled = enablePlatformRedirectToggle.checked;
+      await browser.storage.local.set({ enablePlatformRedirect: enabled });
+      platformContent.classList.toggle("section-content-disabled", !enabled);
+      platformPreferenceSelect.disabled = !enabled;
+    });
+
+    platformPreferenceSelect.addEventListener("change", async () => {
+      await browser.storage.local.set({
+        platformPreference: platformPreferenceSelect.value,
+      });
+    });
+  }
+
+  setupFeatureToggle("enableSubscriptionsToggle", "subscriptionsContent", {
+    permissions: ["alarms"],
+  });
 
   setupFeatureToggle("enableIntegrationsToggle", "integrationsContent", {
     permissions: ["nativeMessaging"],
@@ -959,6 +1048,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   renderSubscriptions();
 
   setupIntegrations();
+  refreshOpenLapisStatus();
 
   browser.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === "local" && changes.remoteSubscriptions) {

@@ -270,5 +270,11 @@
     },
     "overlay_users": {
         "message": "Käyttäjät"
+    },
+    "options_hover_block_buttons": {
+        "message": "Painikkeet osoittamalla"
+    },
+    "platform_redirect_label": {
+        "message": "TV-tila"
     }
 }

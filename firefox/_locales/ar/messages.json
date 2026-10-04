@@ -270,5 +270,11 @@
     },
     "overlay_users": {
         "message": "المستخدمون"
+    },
+    "options_hover_block_buttons": {
+        "message": "الأزرار عند التحويم"
+    },
+    "platform_redirect_label": {
+        "message": "وضع TV"
     }
 }
