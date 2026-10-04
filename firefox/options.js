@@ -353,7 +353,9 @@ async function setupFeatureToggle(toggleId, contentId, permissionObj) {
 
   toggle.addEventListener("change", async () => {
     if (toggle.checked) {
-      const granted = await checkAndRequestPermission(permissionObj);
+      const granted = hasPermission
+        ? true
+        : await checkAndRequestPermission(permissionObj);
       if (granted) {
         await browser.storage.local.set({ [toggleId]: true });
         if (content) content.classList.remove("section-content-disabled");
