@@ -1,4 +1,4 @@
-// uKick — keyboardvolume
+// uKick - keyboardvolume
 
 let activeVideo = null,
   volDisplay = null,

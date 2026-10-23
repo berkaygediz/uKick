@@ -1,27 +1,6 @@
-// uKick — quality
+// uKick - quality
 
 import { sleep } from "../core/utils.js";
-
-const SETTINGS_LABELS = [
-  "Settings", // English
-  "Ajustes", // Spanish
-  "Configurações", // Portuguese
-  "Paramètres", // French
-  "Einstellungen", // German
-  "Impostazioni", // Italian
-  "Ayarlar", // Turkish
-  "Pengaturan", // Indonesian
-  "设置", // Chinese
-  "設定", // Japanese
-  "설정", // Korean
-  "إعدادات", // Arabic
-  "Asetukset", // Finnish
-  "Ustawienia", // Polish
-  "Настройки", // Russian
-  "Cài đặt", // Vietnamese
-  "Nastavení", // Czech
-  "הגדרות", // Hebrew
-];
 
 let lastKickUrl = location.href;
 let lastAppliedQuality = null;
@@ -58,9 +37,10 @@ export async function initAutoQualityControl() {
     const currentUrl = location.href;
     if (currentUrl !== lastKickUrl) {
       lastKickUrl = currentUrl;
-      if (settings.autoQuality && isKickStreamUrl(currentUrl)) {
-        waitForPlayerAndApply(settings.preferredQuality, false);
-      }
+      getQualitySettings().then((s) => {
+        if (s.autoQuality && isKickStreamUrl(currentUrl))
+          waitForPlayerAndApply(s.preferredQuality, false);
+      });
     }
   }).observe(document, { subtree: true, childList: true });
 
@@ -79,6 +59,14 @@ function isKickStreamUrl(url) {
   return /^https:\/\/(www\.)?kick\.com\/[^\/?#]+/.test(url);
 }
 
+function getPlayerVideo() {
+  return (
+    Array.from(document.querySelectorAll("video")).find(
+      (v) => v.getBoundingClientRect().width > 100,
+    ) || document.querySelector("video")
+  );
+}
+
 function persistSessionQuality(pref) {
   if (persistTimer) {
     clearInterval(persistTimer);
@@ -86,33 +74,17 @@ function persistSessionQuality(pref) {
   }
   if (!pref) return;
 
-  const setQuality = () => {
-    try {
-      sessionStorage.setItem("stream_quality", String(pref));
-    } catch (e) {}
-  };
-
-  setQuality();
+  try {
+    sessionStorage.setItem("stream_quality", String(pref));
+  } catch (e) {}
 
   const start = Date.now();
   const maxMs = 10_000;
   persistTimer = setInterval(() => {
-    if (Date.now() - start > maxMs) {
+    if (Date.now() - start > maxMs || getPlayerVideo()) {
       clearInterval(persistTimer);
       persistTimer = null;
-      return;
     }
-    const cur = sessionStorage.getItem("stream_quality");
-    const video = document.querySelector("video");
-    const qualityEls = document.querySelectorAll(
-      '[data-testid="player-quality-option"], [role="menuitemradio"], [role="menuitem"]',
-    );
-    if (cur === String(pref) && (video || qualityEls.length > 0)) {
-      clearInterval(persistTimer);
-      persistTimer = null;
-      return;
-    }
-    setQuality();
   }, 400);
 }
 
@@ -122,7 +94,7 @@ async function waitForPlayerAndApply(preferredQuality, shouldReload) {
   persistSessionQuality(preferredQuality);
 
   while (Date.now() - start < maxWait) {
-    if (document.querySelector("video")) break;
+    if (getPlayerVideo()) break;
     await sleep(300);
   }
   applyKickQuality(preferredQuality, shouldReload);
@@ -138,41 +110,12 @@ async function applyKickQuality(preferredQuality, shouldReload) {
   persistSessionQuality(pref);
   lastAppliedQuality = String(pref);
 
-  const video =
-    document.querySelector("video") || document.getElementById("video-player");
+  /*
 
-  if (!video) {
+  if (!getPlayerVideo()) {
     triggerReloadIfNeeded(shouldReload);
     return;
   }
-
-  const safeClick = (element) => {
-    if (!element) return false;
-    try {
-      element.click();
-      return true;
-    } catch (e) {
-      try {
-        element.dispatchEvent(new MouseEvent("click", { bubbles: true }));
-        return true;
-      } catch (err) {
-        return false;
-      }
-    }
-  };
-
-  const r = video.getBoundingClientRect();
-  ["mouseenter", "mouseover", "mousemove"].forEach((t) => {
-    video.dispatchEvent(
-      new MouseEvent(t, {
-        bubbles: true,
-        clientX: r.left + r.width / 2,
-        clientY: r.top + r.height / 2,
-      }),
-    );
-  });
-
-  await sleep(700);
 
   let qualitySet = false;
   let attempt = 0;
@@ -180,6 +123,12 @@ async function applyKickQuality(preferredQuality, shouldReload) {
 
   while (!qualitySet && attempt < maxAttempts) {
     attempt++;
+
+    if (findAuthModal()) {
+      dismissAuthModal();
+      return;
+    }
+
     const settingsBtn = findSettingsButton();
 
     if (!settingsBtn) {
@@ -187,72 +136,163 @@ async function applyKickQuality(preferredQuality, shouldReload) {
       continue;
     }
 
-    safeClick(settingsBtn);
+    smartClick(settingsBtn);
     await sleep(600);
 
-    const qualityEls = Array.from(
-      document.querySelectorAll(
-        '[data-testid="player-quality-option"], [role="menuitemradio"], [role="menuitem"], li, div[class*="option"]',
-      ),
-    ).filter((el) => /^\d+/.test((el.textContent || "").trim()));
+    if (findAuthModal()) {
+      dismissAuthModal();
+      return;
+    }
 
-    const available = qualityEls
-      .map((el) => (el.textContent || "").toLowerCase().trim())
-      .map((t) => t.replace(/auto|fps|p60|p|source/g, "").trim())
-      .filter((t) => /^\d+$/.test(t))
-      .map((t) => parseInt(t, 10));
+    const parsed = parseQualityMenu();
 
-    if (!available.length) {
-      safeClick(settingsBtn);
+    if (!parsed.length) {
+      smartClick(settingsBtn);
       await sleep(500);
       continue;
     }
-    available.sort((a, b) => b - a);
+
+    const available = parsed
+      .filter((p) => !p.gated)
+      .map((p) => p.num)
+      .sort((a, b) => b - a);
+
+    if (!available.length) {
+      smartClick(settingsBtn);
+      await sleep(500);
+      continue;
+    }
 
     const target =
       available.find((q) => q <= pref) || available[available.length - 1];
 
-    if (lastAppliedQuality === String(target)) {
+    const checked = parsed.find(
+      (p) => p.el.getAttribute("aria-checked") === "true",
+    );
+
+    if (checked && checked.num === target) {
       sessionStorage.setItem("stream_quality", String(target));
+      lastAppliedQuality = String(target);
       qualitySet = true;
-      safeClick(video);
+      smartClick(settingsBtn);
       break;
     }
 
-    const targetEl = qualityEls.find((el) =>
-      (el.textContent || "").toLowerCase().includes(String(target)),
-    );
+    const targetP = parsed.find((p) => p.num === target && !p.gated);
 
-    if (targetEl) {
-      safeClick(targetEl);
+    if (targetP && !isLoggedOut() && target === pref) {
+      smartClick(targetP.el);
       sessionStorage.setItem("stream_quality", String(target));
       lastAppliedQuality = String(target);
       qualitySet = true;
     } else {
-      safeClick(settingsBtn);
-      await sleep(500);
+      qualitySet = true;
+      smartClick(settingsBtn);
     }
   }
+
+  */
+
   triggerReloadIfNeeded(shouldReload);
 }
 
+/*
+
+function parseQualityMenu() {
+  return Array.from(
+    document.querySelectorAll(
+      '[data-testid="player-quality-option"], [role="menuitemradio"]',
+    ),
+  )
+    .map((el) => {
+      const span = el.querySelector("span");
+      const label = ((span && span.textContent) || el.textContent || "").trim();
+      const gated = span
+        ? (el.textContent || "").trim() !== label
+        : false;
+      const m = label.match(/(\d{3,4})/);
+      return { el, gated, num: m ? parseInt(m[1], 10) : null };
+    })
+    .filter((p) => p.num > 0);
+}
+
 function findSettingsButton() {
-  for (const btn of document.querySelectorAll("button[aria-label]")) {
-    if (
-      SETTINGS_LABELS.some((l) =>
-        (btn.getAttribute("aria-label") || "")
-          .toLowerCase()
-          .includes(l.toLowerCase()),
-      )
-    )
-      return btn;
+  const video = getPlayerVideo();
+  if (!video) return null;
+
+  for (const svg of document.querySelectorAll(
+    'svg[data-ds-icon="Settings"]',
+  )) {
+    const btn = svg.closest("button");
+    if (!btn) continue;
+    let col = video.parentElement;
+    while (col) {
+      if (col.contains(btn)) return btn;
+      if (col.tagName === "MAIN") break;
+      col = col.parentElement;
+    }
   }
+  return null;
+}
+
+function findAuthModal() {
   return (
-    document.querySelector(
-      'button[class*="settings"], button[class*="cog"], .vjs-icon-cog',
-    ) || document.querySelector('button[class*="settings"]')
+    Array.from(
+      document.querySelectorAll('[role="dialog"], [aria-modal="true"]'),
+    ).find(
+      (d) =>
+        d.querySelector('input[type="password"]') &&
+        d.getBoundingClientRect().width > 100,
+    ) || null
   );
 }
+
+function dismissAuthModal() {
+  document.dispatchEvent(
+    new KeyboardEvent("keydown", {
+      key: "Escape",
+      code: "Escape",
+      keyCode: 27,
+      which: 27,
+      bubbles: true,
+      cancelable: true,
+    }),
+  );
+}
+
+function smartClick(element) {
+  if (!element) return false;
+  try {
+    const r = element.getBoundingClientRect();
+    const opts = {
+      bubbles: true,
+      cancelable: true,
+      clientX: r.x + r.width / 2 || 100,
+      clientY: r.y + r.height / 2 || 100,
+      pointerId: 1,
+      pointerType: "mouse",
+    };
+    try {
+      element.dispatchEvent(new PointerEvent("pointerdown", opts));
+      element.dispatchEvent(new PointerEvent("pointerup", opts));
+    } catch (e) {}
+    element.click();
+    return true;
+  } catch (e) {
+    try {
+      element.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+}
+
+function isLoggedOut() {
+  return !!document.querySelector('[data-testid="login"]');
+}
+
+*/
 
 function triggerReloadIfNeeded(shouldReload) {
   if (shouldReload && !sessionStorage.getItem("quality_reload_done")) {

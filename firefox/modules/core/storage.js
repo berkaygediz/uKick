@@ -1,4 +1,4 @@
-// uKick — storage
+// uKick - storage
 
 import { normalizeData } from "./utils.js";
 

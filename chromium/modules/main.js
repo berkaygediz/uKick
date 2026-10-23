@@ -4,9 +4,11 @@ import { injectButtonStyles } from "./core/styles.js";
 import { clearSearchHistory, debounce } from "./core/utils.js";
 import { toggleActiveStats } from "./features/activeusers.js";
 import {
+  invalidateCardScan,
   processCards,
   processCategoryCards,
   processCategoryPageHeader,
+  refreshBlockCache,
   removeBlockedCards,
   removeBlockedCategoryCards,
 } from "./features/cards.js";
@@ -56,14 +58,14 @@ async function startFilteringFeatures() {
   if (!enabled) return;
 
   setupAudioContext();
+  await removeBlockedCards();
+  await removeSidebarBlockedChannels();
+  await removeBlockedCategoryCards();
   await processCards();
   await processSidebarChannels();
   await processCategoryCards();
   await processCategoryPageHeader();
   await processTagButtons();
-  await removeBlockedCards();
-  await removeSidebarBlockedChannels();
-  await removeBlockedCategoryCards();
   await addBlockButtonOnChannelPage();
   await observeBlockedChatMessages();
   await observeChatUsernames();
@@ -79,10 +81,25 @@ function extensionContextDead() {
 
 function restoreHiddenElements() {
   document
-    .querySelectorAll(
-      ".group\\/card, [data-testid^='sidebar-recommended-channel-'], div.flex.w-full.shrink-0.grow-0.flex-col",
-    )
-    .forEach((item) => (item.style.display = ""));
+    .querySelectorAll(".group\\/card, div.flex.w-full.shrink-0.grow-0.flex-col")
+    .forEach((item) => {
+      item.style.display = "";
+      delete item.dataset.ukScan;
+      delete item.dataset.ukChan;
+      delete item.dataset.ukCat;
+    });
+  document
+    .querySelectorAll("[data-testid^='sidebar-recommended-channel-']")
+    .forEach((item) => {
+      const shell = item.closest("button") || item;
+      shell.style.display = "";
+      item.style.display = "";
+    });
+  document.querySelectorAll("[data-ukick-shell]").forEach((shell) => {
+    delete shell.dataset.ukickShell;
+    shell.style.display = "";
+  });
+  invalidateCardScan();
   const vp = document.getElementById("video-player");
   if (vp) vp.style.display = "";
 }
@@ -128,6 +145,7 @@ async function updateBlockButtonMode() {
   if (enableKeyboardVolume) startKeyboardVolume();
   if (!disableWebsitePalette) startWebsitePalette();
 
+  await refreshBlockCache();
   await updateBlockButtonsVisibility();
   await updateBlockButtonMode();
 

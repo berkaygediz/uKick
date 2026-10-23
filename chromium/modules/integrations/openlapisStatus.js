@@ -1,4 +1,4 @@
-// uKick — OpenLapis Connect transport + status
+// uKick — OpenLapis Connect
 
 const OPENLAPIS_HOST = "com.openlapis.connect";
 

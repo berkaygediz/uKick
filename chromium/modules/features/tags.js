@@ -1,4 +1,4 @@
-// uKick — tags
+// uKick - tags
 
 import { blockTag, getBlockedTags } from "../core/storage.js";
 import { extractTagText, normalizeData, showToast } from "../core/utils.js";

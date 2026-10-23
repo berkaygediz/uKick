@@ -1,4 +1,4 @@
-// uKick — platform
+// uKick - platform
 
 const PLATFORM_HOSTS = {
   web: "kick.com",

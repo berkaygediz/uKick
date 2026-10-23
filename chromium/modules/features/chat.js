@@ -1,4 +1,4 @@
-// uKick — chat
+// uKick - chat
 
 import { blockChannel, getBlockedChannels } from "../core/storage.js";
 import { debounceRAF } from "../core/utils.js";
@@ -15,7 +15,7 @@ let chatUsernameSetupRunning = false;
 let chatHideSweep = null;
 let chatButtonSweep = null;
 
-function getActiveChatContainer() {
+export function getActiveChatContainer() {
   const all = document.querySelectorAll("#chatroom-messages");
   if (all.length <= 1) return all[0] || null;
   for (const c of all) {
@@ -91,7 +91,7 @@ chrome.storage.onChanged.addListener((changes, area) => {
   }
 });
 
-function collectChatRows(mutationsList) {
+export function collectChatRows(mutationsList) {
   const nodes = new Set();
   for (const mutation of mutationsList) {
     if (mutation.type === "attributes") {

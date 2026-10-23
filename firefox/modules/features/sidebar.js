@@ -1,4 +1,4 @@
-// uKick — sidebar
+// uKick - sidebar
 
 import {
   blockChannel,
@@ -28,14 +28,17 @@ export async function removeSidebarBlockedChannels() {
         if (blockedChannels.includes(username)) hide = true;
       }
 
-      const categoryEl = item.querySelector("span.text-xs.font-bold");
+      const categoryEl = item.querySelector(
+        "span.font-normal.text-surface-fg-subtle",
+      );
       if (
         categoryEl &&
         blockedCategories.includes(normalizeData(categoryEl.textContent))
       )
         hide = true;
 
-      item.style.display = hide ? "none" : "";
+      const shell = item.closest("button") || item;
+      shell.style.display = hide ? "none" : "";
     });
 }
 
@@ -145,7 +148,8 @@ export async function processSidebarChannels() {
       if (!username) return;
 
       if (blocked.includes(normalizeData(username))) {
-        anchor.style.display = "none";
+        const shell = anchor.closest("button") || anchor;
+        shell.style.display = "none";
         return;
       }
 

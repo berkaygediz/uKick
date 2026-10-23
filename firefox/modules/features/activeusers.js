@@ -1,4 +1,4 @@
-// uKick — activeusers
+// uKick - activeusers
 
 let activeUsers = new Map();
 let messageCount = 0;
@@ -277,6 +277,7 @@ function buildOverlay() {
     listEl.innerHTML = html;
 
     if (totalPages > 1) {
+      pagerEl.style.display = "";
       pagerEl.innerHTML = `
         <button class="au-page-btn" id="au-prev" ${page === 1 ? "disabled" : ""}>‹</button>
         <span class="au-page-info">${page} / ${totalPages}</span>
@@ -298,6 +299,7 @@ function buildOverlay() {
       });
     } else {
       pagerEl.innerHTML = "";
+      pagerEl.style.display = "none";
     }
   }
 

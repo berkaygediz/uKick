@@ -1,4 +1,4 @@
-// uKick — styles
+// uKick - styles
 
 export function injectButtonStyles() {
   if (document.getElementById("ukick-btn-styles")) return;

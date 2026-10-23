@@ -1,4 +1,4 @@
-// uKick — volume
+// uKick - volume
 
 let audioContext,
   gainNode,

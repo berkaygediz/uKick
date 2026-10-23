@@ -1,5 +1,5 @@
 /*
- * uKick — utils: ortak yardımcılar.
+ * uKick - utils
  */
 
 export function normalizeData(str) {

@@ -1,6 +1,48 @@
-/*
- * uKick — danmaku: sohbet mesajlarını video üzerinde kaydırır.
- */
+// uKick - danmaku
+
+import { debounceRAF } from "../core/utils.js";
+import { collectChatRows, getActiveChatContainer } from "./chat.js";
+
+const dmPerf = {
+  observerMs: 0,
+  observerCalls: 0,
+  pollMs: 0,
+  pollCalls: 0,
+  processMs: 0,
+  processCalls: 0,
+  processSkipped: 0,
+  showMs: 0,
+  showCalls: 0,
+  reconnects: 0,
+  lastReport: 0,
+};
+window.dmPerf = dmPerf;
+window.dmReport = function () {
+  console.table([
+    {
+      fn: "observer",
+      cagri: dmPerf.observerCalls,
+      toplamMs: +dmPerf.observerMs.toFixed(1),
+    },
+    {
+      fn: "poll",
+      cagri: dmPerf.pollCalls,
+      toplamMs: +dmPerf.pollMs.toFixed(1),
+    },
+    {
+      fn: "processMessage",
+      cagri: dmPerf.processCalls,
+      toplamMs: +dmPerf.processMs.toFixed(1),
+    },
+    { fn: "  ↳ atlanan", cagri: dmPerf.processSkipped, toplamMs: "-" },
+    {
+      fn: "showMessage",
+      cagri: dmPerf.showCalls,
+      toplamMs: +dmPerf.showMs.toFixed(1),
+    },
+    { fn: "reconnect", cagri: dmPerf.reconnects, toplamMs: "-" },
+  ]);
+};
 
 function isDanmakuEnabled() {
   return new Promise((resolve) => {
@@ -26,6 +68,38 @@ const DANMAKU_CSS = `
     .ukick-danmaku-item img { display: inline-block !important; vertical-align: middle !important; height: 1.4em !important; width: auto !important; margin: 0 2px !important; }
   `;
 
+function createLaneManager() {
+  const laneUntil = [];
+  return {
+    assign(overlayHeight, itemHeight, durationMs) {
+      const lh = itemHeight + 10;
+      const laneCount = Math.max(1, Math.floor((overlayHeight / lh) * 0.9));
+      const now = performance.now();
+
+      let best = -1;
+      let bestUntil = Infinity;
+      for (let i = 0; i < laneCount; i++) {
+        const until = laneUntil[i] || 0;
+        if (until <= now) {
+          best = i;
+          break;
+        }
+        if (until < bestUntil) {
+          bestUntil = until;
+          best = i;
+        }
+      }
+      if (best === -1) best = 0;
+
+      laneUntil[best] = now + durationMs + 200;
+      return best * lh;
+    },
+    reset() {
+      laneUntil.length = 0;
+    },
+  };
+}
+
 export const DanmakuEngine = {
   config: {
     speed: 6,
@@ -38,6 +112,7 @@ export const DanmakuEngine = {
     maxQueueSize: 60,
     scrollPauseDuration: 500,
     maxTextLength: 100,
+    recentMemorySize: 300,
 
     replyPatterns: [
       /^الرد على @[\w-]+ /i, // ar
@@ -87,14 +162,18 @@ export const DanmakuEngine = {
     observer: null,
     chatContainer: null,
     messageQueue: [],
-    highestProcessedIndex: -1,
     isPaused: false,
     displayTimer: null,
     scrollTimer: null,
     intervalId: null,
+    pollId: null,
     isActive: false,
     currentUrl: window.location.href,
+    lastScrollTop: 0,
   },
+
+  lanes: createLaneManager(),
+  recentKeys: new Set(),
 
   start: function () {
     if (this.state.isActive) return;
@@ -102,7 +181,9 @@ export const DanmakuEngine = {
     this.state.isActive = true;
     this.state.currentUrl = window.location.href;
     this.state.messageQueue = [];
-    this.state.highestProcessedIndex = this.scanLatestIndex();
+    this.state.lastScrollTop = 0;
+    this.lanes.reset();
+    this.recentKeys.clear();
 
     this.setupOverlay();
     this.setupObserver();
@@ -114,54 +195,86 @@ export const DanmakuEngine = {
       if (window.location.href !== this.state.currentUrl) {
         this.state.currentUrl = window.location.href;
         this.state.messageQueue = [];
-        this.state.highestProcessedIndex = -1;
-        if (this.state.observer) {
-          this.state.observer.disconnect();
-          this.state.observer = null;
-        }
-        if (this.state.chatContainer) {
-          this.state.chatContainer.removeEventListener(
-            "scroll",
-            this.handleScroll,
-          );
-          this.state.chatContainer = null;
-        }
-        this.setupOverlay();
+        this.lanes.reset();
+        this.recentKeys.clear();
       }
 
       this.setupOverlay();
       this.setupObserver();
-    }, 1000);
+    }, 2000);
+
+    this.state.pollId = setInterval(() => {
+      if (!this.state.isActive || !this.state.chatContainer) return;
+      const t0 = performance.now();
+      const rows = this.state.chatContainer.querySelectorAll("[data-index]");
+      if (rows.length === 0) return;
+      this.processMessage(rows[rows.length - 1]);
+      dmPerf.pollMs += performance.now() - t0;
+      dmPerf.pollCalls++;
+      if (performance.now() - dmPerf.lastReport > 5000) {
+        dmPerf.lastReport = performance.now();
+        window.dmReport();
+      }
+    }, 2000);
   },
 
   stop: function () {
     this.state.isActive = false;
     if (this.state.intervalId) clearInterval(this.state.intervalId);
+    if (this.state.pollId) clearInterval(this.state.pollId);
     if (this.state.observer) this.state.observer.disconnect();
     if (this.state.overlay) this.state.overlay.remove();
     if (this.state.displayTimer) clearTimeout(this.state.displayTimer);
-    if (this.state.chatContainer)
-      this.state.chatContainer.removeEventListener("scroll", this.handleScroll);
     this.state.intervalId = null;
+    this.state.pollId = null;
     this.state.observer = null;
     this.state.overlay = null;
     this.state.chatContainer = null;
     this.state.messageQueue = [];
   },
 
-  findChatContainer: function () {
-    const id =
-      document.getElementById("chatroom-messages") ||
-      document.getElementById("chatroom");
-    if (id) return { el: id };
-    const scroll =
-      document.querySelector('[class*="chat-scrollable-area"]') ||
-      document.querySelector(".no-scrollbar.relative");
-    return scroll ? { el: scroll } : null;
+  setupObserver: function () {
+    const active = getActiveChatContainer();
+    if (!active) return;
+    if (this.state.observer && this.state.chatContainer === active) return;
+
+    if (this.state.chatContainer !== active) {
+      dmPerf.reconnects++;
+    }
+
+    if (this.state.observer) this.state.observer.disconnect();
+    if (this.state.chatContainer) {
+      this.state.chatContainer.removeEventListener("scroll", this.handleScroll);
+    }
+
+    this.state.chatContainer = active;
+    this.state.lastScrollTop = active.scrollTop || 0;
+    this.state.chatContainer.addEventListener("scroll", this.handleScroll);
+
+    this.state.observer = new MutationObserver(
+      debounceRAF((mutationsList) => {
+        if (!this.state.isActive) return;
+        const t0 = performance.now();
+        const rows = collectChatRows(mutationsList);
+        for (const row of rows) this.processMessage(row);
+        dmPerf.observerMs += performance.now() - t0;
+        dmPerf.observerCalls++;
+      }),
+    );
+
+    this.state.observer.observe(this.state.chatContainer, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["data-index"],
+    });
   },
 
   findVideoContainer: function () {
-    const video = document.querySelector("video");
+    const videos = Array.from(document.querySelectorAll("video")).filter(
+      (v) => v.getClientRects().length > 0,
+    );
+    const video = videos[0] || document.querySelector("video");
     if (!video) return null;
     let parent = video.parentElement;
     while (parent && parent.parentElement) {
@@ -179,55 +292,12 @@ export const DanmakuEngine = {
     return video.parentElement;
   },
 
-  scanLatestIndex: function () {
-    const container = this.state.chatContainer;
-    if (!container) return -1;
-    const messages = container.querySelectorAll("div[data-index]");
-    let maxIndex = -1;
-    messages.forEach((node) => {
-      const idx = parseInt(node.getAttribute("data-index"));
-      if (!isNaN(idx) && idx > maxIndex) maxIndex = idx;
-    });
-    return maxIndex;
-  },
-
-  setupObserver: function () {
-    if (
-      this.state.observer &&
-      this.state.chatContainer &&
-      document.body.contains(this.state.chatContainer)
-    )
-      return;
-    const target = this.findChatContainer();
-    if (target) {
-      if (this.state.chatContainer && this.state.chatContainer !== target.el)
-        this.state.chatContainer.removeEventListener(
-          "scroll",
-          this.handleScroll,
-        );
-      this.state.chatContainer = target.el;
-      if (this.state.observer) this.state.observer.disconnect();
-      this.state.chatContainer.addEventListener(
-        "scroll",
-        this.handleScroll.bind(this),
-      );
-      this.state.observer = new MutationObserver((mutations) => {
-        if (!this.state.isActive) return;
-        mutations.forEach((m) =>
-          m.addedNodes.forEach((n) => {
-            if (n.nodeType === 1) this.processMessage(n);
-          }),
-        );
-      });
-      this.state.observer.observe(this.state.chatContainer, {
-        childList: true,
-        subtree: true,
-      });
-    }
-  },
-
   setupOverlay: function () {
-    if (this.state.overlay && document.body.contains(this.state.overlay))
+    if (
+      this.state.overlay &&
+      document.body.contains(this.state.overlay) &&
+      this.state.overlay.getClientRects().length > 0
+    )
       return;
     const videoContainer = this.findVideoContainer();
     if (videoContainer) {
@@ -242,20 +312,23 @@ export const DanmakuEngine = {
     }
   },
 
-  handleScroll: function () {
-    this.state.isPaused = true;
-    if (this.state.scrollTimer) clearTimeout(this.state.scrollTimer);
-    this.state.scrollTimer = setTimeout(() => {
-      this.state.isPaused = false;
-    }, this.config.scrollPauseDuration);
+  handleScroll: () => {
+    const st = DanmakuEngine.state.chatContainer?.scrollTop || 0;
+    const prev = DanmakuEngine.state.lastScrollTop;
+    DanmakuEngine.state.lastScrollTop = st;
+
+    if (st < prev - 2) {
+      DanmakuEngine.state.isPaused = true;
+      if (DanmakuEngine.state.scrollTimer)
+        clearTimeout(DanmakuEngine.state.scrollTimer);
+      DanmakuEngine.state.scrollTimer = setTimeout(() => {
+        DanmakuEngine.state.isPaused = false;
+      }, DanmakuEngine.config.scrollPauseDuration);
+    }
   },
 
   processMessage: function (node) {
-    const currentIndex = parseInt(node.getAttribute("data-index"));
-    if (!isNaN(currentIndex)) {
-      if (currentIndex <= this.state.highestProcessedIndex) return;
-      this.state.highestProcessedIndex = currentIndex;
-    }
+    const t0 = performance.now();
     if (node.nodeType !== 1) return;
 
     const span = node.querySelector("span.font-normal");
@@ -264,6 +337,7 @@ export const DanmakuEngine = {
     const html = span.innerHTML,
       txt = span.innerText || "";
     if (!html) return;
+
     if (this.config.systemKeywords.some((k) => txt.includes(k))) return;
 
     let cleanTxt = txt;
@@ -275,6 +349,19 @@ export const DanmakuEngine = {
     if (cleanTxt.length > this.config.maxTextLength) return;
     if (!cleanTxt && !html.includes("<img")) return;
 
+    const key = txt.substring(0, 100);
+    if (this.recentKeys.has(key)) {
+      dmPerf.processSkipped++;
+      return;
+    }
+    this.recentKeys.add(key);
+    if (this.recentKeys.size > this.config.recentMemorySize) {
+      const arr = Array.from(this.recentKeys);
+      this.recentKeys = new Set(arr.slice(50));
+    }
+
+    dmPerf.processMs += performance.now() - t0;
+    dmPerf.processCalls++;
     this.addToQueue({ html: html, text: cleanTxt });
   },
 
@@ -306,12 +393,16 @@ export const DanmakuEngine = {
   },
 
   showMessage: function (html) {
+    const t0 = performance.now();
     if (!this.state.overlay) {
       this.setupOverlay();
       if (!this.state.overlay) return;
     }
     const rect = this.state.overlay.getBoundingClientRect();
-    if (rect.width === 0) return;
+    if (rect.width === 0) {
+      this.setupOverlay();
+      return;
+    }
 
     const item = document.createElement("div");
     item.className = "ukick-danmaku-item";
@@ -328,21 +419,26 @@ export const DanmakuEngine = {
       ];
       item.style.color = colors[Math.floor(Math.random() * colors.length)];
     }
-    this.state.overlay.appendChild(item);
 
-    const lh = this.config.fontSize + 10;
-    const lane = Math.floor(
-      Math.random() * Math.max(1, Math.floor((rect.height / lh) * 0.85)),
+    const durationMs = this.config.speed * 1000;
+    const top = this.lanes.assign(
+      rect.height,
+      this.config.fontSize,
+      durationMs,
     );
-    item.style.top = lane * lh + "px";
+    item.style.top = top + "px";
+
+    this.state.overlay.appendChild(item);
 
     item.animate(
       [
         { transform: `translateX(${rect.width}px)` },
         { transform: `translateX(-100%) translateX(-${item.offsetWidth}px)` },
       ],
-      { duration: this.config.speed * 1000, easing: "linear" },
+      { duration: durationMs, easing: "linear" },
     ).onfinish = () => item.remove();
+    dmPerf.showMs += performance.now() - t0;
+    dmPerf.showCalls++;
   },
 };
 

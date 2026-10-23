@@ -1,4 +1,4 @@
-// uKick — theme
+// uKick - theme
 
 export const themepalettes = {
   original: { bg: "#53fc18", text: "#000000" },
