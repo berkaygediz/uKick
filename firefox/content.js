@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uKick - Everything for Kick
 // @namespace    https://github.com/berkaygediz/uKick
-// @version      3.2.0.0
+// @version      3.2.0.1
 // @description  All-in-one Kick tool to block channels, categories, tags & chat. Sync remote lists. Boost volume, set quality, danmaku & themes.
 // @author       berkaygediz
 // @match        https://kick.com/*

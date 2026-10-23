@@ -359,6 +359,14 @@ async function setupFeatureToggle(toggleId, contentId, permissionObj) {
       if (granted) {
         await browser.storage.local.set({ [toggleId]: true });
         if (content) content.classList.remove("section-content-disabled");
+
+        if (toggleId === "enableSubscriptionsToggle") {
+          try {
+            await browser.runtime.sendMessage({
+              action: "enableSubscriptions",
+            });
+          } catch (e) {}
+        }
       } else {
         toggle.checked = false;
         if (content) content.classList.add("section-content-disabled");
@@ -367,6 +375,12 @@ async function setupFeatureToggle(toggleId, contentId, permissionObj) {
     } else {
       await browser.storage.local.set({ [toggleId]: false });
       if (content) content.classList.add("section-content-disabled");
+
+      if (toggleId === "enableSubscriptionsToggle") {
+        try {
+          await browser.runtime.sendMessage({ action: "disableSubscriptions" });
+        } catch (e) {}
+      }
     }
   });
 }
@@ -436,13 +450,16 @@ function renderSubscriptions() {
         syncBtn.title = i18n("btn_update_now");
         syncBtn.onclick = async () => {
           syncBtn.style.color = "#00b660";
-          browser.runtime.sendMessage(
-            { action: "syncUrl", url: sub.url },
-            (res) => {
-              syncBtn.style.color = res?.success ? "#8bc34a" : "#d9534f";
-              renderSubscriptions();
-            },
-          );
+          try {
+            const res = await browser.runtime.sendMessage({
+              action: "syncUrl",
+              url: sub.url,
+            });
+            syncBtn.style.color = res?.success ? "#8bc34a" : "#d9534f";
+          } catch (e) {
+            syncBtn.style.color = "#d9534f";
+          }
+          renderSubscriptions();
         };
 
         const removeBtn = document.createElement("button");
@@ -483,22 +500,25 @@ function setupSubscriptionEvents() {
     const type = subTypeSelect.value;
     if (!url) return;
 
+    let urlObj;
     try {
-      const urlObj = new URL(url);
-      const hasPermission = await browser.permissions.contains({
-        origins: [`${urlObj.origin}/*`],
-      });
-      if (!hasPermission) {
-        const granted = await browser.permissions.request({
-          origins: [`${urlObj.origin}/*`],
-        });
-        if (!granted) {
-          alert(i18n("alert_permission_denied"));
-          return;
-        }
-      }
+      urlObj = new URL(url);
     } catch (err) {
       alert(i18n("alert_invalid_url"));
+      return;
+    }
+
+    try {
+      const granted = await browser.permissions.request({
+        origins: [`${urlObj.origin}/*`],
+      });
+      if (!granted) {
+        alert(i18n("alert_permission_denied"));
+        return;
+      }
+    } catch (e) {
+      console.error("Permission request failed", e);
+      alert(i18n("alert_permission_denied"));
       return;
     }
 
@@ -515,9 +535,10 @@ function setupSubscriptionEvents() {
     await browser.storage.local.set({ remoteSubscriptions: subs });
     subUrlInput.value = "";
     renderSubscriptions();
-    browser.runtime.sendMessage({ action: "syncUrl", url }, () =>
-      renderSubscriptions(),
-    );
+    try {
+      await browser.runtime.sendMessage({ action: "syncUrl", url });
+    } catch (e) {}
+    renderSubscriptions();
   });
 
   syncIntervalSelect.addEventListener("change", async () => {
@@ -532,11 +553,12 @@ function setupSubscriptionEvents() {
   updateAllBtn.addEventListener("click", async () => {
     updateAllBtn.disabled = true;
     updateAllBtn.textContent = i18n("options_sub_updating");
-    browser.runtime.sendMessage({ action: "syncAll" }, (res) => {
-      updateAllBtn.disabled = false;
-      updateAllBtn.textContent = i18n("options_sub_update_all");
-      renderSubscriptions();
-    });
+    try {
+      await browser.runtime.sendMessage({ action: "syncAll" });
+    } catch (e) {}
+    updateAllBtn.disabled = false;
+    updateAllBtn.textContent = i18n("options_sub_update_all");
+    renderSubscriptions();
   });
 }
 
