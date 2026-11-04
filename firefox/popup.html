@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>uKick</title>
+    <link rel="icon" href="images/icon-32.png" />
     <style>
       body {
         background: #0f0f0f;
@@ -32,6 +33,24 @@
 
       h1 img {
         -webkit-user-drag: none;
+      }
+
+      h1 .brand-text {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        line-height: 1.1;
+      }
+
+      h1 .brand-author {
+        font-size: 9px;
+        font-weight: normal;
+        color: #6e7681;
+        letter-spacing: 0.3px;
+      }
+
+      h1 .brand-name {
+        font-size: inherit;
       }
 
       .section {
@@ -236,7 +255,10 @@
   <body>
     <h1>
       <img src="images/icon-48.png" alt="uKick Logo" draggable="false" />
-      uKick
+      <span class="brand-text">
+        <span class="brand-author">Berkay Gediz</span>
+        <span class="brand-name">uKick</span>
+      </span>
     </h1>
 
     <div class="section">

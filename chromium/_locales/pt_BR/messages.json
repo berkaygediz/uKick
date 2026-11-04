@@ -276,5 +276,106 @@
     },
     "platform_redirect_label": {
         "message": "Modo TV"
+    },
+    "btn_unblock_channel": {
+        "message": "Desbloquear este canal"
+    },
+    "alert_channel_unblocked": {
+        "message": "$CHANNEL$ desbloqueado!",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "btn_unblock_category": {
+        "message": "Mostrar categoria"
+    },
+    "platform_web": {
+        "message": "Web (kick.com)"
+    },
+    "platform_webos": {
+        "message": "webOS (webos.kick.com)"
+    },
+    "platform_tizen": {
+        "message": "Tizen (tizen.kick.com)"
+    },
+    "options_screenshot": {
+        "message": "Captura de tela"
+    },
+    "btn_screenshot": {
+        "message": "Captura (clique: salvar, Ctrl+clique: copiar)"
+    },
+    "shot_saved": {
+        "message": "Captura salva."
+    },
+    "shot_copied": {
+        "message": "Captura copiada para a área de transferência."
+    },
+    "shot_notready": {
+        "message": "O vídeo não está pronto."
+    },
+    "shot_unavailable": {
+        "message": "Capturas de tela não são permitidas nesta transmissão."
+    },
+    "shot_failed": {
+        "message": "Falha ao capturar."
+    },
+    "warn_screenshot": {
+        "message": "Capturas de transmissões são apenas para uso pessoal. A responsabilidade é sua."
+    },
+    "options_ambient": {
+        "message": "Modo ambiente"
+    },
+    "warn_ambient": {
+        "message": "O fundo da página fica transparente; alguns detalhes podem ficar difíceis de ver."
+    },
+    "options_ambient_blur": {
+        "message": "Desfoque"
+    },
+    "options_ambient_opacity": {
+        "message": "Opacidade"
+    },
+    "options_ambient_spread": {
+        "message": "Expansão"
+    },
+    "options_ambient_scrim": {
+        "message": "Proteção do chat"
+    },
+    "options_ambient_experimental": {
+        "message": "Experimental"
+    },
+    "btn_confirm": {
+        "message": "Entendi"
+    },
+    "btn_cancel": {
+        "message": "Cancelar"
+    },
+    "btn_swap_chat": {
+        "message": "Trocar direção do chat"
+    },
+    "btn_danmaku": {
+        "message": "Danmaku"
+    },
+    "btn_active_users": {
+        "message": "Usuários ativos"
+    },
+    "overlay_broadcaster": {
+        "message": "Streamer"
+    },
+    "overlay_verified": {
+        "message": "Verificado"
+    },
+    "overlay_moderators": {
+        "message": "Moderadores"
+    },
+    "overlay_viewers": {
+        "message": "Espectadores"
+    },
+    "overlay_search_users": {
+        "message": "Buscar usuários"
+    },
+    "btn_reset_defaults": {
+        "message": "Restaurar padrões"
     }
 }

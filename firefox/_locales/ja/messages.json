@@ -276,5 +276,106 @@
     },
     "platform_redirect_label": {
         "message": "TVモード"
+    },
+    "btn_unblock_channel": {
+        "message": "このチャンネルのブロックを解除"
+    },
+    "alert_channel_unblocked": {
+        "message": "$CHANNEL$ のブロックを解除しました！",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "btn_unblock_category": {
+        "message": "カテゴリを表示"
+    },
+    "platform_web": {
+        "message": "Web (kick.com)"
+    },
+    "platform_webos": {
+        "message": "webOS (webos.kick.com)"
+    },
+    "platform_tizen": {
+        "message": "Tizen (tizen.kick.com)"
+    },
+    "options_screenshot": {
+        "message": "スクリーンショット"
+    },
+    "btn_screenshot": {
+        "message": "スクリーンショット（クリック：保存、Ctrl+クリック：コピー）"
+    },
+    "shot_saved": {
+        "message": "スクリーンショットを保存しました。"
+    },
+    "shot_copied": {
+        "message": "スクリーンショットをクリップボードにコピーしました。"
+    },
+    "shot_notready": {
+        "message": "動画の準備ができていません。"
+    },
+    "shot_unavailable": {
+        "message": "この配信ではスクリーンショットは許可されていません。"
+    },
+    "shot_failed": {
+        "message": "スクリーンショットに失敗しました。"
+    },
+    "warn_screenshot": {
+        "message": "配信のスクリーンショットは個人利用のみに限ります。責任はご自身にあります。"
+    },
+    "options_ambient": {
+        "message": "アンビエントモード"
+    },
+    "warn_ambient": {
+        "message": "ページの背景が透過になります。一部の細部が見えにくくなる場合があります。"
+    },
+    "options_ambient_blur": {
+        "message": "ぼかし"
+    },
+    "options_ambient_opacity": {
+        "message": "不透明度"
+    },
+    "options_ambient_spread": {
+        "message": "広がり"
+    },
+    "options_ambient_scrim": {
+        "message": "チャット保護"
+    },
+    "options_ambient_experimental": {
+        "message": "実験的機能"
+    },
+    "btn_confirm": {
+        "message": "同意しました"
+    },
+    "btn_cancel": {
+        "message": "キャンセル"
+    },
+    "btn_swap_chat": {
+        "message": "チャットの向きを切り替え"
+    },
+    "btn_danmaku": {
+        "message": "弾幕"
+    },
+    "btn_active_users": {
+        "message": "アクティブユーザー"
+    },
+    "overlay_broadcaster": {
+        "message": "配信者"
+    },
+    "overlay_verified": {
+        "message": "認証済み"
+    },
+    "overlay_moderators": {
+        "message": "モデレーター"
+    },
+    "overlay_viewers": {
+        "message": "視聴者"
+    },
+    "overlay_search_users": {
+        "message": "ユーザーを検索"
+    },
+    "btn_reset_defaults": {
+        "message": "デフォルトに戻す"
     }
 }

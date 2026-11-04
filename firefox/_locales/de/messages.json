@@ -276,5 +276,106 @@
     },
     "platform_redirect_label": {
         "message": "TV-Modus"
+    },
+    "btn_unblock_channel": {
+        "message": "Diesen Kanal wieder freigeben"
+    },
+    "alert_channel_unblocked": {
+        "message": "$CHANNEL$ wieder freigegeben!",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "btn_unblock_category": {
+        "message": "Kategorie einblenden"
+    },
+    "platform_web": {
+        "message": "Web (kick.com)"
+    },
+    "platform_webos": {
+        "message": "webOS (webos.kick.com)"
+    },
+    "platform_tizen": {
+        "message": "Tizen (tizen.kick.com)"
+    },
+    "options_screenshot": {
+        "message": "Screenshot"
+    },
+    "btn_screenshot": {
+        "message": "Screenshot (Klick: speichern, Strg+Klick: kopieren)"
+    },
+    "shot_saved": {
+        "message": "Screenshot gespeichert."
+    },
+    "shot_copied": {
+        "message": "Screenshot in die Zwischenablage kopiert."
+    },
+    "shot_notready": {
+        "message": "Video ist nicht bereit."
+    },
+    "shot_unavailable": {
+        "message": "Screenshots sind in diesem Stream nicht erlaubt."
+    },
+    "shot_failed": {
+        "message": "Screenshot fehlgeschlagen."
+    },
+    "warn_screenshot": {
+        "message": "Stream-Screenshots sind nur für den persönlichen Gebrauch. Verantwortung liegt bei dir."
+    },
+    "options_ambient": {
+        "message": "Ambient-Modus"
+    },
+    "warn_ambient": {
+        "message": "Der Seitenhintergrund wird transparent; einige Details können schwer erkennbar sein."
+    },
+    "options_ambient_blur": {
+        "message": "Unschärfe"
+    },
+    "options_ambient_opacity": {
+        "message": "Deckkraft"
+    },
+    "options_ambient_spread": {
+        "message": "Ausbreitung"
+    },
+    "options_ambient_scrim": {
+        "message": "Chat-Abdunklung"
+    },
+    "options_ambient_experimental": {
+        "message": "Experimentell"
+    },
+    "btn_confirm": {
+        "message": "Verstanden"
+    },
+    "btn_cancel": {
+        "message": "Abbrechen"
+    },
+    "btn_swap_chat": {
+        "message": "Chat-Richtung wechseln"
+    },
+    "btn_danmaku": {
+        "message": "Danmaku"
+    },
+    "btn_active_users": {
+        "message": "Aktive Benutzer"
+    },
+    "overlay_broadcaster": {
+        "message": "Streamer"
+    },
+    "overlay_verified": {
+        "message": "Verifiziert"
+    },
+    "overlay_moderators": {
+        "message": "Moderatoren"
+    },
+    "overlay_viewers": {
+        "message": "Zuschauer"
+    },
+    "overlay_search_users": {
+        "message": "Benutzer suchen"
+    },
+    "btn_reset_defaults": {
+        "message": "Auf Standard zurücksetzen"
     }
 }

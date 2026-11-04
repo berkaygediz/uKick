@@ -6,8 +6,13 @@ import {
   getBlockedCategories,
   getBlockedChannels,
   getBlockedTags,
+  unblockCategory,
 } from "../core/storage.js";
-import { extractTagText, normalizeData } from "../core/utils.js";
+import {
+  extractTagText,
+  findUsernameEl,
+  normalizeData,
+} from "../core/utils.js";
 import { processSidebarChannels } from "./sidebar.js";
 
 const blockCache = { channels: [], categories: [], tags: [] };
@@ -26,19 +31,30 @@ export function invalidateCardScan() {
 
 browser.storage.onChanged.addListener((changes, area) => {
   if (area !== "local") return;
-  if (
+  const listChanged =
     "blockedChannels" in changes ||
     "blockedCategories" in changes ||
     "blockedTags" in changes ||
-    "disableBlockButtons" in changes
-  ) {
+    "disableBlockButtons" in changes ||
+    "remoteSubscriptions" in changes;
+  if (listChanged) {
     invalidateCardScan();
-    refreshBlockCache();
+    refreshBlockCache().then(async () => {
+      const { enabled = true } = await browser.storage.local.get("enabled");
+      if (!enabled) return;
+      removeBlockedCards();
+      removeBlockedCategoryCards();
+    });
   }
-  if ("blockedChannels" in changes) refreshCardHiderCss();
+  if ("blockedChannels" in changes || "remoteSubscriptions" in changes)
+    refreshCardHiderCss();
 });
 
 let cardHiderStyle = null;
+const UKICK_LAYOUT_CSS = `
+.ukick-slot-collapsed { display: none !important; }
+.ukick-shelf-collapsed { display: none !important; }
+`;
 
 function refreshCardHiderCss() {
   getBlockedChannels().then((channels) => {
@@ -49,9 +65,16 @@ function refreshCardHiderCss() {
     }
     const rules = channels.map((u) => {
       const name = String(u).replace(/["\\]/g, "");
-      return `div:has(> div.group\\/card:has(a[href="/${name}" i])), div.group\\/card:has(a[href="/${name}" i]), a.focusable-leaf[href="/${name}" i] { display: none !important; }`;
+      return (
+        [
+          `div:has(> div.group\\/card:has(a[href="/${name}" i]))`,
+          `div.group\\/card:has(a[href="/${name}" i])`,
+          `div:has(> a.focusable-leaf[href="/${name}" i]):not(:has(> a.focusable-leaf ~ a.focusable-leaf))`,
+          `a.focusable-leaf[href="/${name}" i]`,
+        ].join(",") + " { display: none !important; }"
+      );
     });
-    cardHiderStyle.textContent = rules.join("\n");
+    cardHiderStyle.textContent = UKICK_LAYOUT_CSS + rules.join("\n");
   });
 }
 refreshCardHiderCss();
@@ -83,6 +106,112 @@ function showCard(card) {
     delete shell.dataset.ukickShell;
     shell.style.display = "";
   }
+}
+function hideLeafSlot(anchor) {
+  let node = anchor;
+  for (let i = 0; i < 6 && node.parentElement; i++) {
+    const parent = node.parentElement;
+    const leaves = parent.querySelectorAll("a.focusable-leaf").length;
+    const cs = getComputedStyle(parent);
+    const isTrack =
+      leaves > 1 ||
+      cs.display.includes("grid") ||
+      cs.overflowX === "auto" ||
+      cs.overflowX === "scroll";
+    if (isTrack) break;
+    node = parent;
+  }
+  node.dataset.ukickLeaf = "1";
+  node.classList.add("ukick-slot-collapsed");
+}
+
+function resetLeafSlots() {
+  document.querySelectorAll(".ukick-slot-collapsed").forEach((el) => {
+    el.classList.remove("ukick-slot-collapsed");
+    if (el.dataset.ukickLeaf) delete el.dataset.ukickLeaf;
+  });
+}
+
+function collapseEmptyShelves() {
+  document
+    .querySelectorAll(".ukick-shelf-collapsed")
+    .forEach((el) => el.classList.remove("ukick-shelf-collapsed"));
+
+  const cardSelector = ".group\\/card, a.focusable-leaf";
+  const tracks = new Set();
+  for (const card of document.querySelectorAll(cardSelector)) {
+    if (card.getClientRects().length > 0) continue;
+    let node = card;
+    for (let i = 0; i < 6 && node.parentElement; i++) {
+      const parent = node.parentElement;
+      if (parent.querySelectorAll(cardSelector).length > 1) {
+        tracks.add(parent);
+        break;
+      }
+      node = parent;
+    }
+  }
+
+  for (const track of tracks) {
+    const anyVisible = Array.from(track.querySelectorAll(cardSelector)).some(
+      (c) => c.getClientRects().length > 0,
+    );
+    if (!anyVisible) {
+      findShelfRoot(track).classList.add("ukick-shelf-collapsed");
+    }
+  }
+}
+
+function findShelfRoot(track) {
+  let el = track;
+  for (let i = 0; i < 8 && el && el.parentElement; i++) {
+    el = el.parentElement;
+    if (!el || el === document.body || el === document.documentElement) break;
+    const headings = el.querySelectorAll("h2, h3");
+    if (headings.length === 1) return el;
+    if (headings.length > 1) break;
+  }
+  const parent = track.parentElement;
+  return parent && parent !== document.body ? parent : track;
+}
+
+function renumberCarouselSlots() {
+  document
+    .querySelectorAll(
+      'section[aria-roledescription="carousel"], section.no-scrollbar.grid',
+    )
+    .forEach((carousel) => {
+      const children = Array.from(carousel.children);
+      const hasExplicit = children.some(
+        (ch) => ch instanceof HTMLElement && ch.style.gridColumn,
+      );
+      if (!hasExplicit) return;
+
+      let col = 1;
+      for (const ch of children) {
+        if (!(ch instanceof HTMLElement)) continue;
+
+        const isPhantom =
+          ch.getAttribute("aria-hidden") === "true" &&
+          (ch.classList.contains("h-0") || ch.classList.contains("invisible"));
+
+        if (isPhantom) {
+          ch.style.gridColumn = "1";
+          continue;
+        }
+        if (!ch.style.gridColumn) continue;
+
+        if (
+          ch.style.display === "none" ||
+          ch.classList.contains("ukick-slot-collapsed") ||
+          ch.getClientRects().length === 0
+        )
+          continue;
+
+        ch.style.gridColumn = String(col);
+        col++;
+      }
+    });
 }
 
 export async function processCategoryCards() {
@@ -139,7 +268,9 @@ export async function processCategoryCards() {
 }
 
 export async function processCategoryPageHeader() {
-  const nameEl = document.querySelector('h2[data-testid="category-name"]');
+  const nameEl = document.querySelector(
+    'h1[data-testid="category-name"], h2[data-testid="category-name"]',
+  );
   if (!nameEl) return;
 
   let raw = "";
@@ -151,6 +282,7 @@ export async function processCategoryPageHeader() {
 
   const container = nameEl.parentElement;
   if (!container) return;
+
   const dropsLink = container.querySelector('a[href$="/drops"]');
   const actionRow = dropsLink
     ? dropsLink.parentElement
@@ -182,14 +314,13 @@ export async function processCategoryPageHeader() {
       e.preventDefault();
       e.stopPropagation();
 
-      const list = await getBlockedCategories();
-      if (list.includes(categoryName)) {
-        const filtered = list.filter((c) => normalizeData(c) !== categoryName);
-        await browser.storage.local.set({
-          blockedCategories: JSON.stringify(filtered),
-        });
+      const current = btn.dataset.category;
+      if (!current) return;
+
+      if ((await getBlockedCategories()).includes(current)) {
+        await unblockCategory(current);
       } else {
-        await blockCategory(categoryName);
+        await blockCategory(current);
       }
 
       await processCategoryPageHeader();
@@ -198,10 +329,15 @@ export async function processCategoryPageHeader() {
     actionRow.appendChild(btn);
   }
 
+  btn.dataset.category = categoryName;
   btn.classList.toggle("ukick-unblock", isBlocked);
   btn.textContent = isBlocked ? "✓" : "✖";
   btn.title =
-    browser.i18n.getMessage("btn_block_category") + ": " + categoryName;
+    browser.i18n.getMessage(
+      isBlocked ? "btn_unblock_category" : "btn_block_category",
+    ) +
+    ": " +
+    categoryName;
 }
 
 export async function removeBlockedCategoryCards() {
@@ -227,9 +363,13 @@ export async function removeBlockedCategoryCards() {
       delete card.dataset.ukScan;
     }
   });
+
+  collapseEmptyShelves();
+  renumberCarouselSlots();
 }
 
 export async function removeBlockedCards() {
+  resetLeafSlots();
   const chanSet = new Set(blockCache.channels);
   const catSet = new Set(blockCache.categories);
   const blockedTags = blockCache.tags;
@@ -299,7 +439,7 @@ export async function removeBlockedCards() {
       }
     });
 
-  const usernameEl = document.getElementById("channel-username");
+  const usernameEl = findUsernameEl();
   if (usernameEl) {
     const currentUsername = normalizeData(usernameEl.textContent);
     const videoPlayer = document.getElementById("video-player");
@@ -334,8 +474,11 @@ export async function removeBlockedCards() {
       }
     }
 
-    (card.parentElement || card).style.display = shouldHide ? "none" : "";
+    if (shouldHide) hideLeafSlot(card);
   });
+
+  collapseEmptyShelves();
+  renumberCarouselSlots();
 }
 
 export async function processCards() {

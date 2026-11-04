@@ -276,5 +276,106 @@
     },
     "platform_redirect_label": {
         "message": "وضع TV"
+    },
+    "btn_unblock_channel": {
+        "message": "إلغاء حظر هذه القناة"
+    },
+    "alert_channel_unblocked": {
+        "message": "تم إلغاء حظر $CHANNEL$!",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "btn_unblock_category": {
+        "message": "إظهار الفئة"
+    },
+    "platform_web": {
+        "message": "Web (kick.com)"
+    },
+    "platform_webos": {
+        "message": "webOS (webos.kick.com)"
+    },
+    "platform_tizen": {
+        "message": "Tizen (tizen.kick.com)"
+    },
+    "options_screenshot": {
+        "message": "لقطة شاشة"
+    },
+    "btn_screenshot": {
+        "message": "لقطة شاشة (نقرة: حفظ، Ctrl+نقرة: نسخ)"
+    },
+    "shot_saved": {
+        "message": "تم حفظ لقطة الشاشة."
+    },
+    "shot_copied": {
+        "message": "تم نسخ لقطة الشاشة إلى الحافظة."
+    },
+    "shot_notready": {
+        "message": "الفيديو غير جاهز."
+    },
+    "shot_unavailable": {
+        "message": "لقطات الشاشة غير مسموح بها في هذا البث."
+    },
+    "shot_failed": {
+        "message": "فشل التقاط لقطة الشاشة."
+    },
+    "warn_screenshot": {
+        "message": "لقطات شاشة البث للاستخدام الشخصي فقط. المسؤولية عليك."
+    },
+    "options_ambient": {
+        "message": "الوضع المحيطي"
+    },
+    "warn_ambient": {
+        "message": "تصبح خلفية الصفحة شفافة؛ قد يصعب رؤية بعض التفاصيل."
+    },
+    "options_ambient_blur": {
+        "message": "ضبابية"
+    },
+    "options_ambient_opacity": {
+        "message": "العتامة"
+    },
+    "options_ambient_spread": {
+        "message": "الانتشار"
+    },
+    "options_ambient_scrim": {
+        "message": "حماية الدردشة"
+    },
+    "options_ambient_experimental": {
+        "message": "تجريبي"
+    },
+    "btn_confirm": {
+        "message": "فهمت"
+    },
+    "btn_cancel": {
+        "message": "إلغاء"
+    },
+    "btn_swap_chat": {
+        "message": "تبديل اتجاه الدردشة"
+    },
+    "btn_danmaku": {
+        "message": "دانماكو"
+    },
+    "btn_active_users": {
+        "message": "المستخدمون النشطون"
+    },
+    "overlay_broadcaster": {
+        "message": "المذيع"
+    },
+    "overlay_verified": {
+        "message": "موثّق"
+    },
+    "overlay_moderators": {
+        "message": "المشرفون"
+    },
+    "overlay_viewers": {
+        "message": "المشاهدون"
+    },
+    "overlay_search_users": {
+        "message": "البحث عن المستخدمين"
+    },
+    "btn_reset_defaults": {
+        "message": "إعادة التعيين إلى الافتراضي"
     }
 }

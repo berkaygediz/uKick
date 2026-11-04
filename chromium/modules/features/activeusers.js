@@ -11,6 +11,8 @@ let lastUrlPath = location.pathname;
 let lastUIUserCount = -1;
 let lastUIMsgCount = -1;
 
+const msg = (key, fallback) => chrome.i18n.getMessage(key) || fallback;
+
 export const ICON_USER = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
 const ICON_CHAT = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>`;
 
@@ -27,7 +29,17 @@ function updateStatsUI() {
     activeUIElement = document.createElement("div");
     activeUIElement.className = "flex items-center gap-2 text-sm font-bold";
     activeUIElement.style.marginLeft = "4px";
-    activeUIElement.innerHTML = `<div class="flex items-center gap-1 text-primary-base" style="color:#53fc18">${ICON_USER}<span class="uk-u">0</span></div><div class="flex items-center gap-1 text-white" style="color:#ffffff">${ICON_CHAT}<span class="uk-m">0</span></div>`;
+    activeUIElement.innerHTML = `<button type="button" id="ukick-au-stat-btn" class="ukick-au-stat" style="color:#53fc18">${ICON_USER}<span class="uk-u">0</span></button><div class="flex items-center gap-1 text-white" style="color:#ffffff">${ICON_CHAT}<span class="uk-m">0</span></div>`;
+    const statBtn = activeUIElement.querySelector("#ukick-au-stat-btn");
+    const usersTitle = msg("btn_active_users", "Active users");
+    statBtn.title = usersTitle;
+    statBtn.setAttribute("aria-label", usersTitle);
+    statBtn.setAttribute("aria-expanded", "false");
+    statBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleOverlay();
+    });
     parent.appendChild(activeUIElement);
   }
 
@@ -157,6 +169,11 @@ function closeOverlay() {
   document
     .getElementById("active-users-toggle-btn")
     ?.classList.remove("ukick-active");
+  const statBtn = document.getElementById("ukick-au-stat-btn");
+  if (statBtn) {
+    statBtn.classList.remove("ukick-active");
+    statBtn.setAttribute("aria-expanded", "false");
+  }
 }
 
 function buildOverlay() {
@@ -212,6 +229,14 @@ function buildOverlay() {
           ? "MODERATORS"
           : "VIEWERS";
   const catOrder = { BROADCASTER: 0, VERIFIED: 1, MODERATORS: 2, VIEWERS: 3 };
+  const catLabel = (cat) =>
+    cat === "BROADCASTER"
+      ? msg("overlay_broadcaster", "Broadcaster")
+      : cat === "VERIFIED"
+        ? msg("overlay_verified", "Verified")
+        : cat === "MODERATORS"
+          ? msg("overlay_moderators", "Moderators")
+          : msg("overlay_viewers", "Viewers");
 
   const merged = [...activeUsers.entries()]
     .map(([user, data]) => ({
@@ -231,19 +256,23 @@ function buildOverlay() {
   const overlay = document.createElement("div");
   overlay.id = "ukick-active-users-overlay";
 
-  const usersLabel = chrome.i18n.getMessage("overlay_users") || "Users";
+  const usersLabel = msg("overlay_users", "Users");
 
   overlay.innerHTML = `
     <div class="au-header">
       <b>${usersLabel} (${activeUsers.size})</b>
       <button class="au-close-btn" id="close-users-overlay">✕</button>
     </div>
-    <div class="au-search-wrap"><input type="text" id="active-users-search" class="au-search-input" placeholder="..."></div>
+    <div class="au-search-wrap"><input type="text" id="active-users-search" class="au-search-input"></div>
     <div class="au-list" id="au-list"></div>
     <div class="au-pager" id="au-pager"></div>
   `;
 
   chatArea.appendChild(overlay);
+  overlay.querySelector("#active-users-search").placeholder = msg(
+    "overlay_search_users",
+    "Search users",
+  );
 
   const listEl = overlay.querySelector("#au-list");
   const pagerEl = overlay.querySelector("#au-pager");
@@ -270,7 +299,7 @@ function buildOverlay() {
     for (const item of slice) {
       if (item.cat !== lastCat) {
         lastCat = item.cat;
-        html += `<div class="au-category-title">${item.cat}</div>`;
+        html += `<div class="au-category-title">${catLabel(item.cat)}</div>`;
       }
       html += `<div class="au-user" data-username="${escapeHtml(item.user)}" style="color:${item.color}">${escapeHtml(item.user)}</div>`;
     }
@@ -329,4 +358,9 @@ function updateOverlayUI() {
 export function toggleOverlay() {
   isOverlayVisible = !isOverlayVisible;
   updateOverlayUI();
+  const statBtn = document.getElementById("ukick-au-stat-btn");
+  if (statBtn) {
+    statBtn.classList.toggle("ukick-active", isOverlayVisible);
+    statBtn.setAttribute("aria-expanded", String(isOverlayVisible));
+  }
 }

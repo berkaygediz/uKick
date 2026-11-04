@@ -16,6 +16,14 @@ export const themepalettes = {
   lime: { bg: "#a3e635", text: "#000000" },
   sky: { bg: "#38bdf8", text: "#000000" },
   coral: { bg: "#fb7185", text: "#000000" },
+  steel: { bg: "#64748b", text: "#ffffff" },
+  navy: { bg: "#1e40af", text: "#ffffff" },
+  olive: { bg: "#4d7c0f", text: "#ffffff" },
+  blossom: { bg: "#f9a8d4", text: "#000000" },
+  lavender: { bg: "#c4b5fd", text: "#000000" },
+  peach: { bg: "#fdba74", text: "#000000" },
+  amethyst: { bg: "#8b5cf6", text: "#ffffff" },
+  azure: { bg: "#5bcefa", text: "#000000" },
 };
 
 let paletteStyleTag = null,

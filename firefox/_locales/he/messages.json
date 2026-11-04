@@ -276,5 +276,106 @@
     },
     "platform_redirect_label": {
         "message": "מצב TV"
+    },
+    "btn_unblock_channel": {
+        "message": "בטל חסימת ערוץ זה"
+    },
+    "alert_channel_unblocked": {
+        "message": "החסימה של $CHANNEL$ הוסרה!",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "btn_unblock_category": {
+        "message": "הצג קטגוריה"
+    },
+    "platform_web": {
+        "message": "Web (kick.com)"
+    },
+    "platform_webos": {
+        "message": "webOS (webos.kick.com)"
+    },
+    "platform_tizen": {
+        "message": "Tizen (tizen.kick.com)"
+    },
+    "options_screenshot": {
+        "message": "צילום מסך"
+    },
+    "btn_screenshot": {
+        "message": "צילום מסך (לחיצה: שמירה, Ctrl+לחיצה: העתקה)"
+    },
+    "shot_saved": {
+        "message": "צילום המסך נשמר."
+    },
+    "shot_copied": {
+        "message": "צילום המסך הועתק ללוח."
+    },
+    "shot_notready": {
+        "message": "הווידאו אינו מוכן."
+    },
+    "shot_unavailable": {
+        "message": "צילומי מסך אסורים בשידור זה."
+    },
+    "shot_failed": {
+        "message": "צילום המסך נכשל."
+    },
+    "warn_screenshot": {
+        "message": "צילומי מסך של שידורים לשימוש אישי בלבד. האחריות עליך."
+    },
+    "options_ambient": {
+        "message": "מצב סביבה"
+    },
+    "warn_ambient": {
+        "message": "הרקע של הדף הופך שקוף; ייתכן שפרטים מסוימים יהיו קשים לראות."
+    },
+    "options_ambient_blur": {
+        "message": "טשטוש"
+    },
+    "options_ambient_opacity": {
+        "message": "אטימות"
+    },
+    "options_ambient_spread": {
+        "message": "התפשטות"
+    },
+    "options_ambient_scrim": {
+        "message": "הגנת צ'אט"
+    },
+    "options_ambient_experimental": {
+        "message": "ניסיוני"
+    },
+    "btn_confirm": {
+        "message": "הבנתי"
+    },
+    "btn_cancel": {
+        "message": "ביטול"
+    },
+    "btn_swap_chat": {
+        "message": "החלף כיוון צ'אט"
+    },
+    "btn_danmaku": {
+        "message": "דנמקו"
+    },
+    "btn_active_users": {
+        "message": "משתמשים פעילים"
+    },
+    "overlay_broadcaster": {
+        "message": "משדר"
+    },
+    "overlay_verified": {
+        "message": "מאומת"
+    },
+    "overlay_moderators": {
+        "message": "מנהלים"
+    },
+    "overlay_viewers": {
+        "message": "צופים"
+    },
+    "overlay_search_users": {
+        "message": "חיפוש משתמשים"
+    },
+    "btn_reset_defaults": {
+        "message": "אפס לברירת מחדל"
     }
 }

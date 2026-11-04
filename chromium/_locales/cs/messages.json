@@ -276,5 +276,106 @@
     },
     "platform_redirect_label": {
         "message": "Režim TV"
+    },
+    "btn_unblock_channel": {
+        "message": "Odblokovat tento kanál"
+    },
+    "alert_channel_unblocked": {
+        "message": "$CHANNEL$ odblokován!",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "btn_unblock_category": {
+        "message": "Zobrazit kategorii"
+    },
+    "platform_web": {
+        "message": "Web (kick.com)"
+    },
+    "platform_webos": {
+        "message": "webOS (webos.kick.com)"
+    },
+    "platform_tizen": {
+        "message": "Tizen (tizen.kick.com)"
+    },
+    "options_screenshot": {
+        "message": "Snímek obrazovky"
+    },
+    "btn_screenshot": {
+        "message": "Snímek obrazovky (klik: uložit, Ctrl+klik: zkopírovat)"
+    },
+    "shot_saved": {
+        "message": "Snímek obrazovky uložen."
+    },
+    "shot_copied": {
+        "message": "Snímek zkopírován do schránky."
+    },
+    "shot_notready": {
+        "message": "Video není připraveno."
+    },
+    "shot_unavailable": {
+        "message": "Snímky obrazovky nejsou v tomto přenosu povoleny."
+    },
+    "shot_failed": {
+        "message": "Snímek obrazovky se nezdařil."
+    },
+    "warn_screenshot": {
+        "message": "Snímky z přenosů jsou pouze pro osobní použití. Odpovědnost je na vás."
+    },
+    "options_ambient": {
+        "message": "Ambientní režim"
+    },
+    "warn_ambient": {
+        "message": "Pozadí stránky se stane průhledným; některé detaily mohou být špatně viditelné."
+    },
+    "options_ambient_blur": {
+        "message": "Rozostření"
+    },
+    "options_ambient_opacity": {
+        "message": "Krytí"
+    },
+    "options_ambient_spread": {
+        "message": "Rozprostření"
+    },
+    "options_ambient_scrim": {
+        "message": "Ochrana chatu"
+    },
+    "options_ambient_experimental": {
+        "message": "Experimentální"
+    },
+    "btn_confirm": {
+        "message": "Rozumím"
+    },
+    "btn_cancel": {
+        "message": "Zrušit"
+    },
+    "btn_swap_chat": {
+        "message": "Prohodit směr chatu"
+    },
+    "btn_danmaku": {
+        "message": "Danmaku"
+    },
+    "btn_active_users": {
+        "message": "Aktivní uživatelé"
+    },
+    "overlay_broadcaster": {
+        "message": "Streamer"
+    },
+    "overlay_verified": {
+        "message": "Ověřeno"
+    },
+    "overlay_moderators": {
+        "message": "Moderátoři"
+    },
+    "overlay_viewers": {
+        "message": "Diváci"
+    },
+    "overlay_search_users": {
+        "message": "Hledat uživatele"
+    },
+    "btn_reset_defaults": {
+        "message": "Obnovit výchozí"
     }
 }

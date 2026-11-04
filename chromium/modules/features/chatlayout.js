@@ -1,6 +1,7 @@
 // uKick - chatlayout
 
 import { ICON_USER, isOverlayVisible, toggleOverlay } from "./activeusers.js";
+import { findUsernameEl } from "../core/utils.js";
 
 let swapChatDirection = false;
 
@@ -67,9 +68,10 @@ function applyChatOrder(swapped) {
 }
 
 function addChannelToggles() {
-  const usernameEl = document.getElementById("channel-username");
+  const usernameEl = findUsernameEl();
   if (!usernameEl) return;
-  const parent = usernameEl.parentElement;
+  const anchor = usernameEl.closest("button") || usernameEl.parentElement;
+  const parent = anchor.parentElement;
 
   let wrapper = document.getElementById("ukick-channel-toggles");
   if (wrapper && wrapper.parentElement !== parent) {
@@ -86,7 +88,8 @@ function addChannelToggles() {
     const swapBtn = document.createElement("button");
     swapBtn.id = "ukick-swap-btn";
     swapBtn.className = "ukick-round-toggle";
-    swapBtn.title = "Swap chat direction";
+    swapBtn.title =
+      chrome.i18n.getMessage("btn_swap_chat") || "Swap chat direction";
     swapBtn.innerHTML = SWAP_ICON;
     swapBtn.addEventListener("click", (e) => {
       e.preventDefault();
@@ -100,7 +103,7 @@ function addChannelToggles() {
     const danmakuBtn = document.createElement("button");
     danmakuBtn.id = "danmaku-toggle-btn";
     danmakuBtn.className = "ukick-round-toggle";
-    danmakuBtn.title = "Danmaku";
+    danmakuBtn.title = chrome.i18n.getMessage("btn_danmaku") || "Danmaku";
     danmakuBtn.innerHTML = DANMAKU_ICON;
     chrome.storage.local.get("enableDanmaku", (r) =>
       setToggleActive(danmakuBtn, r.enableDanmaku === true),
@@ -119,7 +122,8 @@ function addChannelToggles() {
     const usersBtn = document.createElement("button");
     usersBtn.id = "active-users-toggle-btn";
     usersBtn.className = "ukick-round-toggle";
-    usersBtn.title = "Active users";
+    usersBtn.title =
+      chrome.i18n.getMessage("btn_active_users") || "Active users";
     usersBtn.innerHTML = ICON_USER;
     usersBtn.addEventListener("click", (e) => {
       e.preventDefault();
@@ -131,7 +135,12 @@ function addChannelToggles() {
     parent.appendChild(wrapper);
   }
 
-  if (parent.lastElementChild !== wrapper) parent.appendChild(wrapper);
+  const prev = document.getElementById("channelPageBlockBtn") || anchor;
+  if (
+    wrapper.previousElementSibling !== prev &&
+    prev.parentNode === parent
+  )
+    parent.insertBefore(wrapper, prev.nextSibling);
 
   setToggleActive(document.getElementById("ukick-swap-btn"), swapChatDirection);
   setToggleActive(

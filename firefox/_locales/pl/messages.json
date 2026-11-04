@@ -276,5 +276,106 @@
     },
     "platform_redirect_label": {
         "message": "Tryb TV"
+    },
+    "btn_unblock_channel": {
+        "message": "Odblokuj ten kanał"
+    },
+    "alert_channel_unblocked": {
+        "message": "$CHANNEL$ odblokowany!",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "btn_unblock_category": {
+        "message": "Pokaż kategorię"
+    },
+    "platform_web": {
+        "message": "Web (kick.com)"
+    },
+    "platform_webos": {
+        "message": "webOS (webos.kick.com)"
+    },
+    "platform_tizen": {
+        "message": "Tizen (tizen.kick.com)"
+    },
+    "options_screenshot": {
+        "message": "Zrzut ekranu"
+    },
+    "btn_screenshot": {
+        "message": "Zrzut ekranu (klik: zapisz, Ctrl+klik: kopiuj)"
+    },
+    "shot_saved": {
+        "message": "Zrzut ekranu zapisany."
+    },
+    "shot_copied": {
+        "message": "Zrzut ekranu skopiowany do schowka."
+    },
+    "shot_notready": {
+        "message": "Film nie jest gotowy."
+    },
+    "shot_unavailable": {
+        "message": "Na tej transmisji zrzuty ekranu są niedozwolone."
+    },
+    "shot_failed": {
+        "message": "Nie udało się wykonać zrzutu ekranu."
+    },
+    "warn_screenshot": {
+        "message": "Zrzuty z transmisji są tylko do użytku osobistego. Odpowiedzialność jest Twoja."
+    },
+    "options_ambient": {
+        "message": "Tryb otoczenia"
+    },
+    "warn_ambient": {
+        "message": "Tło strony staje się przezroczyste; niektóre szczegóły mogą być trudne do zobaczenia."
+    },
+    "options_ambient_blur": {
+        "message": "Rozmycie"
+    },
+    "options_ambient_opacity": {
+        "message": "Krycie"
+    },
+    "options_ambient_spread": {
+        "message": "Rozpiętość"
+    },
+    "options_ambient_scrim": {
+        "message": "Ochrona czatu"
+    },
+    "options_ambient_experimental": {
+        "message": "Eksperymentalne"
+    },
+    "btn_confirm": {
+        "message": "Rozumiem"
+    },
+    "btn_cancel": {
+        "message": "Anuluj"
+    },
+    "btn_swap_chat": {
+        "message": "Zmień kierunek czatu"
+    },
+    "btn_danmaku": {
+        "message": "Danmaku"
+    },
+    "btn_active_users": {
+        "message": "Aktywni użytkownicy"
+    },
+    "overlay_broadcaster": {
+        "message": "Streamer"
+    },
+    "overlay_verified": {
+        "message": "Zweryfikowani"
+    },
+    "overlay_moderators": {
+        "message": "Moderatorzy"
+    },
+    "overlay_viewers": {
+        "message": "Widzowie"
+    },
+    "overlay_search_users": {
+        "message": "Szukaj użytkowników"
+    },
+    "btn_reset_defaults": {
+        "message": "Przywróć domyślne"
     }
 }

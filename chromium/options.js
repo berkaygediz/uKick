@@ -1,3 +1,4 @@
+import { showCenterToast } from "./modules/core/utils.js";
 import {
   getOpenLapisStatus,
   sendToOpenLapis,
@@ -650,6 +651,12 @@ function setupEventListeners() {
     ),
 
     themesTitle: chrome.i18n.getMessage("options_themes"),
+    screenshotTitle: chrome.i18n.getMessage("options_screenshot"),
+    ambientTitle: chrome.i18n.getMessage("options_ambient"),
+    ambientBlurLabel: chrome.i18n.getMessage("options_ambient_blur"),
+    ambientOpacityLabel: chrome.i18n.getMessage("options_ambient_opacity"),
+    ambientSpreadLabel: chrome.i18n.getMessage("options_ambient_spread"),
+    ambientScrimLabel: chrome.i18n.getMessage("options_ambient_scrim"),
     subTitle: chrome.i18n.getMessage("options_subscriptions"),
     subUrlInput: chrome.i18n.getMessage("placeholder_remote_url"),
     addSubBtn: chrome.i18n.getMessage("options_sub_add"),
@@ -666,6 +673,24 @@ function setupEventListeners() {
     int_config_mobile_p: chrome.i18n.getMessage("int_config_mobile_p"),
   };
 
+  function setLabelText(el, text) {
+    const bold = el.querySelector("b");
+    if (bold) {
+      bold.textContent = text;
+      return;
+    }
+    const badge = el.querySelector(".ukick-exp-badge");
+    if (badge) {
+      const textNode = Array.from(el.childNodes).find(
+        (n) => n.nodeType === Node.TEXT_NODE,
+      );
+      if (textNode) textNode.nodeValue = text;
+      else el.insertBefore(document.createTextNode(text), badge);
+      return;
+    }
+    el.textContent = text;
+  }
+
   for (const [id, text] of Object.entries(translations)) {
     const el = document.getElementById(id);
     if (el && text) {
@@ -680,9 +705,7 @@ function setupEventListeners() {
           el.placeholder = text;
         }
       } else {
-        const bold = el.querySelector("b");
-        if (bold) bold.textContent = text;
-        else el.textContent = text;
+        setLabelText(el, text);
       }
     }
   }
@@ -884,6 +907,148 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
+
+  const screenshotToggle = document.getElementById("screenshotToggle");
+  if (screenshotToggle) {
+    chrome.storage.local.get(
+      ["enableScreenshot"],
+      ({ enableScreenshot = false }) => {
+        screenshotToggle.checked = enableScreenshot;
+      },
+    );
+    screenshotToggle.addEventListener("change", () => {
+      if (!screenshotToggle.checked) {
+        chrome.storage.local.set({ enableScreenshot: false });
+        return;
+      }
+      screenshotToggle.checked = false;
+      showCenterToast(i18n("warn_screenshot"), {
+        confirmText: i18n("btn_confirm"),
+        cancelText: i18n("btn_cancel"),
+        onConfirm: () => {
+          screenshotToggle.checked = true;
+          chrome.storage.local.set({ enableScreenshot: true });
+        },
+      });
+    });
+  }
+
+  const ambientExpBadge = document.getElementById("ambientExpBadge");
+  if (ambientExpBadge) {
+    ambientExpBadge.title = i18n("options_ambient_experimental");
+  }
+
+  const ambientToggle = document.getElementById("ambientToggle");
+  const ambientHeader = document.getElementById("ambientHeader");
+  const ambientSettings = document.getElementById("ambientSettings");
+  if (ambientToggle && ambientHeader && ambientSettings) {
+    const ambientInputs = [
+      "ambientBlur",
+      "ambientOpacity",
+      "ambientSpread",
+      "ambientScrim",
+    ]
+      .map((id) => document.getElementById(id))
+      .filter(Boolean);
+
+    ambientHeader.addEventListener("click", (e) => {
+      if (e.target.closest("label.switch, input")) return;
+      const open = ambientSettings.classList.toggle("open");
+      ambientHeader.classList.toggle("active", open);
+    });
+
+    function setAmbientInputsDisabled(disabled) {
+      ambientInputs.forEach((input) => {
+        input.disabled = disabled;
+      });
+    }
+
+    chrome.storage.local.get(
+      ["ambientEnabled"],
+      ({ ambientEnabled = false }) => {
+        ambientToggle.checked = ambientEnabled;
+        setAmbientInputsDisabled(!ambientEnabled);
+      },
+    );
+    ambientToggle.addEventListener("change", () => {
+      if (!ambientToggle.checked) {
+        chrome.storage.local.set({ ambientEnabled: false });
+        setAmbientInputsDisabled(true);
+        return;
+      }
+      ambientToggle.checked = false;
+      showCenterToast(i18n("warn_ambient"), {
+        confirmText: i18n("btn_confirm"),
+        cancelText: i18n("btn_cancel"),
+        onConfirm: () => {
+          ambientToggle.checked = true;
+          setAmbientInputsDisabled(false);
+          chrome.storage.local.set({ ambientEnabled: true });
+        },
+      });
+    });
+  }
+
+  const ambientRanges = [
+    {
+      id: "ambientBlur",
+      key: "ambientBlur",
+      scale: 1,
+      fallback: 60,
+      format: (v) => v + "px",
+    },
+    {
+      id: "ambientOpacity",
+      key: "ambientOpacity",
+      scale: 0.01,
+      fallback: 0.6,
+      format: (v) => v + "%",
+    },
+    {
+      id: "ambientSpread",
+      key: "ambientSpread",
+      scale: 0.1,
+      fallback: 2.2,
+      format: (v) => v.toFixed(1) + "x",
+    },
+    {
+      id: "ambientScrim",
+      key: "ambientScrim",
+      scale: 0.01,
+      fallback: 0.3,
+      format: (v) => v + "%",
+    },
+  ];
+  const ambientResetBtn = document.getElementById("ambientResetBtn");
+  if (ambientResetBtn) {
+    ambientResetBtn.textContent = i18n("btn_reset_defaults");
+  }
+  for (const { id, key, scale, fallback, format } of ambientRanges) {
+    const input = document.getElementById(id);
+    const label = document.getElementById(id + "Val");
+    if (!input || !label) continue;
+    chrome.storage.local.get([key], (r) => {
+      const v = typeof r[key] === "number" ? r[key] : fallback;
+      input.value = String(Math.round(v / scale));
+      label.textContent = format(v);
+    });
+    input.addEventListener("input", () => {
+      const v = Number(input.value) * scale;
+      label.textContent = format(v);
+      chrome.storage.local.set({ [key]: v });
+    });
+  }
+  ambientResetBtn?.addEventListener("click", () => {
+    const defaults = {};
+    for (const { id, key, scale, fallback, format } of ambientRanges) {
+      defaults[key] = fallback;
+      const input = document.getElementById(id);
+      const label = document.getElementById(id + "Val");
+      if (input) input.value = String(Math.round(fallback / scale));
+      if (label) label.textContent = format(fallback);
+    }
+    chrome.storage.local.set(defaults);
+  });
 
   const disableSearchHistoryToggle = document.getElementById(
     "disableSearchHistoryToggle",

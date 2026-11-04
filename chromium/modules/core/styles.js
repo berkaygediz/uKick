@@ -93,6 +93,14 @@ export function injectButtonStyles() {
       border-color: rgba(83, 252, 24, 0.85) !important;
       color: #53fc18 !important;
     }
+    .ukick-au-stat {
+      display: inline-flex; align-items: center; gap: 4px;
+      margin: 0; padding: 0; border: 0; background: none;
+      color: inherit; font: inherit; line-height: 1;
+      cursor: pointer;
+    }
+    .ukick-au-stat:hover { opacity: 0.8; }
+    .ukick-au-stat.ukick-active { text-shadow: 0 0 8px currentColor; }
     html.ukick-hide-block-buttons .ukick-x-btn {
       display: none !important;
     }

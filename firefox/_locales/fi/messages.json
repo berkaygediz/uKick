@@ -276,5 +276,106 @@
     },
     "platform_redirect_label": {
         "message": "TV-tila"
+    },
+    "btn_unblock_channel": {
+        "message": "Poista tämän kanavan esto"
+    },
+    "alert_channel_unblocked": {
+        "message": "$CHANNEL$:n esto poistettu!",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "btn_unblock_category": {
+        "message": "Näytä kategoria"
+    },
+    "platform_web": {
+        "message": "Web (kick.com)"
+    },
+    "platform_webos": {
+        "message": "webOS (webos.kick.com)"
+    },
+    "platform_tizen": {
+        "message": "Tizen (tizen.kick.com)"
+    },
+    "options_screenshot": {
+        "message": "Kuvakaappaus"
+    },
+    "btn_screenshot": {
+        "message": "Kuvakaappaus (napsautus: tallenna, Ctrl+napsautus: kopioi)"
+    },
+    "shot_saved": {
+        "message": "Kuvakaappaus tallennettu."
+    },
+    "shot_copied": {
+        "message": "Kuvakaappaus kopioitu leikepöydälle."
+    },
+    "shot_notready": {
+        "message": "Video ei ole valmis."
+    },
+    "shot_unavailable": {
+        "message": "Kuvakaappaukset eivät ole sallittuja tässä suoratoistossa."
+    },
+    "shot_failed": {
+        "message": "Kuvakaappaus epäonnistui."
+    },
+    "warn_screenshot": {
+        "message": "Suoratoistojen kuvakaappaukset ovat vain yksityiskäyttöön. Vastuu on sinulla."
+    },
+    "options_ambient": {
+        "message": "Ambient-tila"
+    },
+    "warn_ambient": {
+        "message": "Sivun tausta muuttuu läpinäkyväksi; jotkin yksityiskohdat voivat olla vaikeasti nähtäviä."
+    },
+    "options_ambient_blur": {
+        "message": "Sumennus"
+    },
+    "options_ambient_opacity": {
+        "message": "Peittävyys"
+    },
+    "options_ambient_spread": {
+        "message": "Leveys"
+    },
+    "options_ambient_scrim": {
+        "message": "Chatin suojaus"
+    },
+    "options_ambient_experimental": {
+        "message": "Kokeellinen"
+    },
+    "btn_confirm": {
+        "message": "Ymmärrän"
+    },
+    "btn_cancel": {
+        "message": "Peruuta"
+    },
+    "btn_swap_chat": {
+        "message": "Vaihda chatin suunta"
+    },
+    "btn_danmaku": {
+        "message": "Danmaku"
+    },
+    "btn_active_users": {
+        "message": "Aktiiviset käyttäjät"
+    },
+    "overlay_broadcaster": {
+        "message": "Striimaaja"
+    },
+    "overlay_verified": {
+        "message": "Vahvistettu"
+    },
+    "overlay_moderators": {
+        "message": "Moderaattorit"
+    },
+    "overlay_viewers": {
+        "message": "Katsojat"
+    },
+    "overlay_search_users": {
+        "message": "Hae käyttäjiä"
+    },
+    "btn_reset_defaults": {
+        "message": "Palauta oletukset"
     }
 }

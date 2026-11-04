@@ -276,5 +276,106 @@
     },
     "platform_redirect_label": {
         "message": "TV 모드"
+    },
+    "btn_unblock_channel": {
+        "message": "이 채널 차단 해제"
+    },
+    "alert_channel_unblocked": {
+        "message": "$CHANNEL$ 차단 해제됨!",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "btn_unblock_category": {
+        "message": "카테고리 표시"
+    },
+    "platform_web": {
+        "message": "Web (kick.com)"
+    },
+    "platform_webos": {
+        "message": "webOS (webos.kick.com)"
+    },
+    "platform_tizen": {
+        "message": "Tizen (tizen.kick.com)"
+    },
+    "options_screenshot": {
+        "message": "스크린샷"
+    },
+    "btn_screenshot": {
+        "message": "스크린샷 (클릭: 저장, Ctrl+클릭: 복사)"
+    },
+    "shot_saved": {
+        "message": "스크린샷이 저장되었습니다."
+    },
+    "shot_copied": {
+        "message": "스크린샷이 클립보드에 복사되었습니다."
+    },
+    "shot_notready": {
+        "message": "영상이 준비되지 않았습니다."
+    },
+    "shot_unavailable": {
+        "message": "이 방송에서는 스크린샷이 허용되지 않습니다."
+    },
+    "shot_failed": {
+        "message": "스크린샷에 실패했습니다."
+    },
+    "warn_screenshot": {
+        "message": "방송 스크린샷은 개인적인 용도로만 사용하세요. 책임은 사용자에게 있습니다."
+    },
+    "options_ambient": {
+        "message": "앰비언트 모드"
+    },
+    "warn_ambient": {
+        "message": "페이지 배경이 투명해집니다. 일부 세부 사항이 잘 보이지 않을 수 있습니다."
+    },
+    "options_ambient_blur": {
+        "message": "흐림"
+    },
+    "options_ambient_opacity": {
+        "message": "불투명도"
+    },
+    "options_ambient_spread": {
+        "message": "확산"
+    },
+    "options_ambient_scrim": {
+        "message": "채팅 보호"
+    },
+    "options_ambient_experimental": {
+        "message": "실험적 기능"
+    },
+    "btn_confirm": {
+        "message": "확인했습니다"
+    },
+    "btn_cancel": {
+        "message": "취소"
+    },
+    "btn_swap_chat": {
+        "message": "채팅 방향 전환"
+    },
+    "btn_danmaku": {
+        "message": "탄막"
+    },
+    "btn_active_users": {
+        "message": "활성 사용자"
+    },
+    "overlay_broadcaster": {
+        "message": "방송자"
+    },
+    "overlay_verified": {
+        "message": "인증됨"
+    },
+    "overlay_moderators": {
+        "message": "관리자"
+    },
+    "overlay_viewers": {
+        "message": "시청자"
+    },
+    "overlay_search_users": {
+        "message": "사용자 검색"
+    },
+    "btn_reset_defaults": {
+        "message": "기본값으로 재설정"
     }
 }

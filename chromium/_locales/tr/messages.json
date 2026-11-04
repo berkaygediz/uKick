@@ -146,7 +146,7 @@
         "message": "1 Ay"
     },
     "options_sub_update_all": {
-        "message": "Şimdi Güncelle"
+        "message": "Tümünü Güncelle"
     },
     "options_sub_updating": {
         "message": "Güncelleniyor..."
@@ -276,5 +276,106 @@
     },
     "platform_redirect_label": {
         "message": "TV Modu"
+    },
+    "btn_unblock_channel": {
+        "message": "Bu kanalın engelini kaldır"
+    },
+    "alert_channel_unblocked": {
+        "message": "$CHANNEL$ engeli kaldırıldı!",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "btn_unblock_category": {
+        "message": "Kategoriyi göster"
+    },
+    "platform_web": {
+        "message": "Web (kick.com)"
+    },
+    "platform_webos": {
+        "message": "webOS (webos.kick.com)"
+    },
+    "platform_tizen": {
+        "message": "Tizen (tizen.kick.com)"
+    },
+    "options_screenshot": {
+        "message": "Ekran Görüntüsü"
+    },
+    "btn_screenshot": {
+        "message": "Ekran görüntüsü (tık: kaydet, Ctrl+tık: kopyala)"
+    },
+    "shot_saved": {
+        "message": "Ekran görüntüsü kaydedildi."
+    },
+    "shot_copied": {
+        "message": "Ekran görüntüsü panoya kopyalandı."
+    },
+    "shot_notready": {
+        "message": "Görüntü hazır değil."
+    },
+    "shot_unavailable": {
+        "message": "Bu yayında ekran görüntüsüne izin verilmiyor."
+    },
+    "shot_failed": {
+        "message": "Ekran görüntüsü alınamadı."
+    },
+    "warn_screenshot": {
+        "message": "Yayın ekran görüntüleri kişisel kullanım içindir. Sorumluluk size aittir."
+    },
+    "options_ambient": {
+        "message": "Ambient Modu"
+    },
+    "warn_ambient": {
+        "message": "Sayfa arka planı şeffaflaşır; bazı detaylar zor görünebilir."
+    },
+    "options_ambient_blur": {
+        "message": "Bulanıklık"
+    },
+    "options_ambient_opacity": {
+        "message": "Opaklık"
+    },
+    "options_ambient_spread": {
+        "message": "Yayılım"
+    },
+    "options_ambient_scrim": {
+        "message": "Sohbet koruması"
+    },
+    "btn_confirm": {
+        "message": "Onaylıyorum"
+    },
+    "options_ambient_experimental": {
+        "message": "Deneysel"
+    },
+    "btn_cancel": {
+        "message": "İptal"
+    },
+    "btn_swap_chat": {
+        "message": "Sohbet yönünü değiştir"
+    },
+    "btn_danmaku": {
+        "message": "Danmaku"
+    },
+    "btn_active_users": {
+        "message": "Aktif kullanıcılar"
+    },
+    "overlay_broadcaster": {
+        "message": "Yayıncı"
+    },
+    "overlay_verified": {
+        "message": "Doğrulanmış"
+    },
+    "overlay_moderators": {
+        "message": "Moderatörler"
+    },
+    "overlay_viewers": {
+        "message": "İzleyiciler"
+    },
+    "overlay_search_users": {
+        "message": "Kullanıcı ara"
+    },
+    "btn_reset_defaults": {
+        "message": "Varsayılanlara sıfırla"
     }
 }

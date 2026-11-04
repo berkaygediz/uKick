@@ -2,6 +2,7 @@
 
 import { normalizeData } from "./utils.js";
 
+// Filtreleme için: lokal + remote birleşik okunur (gizleme kararı bunu kullanır).
 function readBlockedList(storageKey, subscriptionType) {
   return new Promise((resolve) => {
     browser.storage.local.get([storageKey, "remoteSubscriptions"], (result) => {
@@ -17,6 +18,17 @@ function readBlockedList(storageKey, subscriptionType) {
     });
   });
 }
+function readLocalList(storageKey) {
+  return new Promise((resolve) => {
+    browser.storage.local.get([storageKey], (result) => {
+      try {
+        resolve(JSON.parse(result[storageKey] || "[]"));
+      } catch {
+        resolve([]);
+      }
+    });
+  });
+}
 
 function writeBlockedList(storageKey, list) {
   return new Promise((resolve) => {
@@ -24,8 +36,8 @@ function writeBlockedList(storageKey, list) {
   });
 }
 
-async function addEntry(storageKey, subscriptionType, entry) {
-  const list = await readBlockedList(storageKey, subscriptionType);
+async function addEntry(storageKey, entry) {
+  const list = await readLocalList(storageKey);
   const normalized = normalizeData(entry);
   if (!list.includes(normalized)) {
     list.push(normalized);
@@ -54,24 +66,35 @@ export function saveBlockedCategories(list) {
 }
 
 export function blockChannel(username) {
-  return addEntry("blockedChannels", "channels", username);
+  return addEntry("blockedChannels", username);
 }
 
 export function unblockChannel(username) {
   return (async () => {
     username = normalizeData(username);
-    const list = await readBlockedList("blockedChannels", "channels");
+    const list = await readLocalList("blockedChannels");
     await writeBlockedList(
       "blockedChannels",
-      list.filter((u) => u !== username),
+      list.filter((u) => normalizeData(u) !== username),
     );
   })();
 }
 
 export function blockCategory(categoryName) {
-  return addEntry("blockedCategories", "categories", categoryName);
+  return addEntry("blockedCategories", categoryName);
+}
+
+export function unblockCategory(categoryName) {
+  return (async () => {
+    categoryName = normalizeData(categoryName);
+    const list = await readLocalList("blockedCategories");
+    await writeBlockedList(
+      "blockedCategories",
+      list.filter((c) => normalizeData(c) !== categoryName),
+    );
+  })();
 }
 
 export function blockTag(tagName) {
-  return addEntry("blockedTags", "tags", tagName);
+  return addEntry("blockedTags", tagName);
 }

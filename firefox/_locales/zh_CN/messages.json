@@ -276,5 +276,106 @@
     },
     "platform_redirect_label": {
         "message": "TV 模式"
+    },
+    "btn_unblock_channel": {
+        "message": "取消屏蔽此频道"
+    },
+    "alert_channel_unblocked": {
+        "message": "已取消屏蔽 $CHANNEL$！",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "btn_unblock_category": {
+        "message": "显示分类"
+    },
+    "platform_web": {
+        "message": "Web (kick.com)"
+    },
+    "platform_webos": {
+        "message": "webOS (webos.kick.com)"
+    },
+    "platform_tizen": {
+        "message": "Tizen (tizen.kick.com)"
+    },
+    "options_screenshot": {
+        "message": "屏幕截图"
+    },
+    "btn_screenshot": {
+        "message": "屏幕截图（点击：保存，Ctrl+点击：复制）"
+    },
+    "shot_saved": {
+        "message": "屏幕截图已保存。"
+    },
+    "shot_copied": {
+        "message": "屏幕截图已复制到剪贴板。"
+    },
+    "shot_notready": {
+        "message": "视频尚未就绪。"
+    },
+    "shot_unavailable": {
+        "message": "此直播不允许屏幕截图。"
+    },
+    "shot_failed": {
+        "message": "屏幕截图失败。"
+    },
+    "warn_screenshot": {
+        "message": "直播屏幕截图仅限个人使用。责任由您自行承担。"
+    },
+    "options_ambient": {
+        "message": "环境光模式"
+    },
+    "warn_ambient": {
+        "message": "页面背景将变为透明；部分细节可能难以看清。"
+    },
+    "options_ambient_blur": {
+        "message": "模糊"
+    },
+    "options_ambient_opacity": {
+        "message": "不透明度"
+    },
+    "options_ambient_spread": {
+        "message": "扩散"
+    },
+    "options_ambient_scrim": {
+        "message": "聊天遮罩"
+    },
+    "options_ambient_experimental": {
+        "message": "实验性功能"
+    },
+    "btn_confirm": {
+        "message": "我知道了"
+    },
+    "btn_cancel": {
+        "message": "取消"
+    },
+    "btn_swap_chat": {
+        "message": "切换聊天方向"
+    },
+    "btn_danmaku": {
+        "message": "弹幕"
+    },
+    "btn_active_users": {
+        "message": "活跃用户"
+    },
+    "overlay_broadcaster": {
+        "message": "主播"
+    },
+    "overlay_verified": {
+        "message": "已认证"
+    },
+    "overlay_moderators": {
+        "message": "版主"
+    },
+    "overlay_viewers": {
+        "message": "观众"
+    },
+    "overlay_search_users": {
+        "message": "搜索用户"
+    },
+    "btn_reset_defaults": {
+        "message": "恢复默认设置"
     }
 }

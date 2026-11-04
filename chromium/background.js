@@ -1,6 +1,35 @@
+// uKick - background (service worker)
+
+const SYNC_ALARM_NAME = "syncRemoteLists";
+const DEFAULT_SYNC_INTERVAL = 1440;
+
+const alarmsAvailable = !!(chrome.alarms && chrome.alarms.onAlarm);
+
 chrome.runtime.onInstalled.addListener(() => {
   initializeSync();
+  syncStaleLists();
 });
+
+chrome.runtime.onStartup.addListener(() => {
+  initializeSync();
+  syncStaleLists();
+});
+
+initializeSync();
+
+if (alarmsAvailable) {
+  chrome.alarms.onAlarm.addListener((alarm) => {
+    if (alarm.name === SYNC_ALARM_NAME) {
+      syncAllLists();
+    }
+  });
+
+  chrome.permissions.onAdded.addListener((permissions) => {
+    if (permissions.permissions && permissions.permissions.includes("alarms")) {
+      initializeSync();
+    }
+  });
+}
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "syncUrl") {
@@ -24,26 +53,49 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
-chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name === "syncRemoteLists") {
-    syncAllLists();
-  }
-});
+async function initializeSync() {
+  if (!alarmsAvailable) return;
+  const { syncIntervalMinutes } = await chrome.storage.local.get(
+    "syncIntervalMinutes",
+  );
+  const stored = Number(syncIntervalMinutes);
+  const interval = stored > 0 ? stored : DEFAULT_SYNC_INTERVAL;
 
-function initializeSync() {
-  chrome.storage.local.get(["syncIntervalMinutes"], (data) => {
-    if (data.syncIntervalMinutes) {
-      setupSyncAlarm(data.syncIntervalMinutes);
-    }
-  });
+  const existing = await chrome.alarms.get(SYNC_ALARM_NAME);
+  if (!existing) {
+    await setupSyncAlarm(interval);
+  }
 }
 
-function setupSyncAlarm(intervalMinutes) {
-  chrome.alarms.clear("syncRemoteLists");
-  if (intervalMinutes > 0) {
-    chrome.alarms.create("syncRemoteLists", {
-      periodInMinutes: intervalMinutes,
+async function setupSyncAlarm(intervalMinutes) {
+  if (!alarmsAvailable) return;
+  const interval = Number(intervalMinutes);
+  await chrome.alarms.clear(SYNC_ALARM_NAME);
+  if (interval > 0) {
+    await chrome.alarms.create(SYNC_ALARM_NAME, {
+      delayInMinutes: 1,
+      periodInMinutes: interval,
     });
+  }
+}
+
+async function syncStaleLists() {
+  const { remoteSubscriptions, syncIntervalMinutes } =
+    await chrome.storage.local.get([
+      "remoteSubscriptions",
+      "syncIntervalMinutes",
+    ]);
+  const subs = remoteSubscriptions || [];
+  if (subs.length === 0) return;
+
+  const stored = Number(syncIntervalMinutes);
+  const intervalMs = (stored > 0 ? stored : DEFAULT_SYNC_INTERVAL) * 60_000;
+  const now = Date.now();
+
+  for (const sub of subs) {
+    if (now - (sub.lastSync || 0) >= intervalMs) {
+      await syncSingleList(sub.url);
+    }
   }
 }
 
@@ -55,24 +107,40 @@ async function syncSingleList(url) {
   if (index === -1) return false;
 
   try {
-    const response = await fetch(url, {
-      method: "GET",
-      headers: { "Cache-Control": "no-cache" },
-    });
+    const response = await fetch(url, { cache: "no-store" });
 
-    if (!response.ok) throw new Error("HTTP Error");
+    if (!response.ok) {
+      console.error(`[uKick] ${url} -> HTTP ${response.status}`);
+      return false;
+    }
 
     const data = await response.json();
 
-    if (!Array.isArray(data)) return false;
+    if (!Array.isArray(data)) {
+      console.error(
+        `[uKick] ${url} -> beklenen: JSON dizisi, gelen: ${typeof data}`,
+      );
+      return false;
+    }
 
-    subscriptions[index].data = data;
+    const clean = data.filter(
+      (item) => typeof item === "string" && item.trim().length > 0,
+    );
+    if (clean.length !== data.length) {
+      console.warn(
+        `[uKick] ${url} -> ${data.length - clean.length} geçersiz öğe atlandı`,
+      );
+    }
+
+    subscriptions[index].data = clean;
     subscriptions[index].lastSync = Date.now();
-    subscriptions[index].count = data.length;
+    subscriptions[index].count = clean.length;
 
     await chrome.storage.local.set({ remoteSubscriptions: subscriptions });
+
     return true;
   } catch (error) {
+    console.error(`[uKick] fetch hatası (${url}):`, error?.message || error);
     return false;
   }
 }
@@ -98,7 +166,7 @@ async function syncAllLists() {
   }
 
   return {
-    success: true,
+    success: failCount === 0,
     total: subscriptions.length,
     successCount,
     failCount,

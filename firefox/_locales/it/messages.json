@@ -92,7 +92,7 @@
         "message": "Abilita Chat Danmaku"
     },
     "options_disable_active_users": {
-        "message": "Disabilità Statistiche Utenti Attivi"
+        "message": "Disabilita Statistiche Utenti Attivi"
     },
     "options_enable_keyboard_volume": {
         "message": "Abilita Controllo Volume da Tastiera"
@@ -276,5 +276,106 @@
     },
     "platform_redirect_label": {
         "message": "Modalità TV"
+    },
+    "btn_unblock_channel": {
+        "message": "Sblocca questo canale"
+    },
+    "alert_channel_unblocked": {
+        "message": "$CHANNEL$ sbloccato!",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "btn_unblock_category": {
+        "message": "Mostra categoria"
+    },
+    "platform_web": {
+        "message": "Web (kick.com)"
+    },
+    "platform_webos": {
+        "message": "webOS (webos.kick.com)"
+    },
+    "platform_tizen": {
+        "message": "Tizen (tizen.kick.com)"
+    },
+    "options_screenshot": {
+        "message": "Screenshot"
+    },
+    "btn_screenshot": {
+        "message": "Screenshot (clic: salva, Ctrl+clic: copia)"
+    },
+    "shot_saved": {
+        "message": "Screenshot salvato."
+    },
+    "shot_copied": {
+        "message": "Screenshot copiato negli appunti."
+    },
+    "shot_notready": {
+        "message": "Il video non è pronto."
+    },
+    "shot_unavailable": {
+        "message": "Screenshot non consentiti su questo stream."
+    },
+    "shot_failed": {
+        "message": "Screenshot non riuscito."
+    },
+    "warn_screenshot": {
+        "message": "Gli screenshot degli stream sono solo per uso personale. La responsabilità è tua."
+    },
+    "options_ambient": {
+        "message": "Modalità ambient"
+    },
+    "warn_ambient": {
+        "message": "Lo sfondo della pagina diventa trasparente; alcuni dettagli potrebbero essere difficili da vedere."
+    },
+    "options_ambient_blur": {
+        "message": "Sfocatura"
+    },
+    "options_ambient_opacity": {
+        "message": "Opacità"
+    },
+    "options_ambient_spread": {
+        "message": "Estensione"
+    },
+    "options_ambient_scrim": {
+        "message": "Protezione chat"
+    },
+    "options_ambient_experimental": {
+        "message": "Sperimentale"
+    },
+    "btn_confirm": {
+        "message": "Ho capito"
+    },
+    "btn_cancel": {
+        "message": "Annulla"
+    },
+    "btn_swap_chat": {
+        "message": "Inverti direzione chat"
+    },
+    "btn_danmaku": {
+        "message": "Danmaku"
+    },
+    "btn_active_users": {
+        "message": "Utenti attivi"
+    },
+    "overlay_broadcaster": {
+        "message": "Streamer"
+    },
+    "overlay_verified": {
+        "message": "Verificato"
+    },
+    "overlay_moderators": {
+        "message": "Moderatori"
+    },
+    "overlay_viewers": {
+        "message": "Spettatori"
+    },
+    "overlay_search_users": {
+        "message": "Cerca utenti"
+    },
+    "btn_reset_defaults": {
+        "message": "Ripristina impostazioni predefinite"
     }
 }

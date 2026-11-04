@@ -27,6 +27,92 @@ export function showToast(message) {
   }, 2000);
 }
 
+export function findUsernameEl() {
+  const els = document.querySelectorAll(
+    "#channel-username, [data-testid='channel-username']",
+  );
+  for (const el of els) {
+    if (el.getClientRects().length > 0) return el;
+  }
+  return els[0] || null;
+}
+
+export function showCenterToast(message, options = {}) {
+  const box = document.createElement("div");
+  box.style.cssText = `
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    max-width: calc(100vw - 32px); width: 360px;
+    background-color: #242424; color: #fff;
+    border: 1px solid rgba(255,255,255,.12); border-radius: 8px;
+    box-shadow: 0 12px 44px rgba(0,0,0,.6);
+    z-index: 2147483646; font-size: 14px; line-height: 1.5;
+    opacity: 0; transition: opacity 0.2s ease; overflow: hidden;
+  `;
+
+  const header = document.createElement("div");
+  header.style.cssText = `
+    padding: 10px 16px; font-size: 14px; font-weight: bold; color: #eaeaea;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  `;
+  header.textContent = options.title || "uKick";
+  box.appendChild(header);
+
+  const body = document.createElement("div");
+  body.style.cssText = "padding: 14px 16px;";
+  const text = document.createElement("div");
+  text.textContent = message;
+  body.appendChild(text);
+  box.appendChild(body);
+
+  let removed = false;
+  function remove() {
+    if (removed) return;
+    removed = true;
+    box.style.opacity = "0";
+    setTimeout(() => box.remove(), 200);
+  }
+
+  if (options.confirmText) {
+    const actions = document.createElement("div");
+    actions.style.cssText =
+      "display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px;";
+
+    const cancel = document.createElement("button");
+    cancel.textContent = options.cancelText || "Cancel";
+    cancel.style.cssText = `
+      height: 34px; padding: 0 18px; border-radius: 4px; border: none;
+      background: #333; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer;
+    `;
+    cancel.addEventListener("click", () => {
+      remove();
+      options.onCancel?.();
+    });
+
+    const confirm = document.createElement("button");
+    confirm.textContent = options.confirmText;
+    confirm.style.cssText = `
+      height: 34px; padding: 0 18px; border-radius: 4px; border: none;
+      background: #00b660; color: #000; font-size: 13px; font-weight: bold; cursor: pointer;
+      transition: background 0.3s ease;
+    `;
+    confirm.addEventListener("click", () => {
+      remove();
+      options.onConfirm?.();
+    });
+
+    actions.appendChild(cancel);
+    actions.appendChild(confirm);
+    body.appendChild(actions);
+  }
+
+  document.body.appendChild(box);
+  requestAnimationFrame(() => {
+    box.style.opacity = "1";
+  });
+  if (!options.confirmText) setTimeout(remove, 3000);
+  return remove;
+}
+
 export function extractTagText(tagEl) {
   let text = "";
   for (const node of tagEl.childNodes) {

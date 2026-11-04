@@ -1,3 +1,4 @@
+import { showCenterToast } from "./modules/core/utils.js";
 import {
   getOpenLapisStatus,
   sendToOpenLapis,
@@ -308,13 +309,9 @@ function i18n(key, substitutions) {
 }
 
 async function checkAndRequestPermission(permissionObj) {
-  if (
-    !permissionObj ||
-    (!permissionObj.permissions?.length && !permissionObj.origins?.length)
-  ) {
+  if (await browser.permissions.contains(permissionObj)) {
     return true;
   }
-
   try {
     return await browser.permissions.request(permissionObj);
   } catch (e) {
@@ -353,20 +350,10 @@ async function setupFeatureToggle(toggleId, contentId, permissionObj) {
 
   toggle.addEventListener("change", async () => {
     if (toggle.checked) {
-      const granted = hasPermission
-        ? true
-        : await checkAndRequestPermission(permissionObj);
+      const granted = await checkAndRequestPermission(permissionObj);
       if (granted) {
         await browser.storage.local.set({ [toggleId]: true });
         if (content) content.classList.remove("section-content-disabled");
-
-        if (toggleId === "enableSubscriptionsToggle") {
-          try {
-            await browser.runtime.sendMessage({
-              action: "enableSubscriptions",
-            });
-          } catch (e) {}
-        }
       } else {
         toggle.checked = false;
         if (content) content.classList.add("section-content-disabled");
@@ -375,12 +362,6 @@ async function setupFeatureToggle(toggleId, contentId, permissionObj) {
     } else {
       await browser.storage.local.set({ [toggleId]: false });
       if (content) content.classList.add("section-content-disabled");
-
-      if (toggleId === "enableSubscriptionsToggle") {
-        try {
-          await browser.runtime.sendMessage({ action: "disableSubscriptions" });
-        } catch (e) {}
-      }
     }
   });
 }
@@ -450,16 +431,13 @@ function renderSubscriptions() {
         syncBtn.title = i18n("btn_update_now");
         syncBtn.onclick = async () => {
           syncBtn.style.color = "#00b660";
-          try {
-            const res = await browser.runtime.sendMessage({
-              action: "syncUrl",
-              url: sub.url,
-            });
-            syncBtn.style.color = res?.success ? "#8bc34a" : "#d9534f";
-          } catch (e) {
-            syncBtn.style.color = "#d9534f";
-          }
-          renderSubscriptions();
+          browser.runtime.sendMessage(
+            { action: "syncUrl", url: sub.url },
+            (res) => {
+              syncBtn.style.color = res?.success ? "#8bc34a" : "#d9534f";
+              renderSubscriptions();
+            },
+          );
         };
 
         const removeBtn = document.createElement("button");
@@ -496,14 +474,21 @@ function setupSubscriptionEvents() {
   if (!addSubBtn) return;
 
   addSubBtn.addEventListener("click", async () => {
-    const url = subUrlInput.value.trim();
+    let url = subUrlInput.value.trim();
     const type = subTypeSelect.value;
     if (!url) return;
 
     let urlObj;
     try {
-      urlObj = new URL(url);
-    } catch (err) {
+      const withScheme = /^[a-z][a-z\d+.-]*:\/\//i.test(url)
+        ? url
+        : `https://${url}`;
+      urlObj = new URL(withScheme);
+      if (urlObj.protocol !== "http:" && urlObj.protocol !== "https:") {
+        throw new Error("unsupported protocol");
+      }
+      url = urlObj.href;
+    } catch {
       alert(i18n("alert_invalid_url"));
       return;
     }
@@ -535,10 +520,9 @@ function setupSubscriptionEvents() {
     await browser.storage.local.set({ remoteSubscriptions: subs });
     subUrlInput.value = "";
     renderSubscriptions();
-    try {
-      await browser.runtime.sendMessage({ action: "syncUrl", url });
-    } catch (e) {}
-    renderSubscriptions();
+    browser.runtime.sendMessage({ action: "syncUrl", url }, () =>
+      renderSubscriptions(),
+    );
   });
 
   syncIntervalSelect.addEventListener("change", async () => {
@@ -553,12 +537,11 @@ function setupSubscriptionEvents() {
   updateAllBtn.addEventListener("click", async () => {
     updateAllBtn.disabled = true;
     updateAllBtn.textContent = i18n("options_sub_updating");
-    try {
-      await browser.runtime.sendMessage({ action: "syncAll" });
-    } catch (e) {}
-    updateAllBtn.disabled = false;
-    updateAllBtn.textContent = i18n("options_sub_update_all");
-    renderSubscriptions();
+    browser.runtime.sendMessage({ action: "syncAll" }, (res) => {
+      updateAllBtn.disabled = false;
+      updateAllBtn.textContent = i18n("options_sub_update_all");
+      renderSubscriptions();
+    });
   });
 }
 
@@ -678,6 +661,12 @@ function setupEventListeners() {
     ),
 
     themesTitle: browser.i18n.getMessage("options_themes"),
+    screenshotTitle: browser.i18n.getMessage("options_screenshot"),
+    ambientTitle: browser.i18n.getMessage("options_ambient"),
+    ambientBlurLabel: browser.i18n.getMessage("options_ambient_blur"),
+    ambientOpacityLabel: browser.i18n.getMessage("options_ambient_opacity"),
+    ambientSpreadLabel: browser.i18n.getMessage("options_ambient_spread"),
+    ambientScrimLabel: browser.i18n.getMessage("options_ambient_scrim"),
     subTitle: browser.i18n.getMessage("options_subscriptions"),
     subUrlInput: browser.i18n.getMessage("placeholder_remote_url"),
     addSubBtn: browser.i18n.getMessage("options_sub_add"),
@@ -694,6 +683,24 @@ function setupEventListeners() {
     int_config_mobile_p: browser.i18n.getMessage("int_config_mobile_p"),
   };
 
+  function setLabelText(el, text) {
+    const bold = el.querySelector("b");
+    if (bold) {
+      bold.textContent = text;
+      return;
+    }
+    const badge = el.querySelector(".ukick-exp-badge");
+    if (badge) {
+      const textNode = Array.from(el.childNodes).find(
+        (n) => n.nodeType === Node.TEXT_NODE,
+      );
+      if (textNode) textNode.nodeValue = text;
+      else el.insertBefore(document.createTextNode(text), badge);
+      return;
+    }
+    el.textContent = text;
+  }
+
   for (const [id, text] of Object.entries(translations)) {
     const el = document.getElementById(id);
     if (el && text) {
@@ -708,9 +715,7 @@ function setupEventListeners() {
           el.placeholder = text;
         }
       } else {
-        const bold = el.querySelector("b");
-        if (bold) bold.textContent = text;
-        else el.textContent = text;
+        setLabelText(el, text);
       }
     }
   }
@@ -912,6 +917,148 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
+
+  const screenshotToggle = document.getElementById("screenshotToggle");
+  if (screenshotToggle) {
+    browser.storage.local.get(
+      ["enableScreenshot"],
+      ({ enableScreenshot = false }) => {
+        screenshotToggle.checked = enableScreenshot;
+      },
+    );
+    screenshotToggle.addEventListener("change", () => {
+      if (!screenshotToggle.checked) {
+        browser.storage.local.set({ enableScreenshot: false });
+        return;
+      }
+      screenshotToggle.checked = false;
+      showCenterToast(i18n("warn_screenshot"), {
+        confirmText: i18n("btn_confirm"),
+        cancelText: i18n("btn_cancel"),
+        onConfirm: () => {
+          screenshotToggle.checked = true;
+          browser.storage.local.set({ enableScreenshot: true });
+        },
+      });
+    });
+  }
+
+  const ambientExpBadge = document.getElementById("ambientExpBadge");
+  if (ambientExpBadge) {
+    ambientExpBadge.title = i18n("options_ambient_experimental");
+  }
+
+  const ambientToggle = document.getElementById("ambientToggle");
+  const ambientHeader = document.getElementById("ambientHeader");
+  const ambientSettings = document.getElementById("ambientSettings");
+  if (ambientToggle && ambientHeader && ambientSettings) {
+    const ambientInputs = [
+      "ambientBlur",
+      "ambientOpacity",
+      "ambientSpread",
+      "ambientScrim",
+    ]
+      .map((id) => document.getElementById(id))
+      .filter(Boolean);
+
+    ambientHeader.addEventListener("click", (e) => {
+      if (e.target.closest("label.switch, input")) return;
+      const open = ambientSettings.classList.toggle("open");
+      ambientHeader.classList.toggle("active", open);
+    });
+
+    function setAmbientInputsDisabled(disabled) {
+      ambientInputs.forEach((input) => {
+        input.disabled = disabled;
+      });
+    }
+
+    browser.storage.local.get(
+      ["ambientEnabled"],
+      ({ ambientEnabled = false }) => {
+        ambientToggle.checked = ambientEnabled;
+        setAmbientInputsDisabled(!ambientEnabled);
+      },
+    );
+    ambientToggle.addEventListener("change", () => {
+      if (!ambientToggle.checked) {
+        browser.storage.local.set({ ambientEnabled: false });
+        setAmbientInputsDisabled(true);
+        return;
+      }
+      ambientToggle.checked = false;
+      showCenterToast(i18n("warn_ambient"), {
+        confirmText: i18n("btn_confirm"),
+        cancelText: i18n("btn_cancel"),
+        onConfirm: () => {
+          ambientToggle.checked = true;
+          setAmbientInputsDisabled(false);
+          browser.storage.local.set({ ambientEnabled: true });
+        },
+      });
+    });
+  }
+
+  const ambientRanges = [
+    {
+      id: "ambientBlur",
+      key: "ambientBlur",
+      scale: 1,
+      fallback: 60,
+      format: (v) => v + "px",
+    },
+    {
+      id: "ambientOpacity",
+      key: "ambientOpacity",
+      scale: 0.01,
+      fallback: 0.6,
+      format: (v) => v + "%",
+    },
+    {
+      id: "ambientSpread",
+      key: "ambientSpread",
+      scale: 0.1,
+      fallback: 2.2,
+      format: (v) => v.toFixed(1) + "x",
+    },
+    {
+      id: "ambientScrim",
+      key: "ambientScrim",
+      scale: 0.01,
+      fallback: 0.3,
+      format: (v) => v + "%",
+    },
+  ];
+  const ambientResetBtn = document.getElementById("ambientResetBtn");
+  if (ambientResetBtn) {
+    ambientResetBtn.textContent = i18n("btn_reset_defaults");
+  }
+  for (const { id, key, scale, fallback, format } of ambientRanges) {
+    const input = document.getElementById(id);
+    const label = document.getElementById(id + "Val");
+    if (!input || !label) continue;
+    browser.storage.local.get([key], (r) => {
+      const v = typeof r[key] === "number" ? r[key] : fallback;
+      input.value = String(Math.round(v / scale));
+      label.textContent = format(v);
+    });
+    input.addEventListener("input", () => {
+      const v = Number(input.value) * scale;
+      label.textContent = format(v);
+      browser.storage.local.set({ [key]: v });
+    });
+  }
+  ambientResetBtn?.addEventListener("click", () => {
+    const defaults = {};
+    for (const { id, key, scale, fallback, format } of ambientRanges) {
+      defaults[key] = fallback;
+      const input = document.getElementById(id);
+      const label = document.getElementById(id + "Val");
+      if (input) input.value = String(Math.round(fallback / scale));
+      if (label) label.textContent = format(fallback);
+    }
+    browser.storage.local.set(defaults);
+  });
 
   const disableSearchHistoryToggle = document.getElementById(
     "disableSearchHistoryToggle",

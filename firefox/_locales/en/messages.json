@@ -110,7 +110,7 @@
         "message": "Tizen (tizen.kick.com)"
     },
     "btn_unblock_channel": {
-        "message": "Unblock channel"
+        "message": "Unblock this channel"
     },
     "alert_channel_unblocked": {
         "message": "$CHANNEL$ unblocked!",
@@ -296,5 +296,86 @@
     },
     "options_hover_block_buttons": {
         "message": "Buttons on Hover"
+    },
+    "btn_unblock_category": {
+        "message": "Show category"
+    },
+    "options_screenshot": {
+        "message": "Screenshot"
+    },
+    "btn_screenshot": {
+        "message": "Screenshot (click: save, Ctrl+click: copy)"
+    },
+    "shot_saved": {
+        "message": "Screenshot saved."
+    },
+    "shot_copied": {
+        "message": "Screenshot copied to clipboard."
+    },
+    "shot_notready": {
+        "message": "Video is not ready."
+    },
+    "shot_unavailable": {
+        "message": "Screenshots are not allowed on this stream."
+    },
+    "shot_failed": {
+        "message": "Screenshot failed."
+    },
+    "warn_screenshot": {
+        "message": "Stream screenshots are for personal use only. Responsibility is yours."
+    },
+    "options_ambient": {
+        "message": "Ambient Mode"
+    },
+    "warn_ambient": {
+        "message": "The page background becomes transparent; some details may be hard to see."
+    },
+    "options_ambient_blur": {
+        "message": "Blur"
+    },
+    "options_ambient_opacity": {
+        "message": "Opacity"
+    },
+    "options_ambient_spread": {
+        "message": "Spread"
+    },
+    "options_ambient_scrim": {
+        "message": "Chat scrim"
+    },
+    "btn_confirm": {
+        "message": "I understand"
+    },
+    "options_ambient_experimental": {
+        "message": "Experimental"
+    },
+    "btn_cancel": {
+        "message": "Cancel"
+    },
+    "btn_swap_chat": {
+        "message": "Swap chat direction"
+    },
+    "btn_danmaku": {
+        "message": "Danmaku"
+    },
+    "btn_active_users": {
+        "message": "Active users"
+    },
+    "overlay_broadcaster": {
+        "message": "Broadcaster"
+    },
+    "overlay_verified": {
+        "message": "Verified"
+    },
+    "overlay_moderators": {
+        "message": "Moderators"
+    },
+    "overlay_viewers": {
+        "message": "Viewers"
+    },
+    "overlay_search_users": {
+        "message": "Search users"
+    },
+    "btn_reset_defaults": {
+        "message": "Reset to defaults"
     }
 }

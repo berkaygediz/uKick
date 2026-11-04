@@ -3,6 +3,7 @@
 import { injectButtonStyles } from "./core/styles.js";
 import { clearSearchHistory, debounce } from "./core/utils.js";
 import { toggleActiveStats } from "./features/activeusers.js";
+import { initAmbient } from "./features/ambient.js";
 import {
   invalidateCardScan,
   processCards,
@@ -25,6 +26,7 @@ import {
 } from "./features/keyboardvolume.js";
 import { initPlatformRedirect } from "./features/platform.js";
 import { initAutoQualityControl } from "./features/quality.js";
+import { initScreenshot } from "./features/screenshot.js";
 import {
   addBlockButtonOnChannelPage,
   processSidebarChannels,
@@ -45,6 +47,8 @@ import {
 
 injectButtonStyles();
 initAutoQualityControl();
+initScreenshot();
+initAmbient();
 
 async function startUIFeatures() {
   processChatLayout();

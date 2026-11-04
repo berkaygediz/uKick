@@ -276,5 +276,106 @@
     },
     "platform_redirect_label": {
         "message": "Chế độ TV"
+    },
+    "btn_unblock_channel": {
+        "message": "Bỏ chặn kênh này"
+    },
+    "alert_channel_unblocked": {
+        "message": "Đã bỏ chặn $CHANNEL$!",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "btn_unblock_category": {
+        "message": "Hiện danh mục"
+    },
+    "platform_web": {
+        "message": "Web (kick.com)"
+    },
+    "platform_webos": {
+        "message": "webOS (webos.kick.com)"
+    },
+    "platform_tizen": {
+        "message": "Tizen (tizen.kick.com)"
+    },
+    "options_screenshot": {
+        "message": "Ảnh chụp màn hình"
+    },
+    "btn_screenshot": {
+        "message": "Ảnh chụp màn hình (nhấp: lưu, Ctrl+nhấp: sao chép)"
+    },
+    "shot_saved": {
+        "message": "Đã lưu ảnh chụp màn hình."
+    },
+    "shot_copied": {
+        "message": "Đã sao chép ảnh chụp màn hình vào bảng nhớ tạm."
+    },
+    "shot_notready": {
+        "message": "Video chưa sẵn sàng."
+    },
+    "shot_unavailable": {
+        "message": "Không cho phép chụp màn hình trong buổi phát trực tiếp này."
+    },
+    "shot_failed": {
+        "message": "Chụp màn hình thất bại."
+    },
+    "warn_screenshot": {
+        "message": "Ảnh chụp màn hình phát trực tuyến chỉ dành cho mục đích cá nhân. Bạn tự chịu trách nhiệm."
+    },
+    "options_ambient": {
+        "message": "Chế độ ánh sáng môi trường"
+    },
+    "warn_ambient": {
+        "message": "Nền trang trở nên trong suốt; một số chi tiết có thể khó nhìn thấy."
+    },
+    "options_ambient_blur": {
+        "message": "Làm mờ"
+    },
+    "options_ambient_opacity": {
+        "message": "Độ đục"
+    },
+    "options_ambient_spread": {
+        "message": "Độ lan"
+    },
+    "options_ambient_scrim": {
+        "message": "Bảo vệ trò chuyện"
+    },
+    "options_ambient_experimental": {
+        "message": "Thử nghiệm"
+    },
+    "btn_confirm": {
+        "message": "Tôi hiểu"
+    },
+    "btn_cancel": {
+        "message": "Hủy"
+    },
+    "btn_swap_chat": {
+        "message": "Đổi hướng trò chuyện"
+    },
+    "btn_danmaku": {
+        "message": "Danmaku"
+    },
+    "btn_active_users": {
+        "message": "Người dùng đang hoạt động"
+    },
+    "overlay_broadcaster": {
+        "message": "Người phát trực tiếp"
+    },
+    "overlay_verified": {
+        "message": "Đã xác minh"
+    },
+    "overlay_moderators": {
+        "message": "Quản trị viên"
+    },
+    "overlay_viewers": {
+        "message": "Người xem"
+    },
+    "overlay_search_users": {
+        "message": "Tìm kiếm người dùng"
+    },
+    "btn_reset_defaults": {
+        "message": "Đặt lại mặc định"
     }
 }

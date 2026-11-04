@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>uKick</title>
+    <link rel="icon" href="images/icon-32.png" />
     <style>
       body {
         background: #1a1a1a;
@@ -25,6 +26,24 @@
 
       h1 img {
         -webkit-user-drag: none;
+      }
+
+      h1 .brand-text {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        line-height: 1.1;
+      }
+
+      h1 .brand-author {
+        font-size: 10px;
+        font-weight: normal;
+        color: #6e7681;
+        letter-spacing: 0.3px;
+      }
+
+      h1 .brand-name {
+        font-size: inherit;
       }
 
       .container {
@@ -333,6 +352,93 @@
         border: none;
         border-radius: 4px;
         font-size: 14px;
+      }
+      .ukick-range {
+        flex: 1;
+        min-width: 150px;
+        max-width: 180px;
+        accent-color: #53fc18;
+      }
+      .ukick-range-value {
+        min-width: 48px;
+        text-align: right;
+        font-size: 13px;
+        color: #9fa6ad;
+      }
+      .ukick-range:disabled {
+        opacity: 0.4;
+      }
+      .ukick-ambient-row {
+        display: grid;
+        grid-template-columns: 150px minmax(0, 1fr) 48px;
+        align-items: center;
+      }
+      .ukick-ambient-row .ukick-range {
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+      }
+      .ukick-reset-row {
+        justify-content: flex-end;
+      }
+      .ukick-reset-btn {
+        flex: 0 0 auto;
+        min-width: 0;
+        padding: 7px 12px;
+        font-size: 13px;
+        background: #3a3a3a;
+        color: #e6e6e6;
+        border: 1px solid #555;
+      }
+      .ukick-reset-btn:hover {
+        background: #4a4a4a;
+      }
+      .ukick-row-actions {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .ukick-expandable {
+        cursor: pointer;
+        user-select: none;
+        transition: background 0.2s;
+      }
+      .ukick-expandable:hover {
+        background: #333;
+      }
+      .ukick-arrow {
+        width: 18px;
+        height: 18px;
+        fill: #aaa;
+        transition: transform 0.3s ease;
+        flex-shrink: 0;
+      }
+      .ukick-expandable.active .ukick-arrow {
+        transform: rotate(180deg);
+      }
+      .ukick-exp-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 6px;
+        min-width: 16px;
+        height: 16px;
+        padding: 0 4px;
+        border-radius: 4px;
+        background: #fa2d2d;
+        color: #fff;
+        font-size: 11px;
+        font-weight: 800;
+        cursor: help;
+      }
+      .ukick-collapse {
+        display: none;
+        padding: 4px 0 8px 14px;
+        border-left: 1px solid #333;
+        margin: 4px 0 4px 6px;
+      }
+      .ukick-collapse.open {
+        display: block;
       }
 
       .theme-grid {
@@ -774,6 +880,13 @@
           width: 100%;
         }
 
+        .ukick-ambient-row {
+          grid-template-columns: minmax(0, 1fr) 48px;
+        }
+        .ukick-ambient-row .setting-label {
+          grid-column: 1 / -1;
+        }
+
         .sub-input-row {
           flex-direction: column;
           align-items: stretch;
@@ -810,7 +923,10 @@
   <body>
     <h1>
       <img src="images/icon-48.png" alt="uKick Logo" draggable="false" />
-      uKick
+      <span class="brand-text">
+        <span class="brand-author">Berkay Gediz</span>
+        <span class="brand-name">uKick</span>
+      </span>
     </h1>
 
     <div class="container">
@@ -975,6 +1091,46 @@
             data-theme="coral"
             style="background: #fb7185"
           ></div>
+          <div
+            class="theme-option"
+            data-theme="steel"
+            style="background: #64748b"
+          ></div>
+          <div
+            class="theme-option"
+            data-theme="navy"
+            style="background: #1e40af"
+          ></div>
+          <div
+            class="theme-option"
+            data-theme="olive"
+            style="background: #4d7c0f"
+          ></div>
+          <div
+            class="theme-option"
+            data-theme="blossom"
+            style="background: #f9a8d4"
+          ></div>
+          <div
+            class="theme-option"
+            data-theme="lavender"
+            style="background: #c4b5fd"
+          ></div>
+          <div
+            class="theme-option"
+            data-theme="peach"
+            style="background: #fdba74"
+          ></div>
+          <div
+            class="theme-option"
+            data-theme="amethyst"
+            style="background: #8b5cf6"
+          ></div>
+          <div
+            class="theme-option"
+            data-theme="azure"
+            style="background: #5bcefa"
+          ></div>
         </div>
       </div>
 
@@ -1087,6 +1243,89 @@
             <input type="checkbox" id="enableKeyboardVolumeToggle" />
             <span class="slider"></span>
           </label>
+        </div>
+
+        <div class="setting-row">
+          <span class="setting-label" id="screenshotTitle">Screenshot</span>
+          <label class="switch">
+            <input type="checkbox" id="screenshotToggle" />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row ukick-expandable" id="ambientHeader">
+          <span class="setting-label" id="ambientTitle"
+            >Ambient Mode<span class="ukick-exp-badge" id="ambientExpBadge"
+              >!</span
+            ></span
+          >
+          <span class="ukick-row-actions">
+            <label class="switch">
+              <input type="checkbox" id="ambientToggle" />
+              <span class="slider"></span>
+            </label>
+            <svg class="ukick-arrow" viewBox="0 0 24 24">
+              <path
+                d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+              />
+            </svg>
+          </span>
+        </div>
+
+        <div class="ukick-collapse" id="ambientSettings">
+          <div class="setting-row ukick-ambient-row">
+            <span class="setting-label" id="ambientBlurLabel">Blur</span>
+            <input
+              type="range"
+              id="ambientBlur"
+              min="0"
+              max="120"
+              step="20"
+              class="ukick-range"
+            />
+            <span class="ukick-range-value" id="ambientBlurVal"></span>
+          </div>
+          <div class="setting-row ukick-ambient-row">
+            <span class="setting-label" id="ambientOpacityLabel">Opacity</span>
+            <input
+              type="range"
+              id="ambientOpacity"
+              min="10"
+              max="100"
+              step="10"
+              class="ukick-range"
+            />
+            <span class="ukick-range-value" id="ambientOpacityVal"></span>
+          </div>
+          <div class="setting-row ukick-ambient-row">
+            <span class="setting-label" id="ambientSpreadLabel">Spread</span>
+            <input
+              type="range"
+              id="ambientSpread"
+              min="12"
+              max="40"
+              step="2"
+              class="ukick-range"
+            />
+            <span class="ukick-range-value" id="ambientSpreadVal"></span>
+          </div>
+          <div class="setting-row ukick-ambient-row">
+            <span class="setting-label" id="ambientScrimLabel">Chat scrim</span>
+            <input
+              type="range"
+              id="ambientScrim"
+              min="0"
+              max="60"
+              step="10"
+              class="ukick-range"
+            />
+            <span class="ukick-range-value" id="ambientScrimVal"></span>
+          </div>
+          <div class="setting-row ukick-reset-row">
+            <button type="button" id="ambientResetBtn" class="ukick-reset-btn">
+              Reset to defaults
+            </button>
+          </div>
         </div>
 
         <div class="setting-row">
@@ -1291,8 +1530,7 @@
         <div class="eco-headline">
           <a href="https://github.com/berkaygediz" target="_blank"
             ><b>Berkay Gediz</b></a
-          >'s Ecosystem -
-          <i>A truly transparent, fully open-source ecosystem.</i>
+          >'s Ecosystem
         </div>
         <div class="eco-scroller">
           <a

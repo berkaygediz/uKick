@@ -272,9 +272,110 @@
         "message": "Pengguna"
     },
     "options_hover_block_buttons": {
-        "message": "Tombol saat kursor melayang"
+        "message": "Tombol saat hover"
     },
     "platform_redirect_label": {
         "message": "Mode TV"
+    },
+    "btn_unblock_channel": {
+        "message": "Buka blokir kanal ini"
+    },
+    "alert_channel_unblocked": {
+        "message": "Blokir $CHANNEL$ dibuka!",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "btn_unblock_category": {
+        "message": "Tampilkan kategori"
+    },
+    "platform_web": {
+        "message": "Web (kick.com)"
+    },
+    "platform_webos": {
+        "message": "webOS (webos.kick.com)"
+    },
+    "platform_tizen": {
+        "message": "Tizen (tizen.kick.com)"
+    },
+    "options_screenshot": {
+        "message": "Tangkapan Layar"
+    },
+    "btn_screenshot": {
+        "message": "Tangkapan layar (klik: simpan, Ctrl+klik: salin)"
+    },
+    "shot_saved": {
+        "message": "Tangkapan layar disimpan."
+    },
+    "shot_copied": {
+        "message": "Tangkapan layar disalin ke papan klip."
+    },
+    "shot_notready": {
+        "message": "Video belum siap."
+    },
+    "shot_unavailable": {
+        "message": "Tangkapan layar tidak diizinkan pada siaran ini."
+    },
+    "shot_failed": {
+        "message": "Tangkapan layar gagal."
+    },
+    "warn_screenshot": {
+        "message": "Tangkapan layar siaran hanya untuk penggunaan pribadi. Tanggung jawab ada pada Anda."
+    },
+    "options_ambient": {
+        "message": "Mode Ambient"
+    },
+    "warn_ambient": {
+        "message": "Latar halaman menjadi transparan; beberapa detail mungkin sulit terlihat."
+    },
+    "options_ambient_blur": {
+        "message": "Kabur"
+    },
+    "options_ambient_opacity": {
+        "message": "Opasitas"
+    },
+    "options_ambient_spread": {
+        "message": "Sebaran"
+    },
+    "options_ambient_scrim": {
+        "message": "Proteksi obrolan"
+    },
+    "options_ambient_experimental": {
+        "message": "Eksperimental"
+    },
+    "btn_confirm": {
+        "message": "Saya mengerti"
+    },
+    "btn_cancel": {
+        "message": "Batal"
+    },
+    "btn_swap_chat": {
+        "message": "Tukar arah chat"
+    },
+    "btn_danmaku": {
+        "message": "Danmaku"
+    },
+    "btn_active_users": {
+        "message": "Pengguna aktif"
+    },
+    "overlay_broadcaster": {
+        "message": "Penyiar"
+    },
+    "overlay_verified": {
+        "message": "Terverifikasi"
+    },
+    "overlay_moderators": {
+        "message": "Moderator"
+    },
+    "overlay_viewers": {
+        "message": "Penonton"
+    },
+    "overlay_search_users": {
+        "message": "Cari pengguna"
+    },
+    "btn_reset_defaults": {
+        "message": "Atur ulang ke default"
     }
 }

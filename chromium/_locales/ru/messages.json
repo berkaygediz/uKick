@@ -276,5 +276,106 @@
     },
     "platform_redirect_label": {
         "message": "Режим ТВ"
+    },
+    "btn_unblock_channel": {
+        "message": "Разблокировать этот канал"
+    },
+    "alert_channel_unblocked": {
+        "message": "$CHANNEL$ разблокирован!",
+        "placeholders": {
+            "channel": {
+                "content": "$1"
+            }
+        }
+    },
+    "btn_unblock_category": {
+        "message": "Показать категорию"
+    },
+    "platform_web": {
+        "message": "Web (kick.com)"
+    },
+    "platform_webos": {
+        "message": "webOS (webos.kick.com)"
+    },
+    "platform_tizen": {
+        "message": "Tizen (tizen.kick.com)"
+    },
+    "options_screenshot": {
+        "message": "Скриншот"
+    },
+    "btn_screenshot": {
+        "message": "Скриншот (клик: сохранить, Ctrl+клик: копировать)"
+    },
+    "shot_saved": {
+        "message": "Скриншот сохранён."
+    },
+    "shot_copied": {
+        "message": "Скриншот скопирован в буфер обмена."
+    },
+    "shot_notready": {
+        "message": "Видео не готово."
+    },
+    "shot_unavailable": {
+        "message": "Скриншоты в этом стриме запрещены."
+    },
+    "shot_failed": {
+        "message": "Не удалось сделать скриншот."
+    },
+    "warn_screenshot": {
+        "message": "Скриншоты стримов — только для личного использования. Ответственность на вас."
+    },
+    "options_ambient": {
+        "message": "Режим окружения"
+    },
+    "warn_ambient": {
+        "message": "Фон страницы становится прозрачным; некоторые детали может быть сложно разглядеть."
+    },
+    "options_ambient_blur": {
+        "message": "Размытие"
+    },
+    "options_ambient_opacity": {
+        "message": "Непрозрачность"
+    },
+    "options_ambient_spread": {
+        "message": "Распространение"
+    },
+    "options_ambient_scrim": {
+        "message": "Затемнение чата"
+    },
+    "options_ambient_experimental": {
+        "message": "Экспериментально"
+    },
+    "btn_confirm": {
+        "message": "Понятно"
+    },
+    "btn_cancel": {
+        "message": "Отмена"
+    },
+    "btn_swap_chat": {
+        "message": "Сменить направление чата"
+    },
+    "btn_danmaku": {
+        "message": "Данмаку"
+    },
+    "btn_active_users": {
+        "message": "Активные пользователи"
+    },
+    "overlay_broadcaster": {
+        "message": "Стример"
+    },
+    "overlay_verified": {
+        "message": "Подтверждённые"
+    },
+    "overlay_moderators": {
+        "message": "Модераторы"
+    },
+    "overlay_viewers": {
+        "message": "Зрители"
+    },
+    "overlay_search_users": {
+        "message": "Поиск пользователей"
+    },
+    "btn_reset_defaults": {
+        "message": "Сбросить настройки"
     }
 }

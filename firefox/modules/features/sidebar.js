@@ -6,7 +6,7 @@ import {
   getBlockedChannels,
   unblockChannel,
 } from "../core/storage.js";
-import { normalizeData, showToast } from "../core/utils.js";
+import { findUsernameEl, normalizeData, showToast } from "../core/utils.js";
 
 const ICON_BLOCK = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
 const ICON_UNBLOCK = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
@@ -53,14 +53,15 @@ function renderChannelBlockBtn(btn, username, isBlocked) {
 }
 
 export async function addBlockButtonOnChannelPage() {
-  const usernameEl = document.getElementById("channel-username");
+  const usernameEl = findUsernameEl();
   if (!usernameEl) return;
 
   const username = usernameEl.textContent.trim();
   const blocked = await getBlockedChannels();
   const isBlocked = blocked.includes(normalizeData(username));
 
-  const parent = usernameEl.parentElement;
+  const anchor = usernameEl.closest("button") || usernameEl.parentElement;
+  const parent = anchor.parentElement;
 
   let btn = document.getElementById("channelPageBlockBtn");
 
@@ -112,9 +113,11 @@ export async function addBlockButtonOnChannelPage() {
       }
     });
 
-    parent.style.display = "inline-flex";
-    parent.style.alignItems = "center";
-    parent.appendChild(btn);
+    if (anchor.parentNode === parent) {
+      parent.insertBefore(btn, anchor.nextSibling);
+    } else {
+      parent.appendChild(btn);
+    }
   }
 
   if (
